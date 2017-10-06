@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Registro de Usuarios</title>
+</h:head>
+
+<h:body>
+	<f:facet name="header">Formulario Dispositivos Móviles</f:facet>
+
+	<h:form id="frmFacturaEdicion">
+		<p:growl id="msgs" showDetail="true" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:menuButton value="Menu Opciones">
+					<p:menuitem value="Nuevo" update=":frmFacturaEdicion" icon="	ui-icon-refresh" actionListener="#{facturaControlador.init()}" />
+					<p:menuitem value="Facturar" update=":frmFacturaEdicion" icon="ui-icon-disk" actionListener="#{facturaControlador.guardarFactura()}" />
+					<p:menuitem value="Cancelar" update=":frmFacturaEdicion" icon="ui-icon-cancel" actionListener="#{facturaControlador.init()}" />
+				</p:menuButton>
+			</f:facet>
+		</p:toolbar>
+
+		<p:panel header="Buscar Factura">
+			<h:panelGrid columns="4">
+				<p:outputLabel for="fechaInicio" value="Fecha inicio:" />
+				<p:calendar id="fechaInicio" value="#{facturaEdicionControlador.fechaInicio}" required="true" />
+				<p:outputLabel for="fechaFin" value="Fecha fin:" />
+				<p:calendar id="fechaFin" value="#{facturaEdicionControlador.fechaFin}" required="true" />
+			</h:panelGrid>
+			<p:commandButton icon="ui-icon-search" actionListener="#{facturaEdicionControlador.buscarFacturaCliente()}" title="Buscar Cliente" update="frmFacturaEdicion" />
+		</p:panel>
+		<p:panel header="Facturas" rendered="#{facturaEdicionControlador.flagFactura}">
+			<p:dataTable id="dtFacturas" var="f" value="#{facturaEdicionControlador.facFacturas}" editMode="cell" widgetVar="zTable" paginator="true" rows="20">
+
+				<p:column headerText="Id Factura " filterBy="#{f.facIdFactura}">
+					<h:outputText value="#{f.facIdFactura}" />
+				</p:column>
+					<p:column headerText="Cedula" filterBy="#{f.perIdPersona.perCedula}">
+					<h:outputText value="#{f.perIdPersona.perCedula}" />
+				</p:column>
+				<p:column headerText="Nombres" filterBy="#{f.perIdPersona.perNombres}">
+					<h:outputText value="#{f.perIdPersona.perNombres}" />
+				</p:column>
+				<p:column headerText="Apellidos" filterBy="#{f.perIdPersona.perApellidos}">
+					<h:outputText value="#{f.perIdPersona.perApellidos}" />
+				</p:column>
+			
+
+			</p:dataTable>
+		</p:panel>
+	</h:form>
+
+
+
+
+
+
+
+	<p:dialog id="dialogWait" header="Procesando" widgetVar="dlgWait" modal="true" closable="#{registroInformacionControl.flagWaiting}">
+		<h:form id="waitingForm">
+			<h:graphicImage url="/img/cargando/ani_cargando.gif" />
+		</h:form>
+	</p:dialog>
+
+
+</h:body>
+
+</html>

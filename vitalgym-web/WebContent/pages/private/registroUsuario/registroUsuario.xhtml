@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Registro de Usuarios</title>
+</h:head>
+
+<h:body>
+	<f:facet name="header">Formulario Dispositivos Móviles</f:facet>
+
+	<h:form id="frmRegistroUsuario">
+		<p:growl id="msgs" showDetail="true" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:menuButton value="Menu Opciones">
+					<p:menuitem value="Actualizar" update="msgs" icon="ui-icon-arrowrefresh-1-w" actionListener="#{registroUsuarioControlador.init()}" />
+					<p:menuitem value="Nuevo" update="msgs" actionListener="#{registroUsuarioControlador.nuevoRegistroPersona()}" icon="ui-icon-plus" />
+
+				</p:menuButton>
+			</f:facet>
+		</p:toolbar>
+		<p:dataTable id="dtResgitroUsarios" var="r" value="#{registroUsuarioControlador.rgPersonas}" editMode="cell" widgetVar="zTable" paginator="true" rows="20">
+			<f:facet name="header">  
+            Usuario Registrados
+			</f:facet>
+			<p:column headerText="Edición ">
+				<p:commandButton title="Editar" update="frmIngresoUsuario" icon="ui-icon-pencil" actionListener="#{registroUsuarioControlador.recuperarPersona(r)}">
+					<f:setPropertyActionListener target="#{registroUsuarioControlador.rgPersona}" value="#{r}" />
+				</p:commandButton>
+			</p:column>
+			<p:column headerText="Cedula" filterBy="#{r.perCedula}">
+				<h:outputText value="#{r.perCedula}" />
+			</p:column>
+			<p:column headerText="Nombres" filterBy="#{r.perNombres}">
+				<h:outputText value="#{r.perNombres}" />
+			</p:column>
+			<p:column headerText="Apellidos" filterBy="#{r.perApellidos}">
+				<h:outputText value="#{r.perApellidos}" />
+			</p:column>
+			<p:column headerText="Fecha de Nacimiento">
+				<h:outputText value="#{r.perFechaNacimiento}" />
+			</p:column>
+		</p:dataTable>
+
+	</h:form>
+
+
+
+	<p:dialog id="dlgRegistroUsuario" header="Registro de Usuarios" widgetVar="dlgRegistroUsuario" modal="true" height="400" width="800">
+		<h:form id="frmIngresoUsuario">
+			<p:growl id="msgs2" sticky="true" showDetail="true" />
+
+			<p:wizard flowListener="#{registroUsuarioControlador.onFlowProcess}">
+				<p:tab id="personal" title="Personal">
+					<p:panel>
+						<p:messages />
+						<h:panelGrid columns="6" columnClasses="label, value">
+							<h:outputLabel value="Cedula:" />
+							<p:inputText value="#{registroUsuarioControlador.rgPersona.perCedula}" required="true" label="cedula">
+								<f:validateLength minimum="10"></f:validateLength>
+							</p:inputText>
+							<h:outputLabel value="Nombres:" />
+							<p:inputText value="#{registroUsuarioControlador.rgPersona.perNombres}" required="true" label="nombres"></p:inputText>
+							<h:outputLabel value="Apellidos" />
+							<p:inputText value="#{registroUsuarioControlador.rgPersona.perApellidos}" required="true" label="apellidos"></p:inputText>
+							<h:outputLabel value="Fecha Nacimiento:" />
+							<p:calendar value="#{registroUsuarioControlador.rgPersona.perFechaNacimiento}" required="true" navigator="true" pattern="dd/MM/yyyy"></p:calendar>
+							<h:outputLabel value="Lugar Nacimiento:" />
+							<p:inputText value="#{registroUsuarioControlador.rgPersona.perLugarNacimiento}"></p:inputText>
+							<h:outputLabel value="Nacionabilidad:" />
+							<p:inputText value="#{registroUsuarioControlador.rgPersona.perNacionalidad}"></p:inputText>
+							<h:outputLabel value="Sexo:" />
+							<p:selectOneMenu value="#{registroUsuarioControlador.rgPersona.perSexo}">
+								<f:selectItem itemValue="" itemLabel="Escoja una opción:" />
+								<f:selectItems value="#{registroUsuarioControlador.sysCatalogoSexos}" var="se" itemLabel="#{se.ctgDescripcion}" itemValue="#{se.ctgIdCatalogo}" />
+							</p:selectOneMenu>
+							<h:outputLabel value="Estado Civil:" />
+							<p:selectOneMenu value="#{registroUsuarioControlador.rgPersona.perEstadoCivil}">
+								<f:selectItem itemValue="" itemLabel="Escoja una opción:" />
+								<f:selectItems value="#{registroUsuarioControlador.sysCatalogoEstasoCivils}" var="e" itemLabel="#{e.ctgDescripcion}" itemValue="#{e.ctgIdCatalogo}" />
+							</p:selectOneMenu>
+							<h:outputLabel value="Estado" />
+							<h:selectOneMenu value="#{registroUsuarioControlador.rgPersona.perEstado}"  required="true">
+											<f:selectItem itemValue="false" itemLabel="Inactivo" />
+											<f:selectItem itemValue="true" itemLabel="Activo" />
+											<f:selectItem itemValue="null" itemLabel="Escoja una Opción." />
+										</h:selectOneMenu>
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+				<p:tab id="datosAdicionales" title="Datos Adicionales">
+					<p:panel>
+						<p:dataTable id="dtResgitroUsarios" value="#{registroUsuarioControlador.rgContactoPersonas}" var="t" editable="true" editMode="cell" widgetVar="cellRgContactoPersona" paginator="true" rows="10">
+							<f:facet name="header">  
+            Datos Adicionales
+            <p:commandButton title="Agregar Otro tipo de direccion" icon="ui-icon-plus" actionListener="#{registroUsuarioControlador.agregarOtroTipoContacto()}" update=":frmIngresoUsuario"></p:commandButton>
+							</f:facet>
+
+							<p:column headerText="Tipo Dirección">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:selectOneMenu value="#{t.ctgIdCatalogo}" disabled="true" required="true">
+											<f:selectItem itemValue="0" itemLabel="Escoja una Opción:" />
+											<f:selectItems value="#{registroUsuarioControlador.sysCatalogoTipoContactos}" var="tc" itemLabel="#{tc.ctgDescripcion}" itemValue="#{tc.ctgIdCatalogo}" />
+
+										</h:selectOneMenu>
+									</f:facet>
+									<f:facet name="input">
+										<h:selectOneMenu value="#{t.ctgIdCatalogo}" required="true">
+											<f:selectItem itemValue="null" itemLabel="Escoja una Opción." />
+											<f:selectItems value="#{registroUsuarioControlador.sysCatalogoTipoContactos}" var="tc" itemLabel="#{tc.ctgDescripcion}" itemValue="#{tc.ctgIdCatalogo}" />
+										</h:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Detalle de Contacto">
+								<p:cellEditor>
+									<f:facet name="output">
+										<p:outputLabel value="#{t.ctcDetalleContacto}"  ></p:outputLabel>
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{t.ctcDetalleContacto}"  required="true"></p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Estado">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:selectOneMenu value="#{t.ctcEstado}" disabled="true" required="true">
+											<f:selectItem itemValue="false" itemLabel="Inactivo" />
+											<f:selectItem itemValue="true" itemLabel="Activo" />
+											<f:selectItem itemValue="null" itemLabel="Escoja una Opción." />
+										</h:selectOneMenu>
+									</f:facet>
+									<f:facet name="input">
+										<h:selectOneMenu value="#{t.ctcEstado}">
+											<f:selectItem itemValue="false" itemLabel="Inactivo" />
+											<f:selectItem itemValue="true" itemLabel="Activo" />
+										</h:selectOneMenu>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<h:panelGroup>
+						<center>
+							<p:commandButton value="Guardar" icon="ui-icon-disk" actionListener="#{registroUsuarioControlador.guardarRegistro()}" update=":frmIngresoUsuario:msgs2"></p:commandButton>
+							<p:commandButton value="Cancelar" icon="ui-icon-cancel" actionListener="#{registroUsuarioControlador.cancelarPersona()}" update=":frmIngresoUsuario"></p:commandButton>
+						</center>
+					</h:panelGroup>
+
+				</p:tab>
+
+			</p:wizard>
+		</h:form>
+	</p:dialog>
+
+
+
+
+	<p:dialog id="dialogWait" header="Procesando" widgetVar="dlgWait" modal="true" closable="#{registroInformacionControl.flagWaiting}">
+		<h:form id="waitingForm">
+			<h:graphicImage url="/img/cargando/ani_cargando.gif" />
+		</h:form>
+	</p:dialog>
+
+
+</h:body>
+
+</html>

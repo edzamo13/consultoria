@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<link rel="stylesheet" type="text/css" href="../../css/base.css" media="screen" />
+	<link rel="icon" href="../../img/plantilla/gymSalud.png" />
+	
+	<title>Vital Gym</title>
+</h:head>
+
+<h:body>
+	<div id="principal">
+		<div id="cabecera">
+			<div class="logo" style="width: 241px; height: 200px">&nbsp;</div>
+			<div class="menu_superior" style="width: 500px; font-size: 60px">
+				<p align="right">VITAL GYM</p>
+
+			</div>
+
+		</div>
+		<!-- area principal -->
+
+
+		<div id="login" class="cont_derecha">
+
+			<div>
+				<!-- ; border-color:#6482b2 -->
+				<div class="ingreso_sistema">
+					<h:form id="form">
+						<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+						<p:growl id="growl" sticky="true" />
+						<p:panel header="Ingrese las credenciales:">
+
+							<h:panelGrid columns="3" cellpadding="10">
+								<h:outputText value="Usuario"></h:outputText>
+								<h:inputText id="userName" value="#{loginControlador.userName}" required="true" label="Usuario"></h:inputText>
+								<p:message for="userName" />
+								<h:outputText value="Password" />
+								<h:inputSecret id="password" value="#{loginControlador.password}" required="true" label="Password"></h:inputSecret>
+								<p:message for="password" />
+							</h:panelGrid>
+							<center>
+								<p:commandButton value="Ingresar al sistema" action="#{loginControlador.entrar}" update=":form:growl"></p:commandButton>
+							</center>
+						</p:panel>
+					</h:form>
+
+				</div>
+
+				<br /> <br /> <br />
+				<div style="width: 748px;">
+					<div style="margin: 85px 0px 0px 30px; height: 35px; color: #294a71; width: 797px;">Todos los Derechos Reservados © 2017</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</h:body>
+</html>
+
+

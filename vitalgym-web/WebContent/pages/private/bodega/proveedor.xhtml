@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Registro de Usuarios</title>
+</h:head>
+
+<h:body>
+	<f:facet name="header">Formulario Dispositivos Móviles</f:facet>
+
+	<h:form id="frmProveedor">
+		<p:growl id="msgs" showDetail="true" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:menuButton value="Menu Opciones">
+					<p:menuitem value="Actualizar" update=":frmProveedor" icon="ui-icon-arrowrefresh-1-w" actionListener="#{proveedorControlador.init()}" />
+					<p:menuitem value="Nuevo" update=":frmRegistro" actionListener="#{proveedorControlador.nuevoProveedor()}" icon="ui-icon-plus" />
+
+				</p:menuButton>
+			</f:facet>
+		</p:toolbar>
+		<p:dataTable id="dtResgitroUsarios" var="r" value="#{proveedorControlador.facProveedorLst}" editMode="cell" widgetVar="zTable" paginator="true" rows="20">
+			<f:facet name="header">  
+            Proveedores
+			</f:facet>
+			<p:column headerText="Edición ">
+				<p:commandButton title="Editar" update="frmRegistro" icon="ui-icon-pencil" actionListener="#{proveedorControlador.recuperarRegistro(r)}">
+					<f:setPropertyActionListener target="#{proveedorControlador.facProveedor}" value="#{r}" />
+				</p:commandButton>
+			</p:column>
+			<p:column headerText="Nombre" filterBy="#{r.prNombre}">
+				<h:outputText value="#{r.prNombre}" />
+			</p:column>
+			<p:column headerText="Dirección">
+				<h:outputText value="#{r.prDireccion}" />
+			</p:column>
+			<p:column headerText="Ciudad">
+				<h:outputText value="#{r.prCiudad}" />
+			</p:column>
+			<p:column headerText="Telefono">
+				<h:outputText value="#{r.prTelefono}" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+
+
+
+	<p:dialog id="dlgRegistro" header="Registro de Proveedor" widgetVar="dlgRegistro" modal="true" height="400" width="800">
+		<h:form id="frmRegistro">
+			<p:growl id="msgs2" sticky="true" showDetail="true" />
+			<p:panel header="Datos del Proveedor">
+				<h:panelGrid columns="4" columnClasses="label, value">
+					<h:outputLabel value="Nombre:" />
+					<h:panelGroup>
+						<p:inputText id="nombre" value="#{proveedorControlador.facProveedor.prNombre}" required="true" label="nombre" />
+						<p:message for="nombre" />
+					</h:panelGroup>
+					<h:outputLabel value="Ruc:" />
+					<p:inputText value="#{proveedorControlador.facProveedor.prRuc}" />
+					<h:outputLabel value="Dirección:" />
+					<h:panelGroup>
+						<p:inputText id="direccion" value="#{proveedorControlador.facProveedor.prDireccion}" required="true" label="dirección" />
+						<p:message for="direccion" />
+					</h:panelGroup>
+					<h:outputLabel value="Ciudad:" />
+					<p:inputText value="#{proveedorControlador.facProveedor.prCiudad}" />
+					<h:outputLabel value="Provincia:" />
+					<p:inputText value="#{proveedorControlador.facProveedor.prProvincia}" />
+					<h:outputLabel value="Telefono:" />
+					<p:inputText value="#{proveedorControlador.facProveedor.prTelefono}" />
+					<h:outputLabel value="Celular:" />
+					<p:inputText value="#{proveedorControlador.facProveedor.prCelular}" />
+					<h:outputLabel value="E-mail:" />
+					<p:inputText value="#{proveedorControlador.facProveedor.prEmail}" />
+					<h:outputLabel value="Estado:" />
+					<h:panelGroup>
+						<p:selectOneMenu id="estado" value="#{proveedorControlador.facProveedor.prEstado}" required="true">
+							<f:selectItem itemValue="" itemLabel="Seleccione un opción" />
+							<f:selectItem itemValue="false" itemLabel="Inactivo" />
+							<f:selectItem itemValue="true" itemLabel="Activo" />
+						</p:selectOneMenu>
+						<p:message for="estado" />
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:outputLabel value="Observación:" />
+				<p:inputTextarea value="#{proveedorControlador.facProveedor.prObservacion}" rows="6" cols="33" />
+
+			</p:panel>
+			<h:panelGroup>
+				<center>
+					<p:commandButton value="Guardar" icon="ui-icon-disk" actionListener="#{proveedorControlador.guardarRegistro()}" update=":frmRegistro,:frmProveedor"></p:commandButton>
+					<p:commandButton value="Cancelar" icon="ui-icon-cancel" actionListener="#{proveedorControlador.cancelarPersona()}" update=":frmRegistro" process="@this">
+						<p:ajax update=":frmRegistro,:frmProveedor" resetValues="true"></p:ajax>
+					</p:commandButton>
+				</center>
+			</h:panelGroup>
+		</h:form>
+	</p:dialog>
+
+
+
+
+	<p:dialog id="dialogWait" header="Procesando" widgetVar="dlgWait" modal="true" closable="#{registroInformacionControl.flagWaiting}">
+		<h:form id="waitingForm">
+			<h:graphicImage url="/img/cargando/ani_cargando.gif" />
+		</h:form>
+	</p:dialog>
+
+
+</h:body>
+
+</html>

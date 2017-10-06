@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Registro de Usuarios</title>
+</h:head>
+
+<h:body>
+	<f:facet name="header">Formulario Dispositivos Móviles</f:facet>
+
+	<h:form id="frmFactura">
+		<p:growl id="msgs" showDetail="true" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:menuButton value="Menu Opciones">
+					<p:menuitem value="Nuevo" update=":frmFactura" icon="	ui-icon-refresh" actionListener="#{facturaControlador.init()}" />
+					<p:menuitem value="Facturar" update=":frmFactura" icon="ui-icon-disk" actionListener="#{facturaControlador.guardarFactura()}" />
+					<p:menuitem value="Cancelar" update=":frmFactura" icon="ui-icon-cancel" actionListener="#{facturaControlador.init()}" />
+				</p:menuButton>
+			</f:facet>
+		</p:toolbar>
+		<p:panel header="Facturación">
+			<p:panel header="Datos Cliente">
+				<h:panelGrid columns="5">
+					<p:outputLabel value="Cedula:"></p:outputLabel>
+					<p:inputText value="#{facturaControlador.rgPersona.perCedula}" disabled="true" />
+					<p:outputLabel value="Nombres:"></p:outputLabel>
+					<p:inputText value="#{facturaControlador.rgPersona.perNombres}  #{facturaControlador.rgPersona.perApellidos}" disabled="true" />
+					<p:commandButton icon="ui-icon-search" actionListener="#{facturaControlador.buscarTodoCliente()}" title="Buscar Cliente" update="frmCliente" />
+				</h:panelGrid>
+			</p:panel>
+			<p:panel header="Detalle Factura" rendered="#{facturaControlador.flagCliente}">
+				<p:dataTable id="dtProductoFacturado" var="f" value="#{facturaControlador.facDetalleFacturas}" editMode="cell" widgetVar="zTable" paginator="true" rows="20">
+					<f:facet name="header">
+						<p:commandButton title="Agregar Item" update="frmProducto" icon="ui-icon-plus" actionListener="#{facturaControlador.buscarTodoProducto()}" />
+					</f:facet>
+					<p:column headerText="Nombre" filterBy="#{f.prdIdProducto.prdNombre}">
+						<h:outputText value="#{f.prdIdProducto.prdNombre}" />
+					</p:column>
+					<p:column headerText="Detalle Producto" filterBy="#{f.prdIdProducto.prdDetalleProducto}">
+						<h:outputText value="#{f.prdIdProducto.prdDetalleProducto}" />
+					</p:column>
+					<p:column headerText="Precio Venta">
+						<h:outputText value="#{f.prdIdProducto.prdPrecioVenta}" />
+					</p:column>
+					<p:column headerText="Cantidad">
+						<h:outputText value="#{f.detCantidad}" />
+					</p:column>
+					<p:column headerText="Sub Total">
+						<h:outputText value="#{f.detSubTotal}" />
+					</p:column>
+				</p:dataTable>
+				<p:panel>
+					<p:outputLabel value="Iva 12%:" />
+					<p:inputText value="#{facturaControlador.valorIva}" disabled="true" />
+					<p:outputLabel value="Valor a Pagar:" />
+					<p:inputText value="#{facturaControlador.valorTotal}" disabled="true" />
+				</p:panel>
+			</p:panel>
+		</p:panel>
+	</h:form>
+
+
+	<p:dialog id="dlgCliente" header="Clientes" widgetVar="dlgCliente" modal="true" height="400" width="800">
+		<h:form id="frmCliente">
+			<p:growl id="msgs3" sticky="true" showDetail="true" />
+			<p:panel header="Datos de Clientes">
+				<p:dataTable id="dtClientes" var="r" value="#{facturaControlador.rgPersonas}" editMode="cell" widgetVar="zTable" paginator="true" rows="20">
+					<p:column headerText="Seleccionar ">
+						<p:commandButton title="Seleccionar Cliente" update="frmFactura" icon="ui-icon-plus" actionListener="#{facturaControlador.obtieneCliente(r)}">
+							<f:setPropertyActionListener target="#{facturaControlador.rgPersona}" value="#{r}" />
+						</p:commandButton>
+					</p:column>
+					<p:column headerText="Cedula" filterBy="#{r.perCedula}">
+						<h:outputText value="#{r.perCedula}" />
+					</p:column>
+					<p:column headerText="Nombres" filterBy="#{r.perNombres}">
+						<h:outputText value="#{r.perNombres}" />
+					</p:column>
+					<p:column headerText="Apellidos" filterBy="#{r.perApellidos}">
+						<h:outputText value="#{r.perApellidos}" />
+					</p:column>
+					<p:column headerText="Fecha de Nacimiento">
+						<h:outputText value="#{r.perFechaNacimiento}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog id="dlgProducto" header="Productos" widgetVar="dlgProducto" modal="true" height="400" width="800">
+		<h:form id="frmProducto">
+			<p:growl id="msgs4" sticky="true" showDetail="true" />
+			<p:panel header="Datos de Productos">
+				<p:dataTable id="dtProductos" var="p" value="#{facturaControlador.facDetalleFacturaProductos}" paginator="true" rows="20" selection="#{facturaControlador.facDetalleFacturas}" rowKey="#{p.prdIdProducto.prdIdProducto}">
+					<p:column selectionMode="multiple" style="width:16px;text-align:center" />
+					<p:column headerText="Nombre" filterBy="#{p.prdIdProducto.prdNombre}">
+						<h:outputText value="#{p.prdIdProducto.prdNombre}" />
+					</p:column>
+					<p:column headerText="Detalle Producto" filterBy="#{p.prdIdProducto.prdDetalleProducto}">
+						<h:outputText value="#{p.prdIdProducto.prdDetalleProducto}" />
+					</p:column>
+					<p:column headerText="Precio Venta">
+						<h:outputText value="#{p.prdIdProducto.prdPrecioVenta}" />
+					</p:column>
+					<p:column headerText="Cantidad">
+						<p:inputText value="#{p.detCantidad}" autocomplete="off"/>
+					</p:column>
+					<f:facet name="footer">
+						<p:commandButton process="dtProductos" update=":frmFactura" icon="ui-icon-plusthick " value="Añadir" actionListener="#{facturaControlador.calcularProductos()}" />
+					</f:facet>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+
+
+
+
+	<p:dialog id="dialogWait" header="Procesando" widgetVar="dlgWait" modal="true" closable="#{registroInformacionControl.flagWaiting}">
+		<h:form id="waitingForm">
+			<h:graphicImage url="/img/cargando/ani_cargando.gif" />
+		</h:form>
+	</p:dialog>
+
+
+</h:body>
+
+</html>

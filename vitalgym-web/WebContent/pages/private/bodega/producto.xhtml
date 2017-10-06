@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Registro de Usuarios</title>
+</h:head>
+
+<h:body>
+	<f:facet name="header">Formulario Dispositivos Móviles</f:facet>
+
+	<h:form id="frmProducto">
+		<p:growl id="msgs" showDetail="true" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:menuButton value="Menu Opciones">
+					<p:menuitem value="Actualizar" update=":frmProducto" icon="ui-icon-arrowrefresh-1-w" actionListener="#{productoControlador.init()}" />
+					<p:menuitem value="Nuevo" update=":frmRegistro" actionListener="#{productoControlador.nuevoProducto()}" icon="ui-icon-plus" />
+
+				</p:menuButton>
+			</f:facet>
+		</p:toolbar>
+		<p:dataTable id="dtResgitroUsarios" var="r" value="#{productoControlador.facProductoLst}" editMode="cell" widgetVar="zTable" paginator="true" rows="20">
+			<f:facet name="header">  
+            Productos
+			</f:facet>
+			<p:column headerText="Edición ">
+				<p:commandButton title="Editar" update="frmRegistro" icon="ui-icon-pencil" actionListener="#{productoControlador.recuperarRegistro(r)}">
+					<f:setPropertyActionListener target="#{productoControlador.facProducto}" value="#{r}" />
+				</p:commandButton>
+			</p:column>
+			<p:column headerText="Nombre" filterBy="#{r.prdNombre}">
+				<h:outputText value="#{r.prdNombre}" />
+			</p:column>
+			<p:column headerText="Detalle Producto" filterBy="#{r.prdDetalleProducto}">
+				<h:outputText value="#{r.prdDetalleProducto}" />
+			</p:column>
+			<p:column headerText="Precio Venta">
+				<h:outputText value="#{r.prdPrecioVenta}" />
+			</p:column>
+			<p:column headerText="Proveedor">
+				<h:outputText value="#{r.prIdProveedor.prNombre}" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+
+
+
+	<p:dialog id="dlgRegistro" header="Registro de Proveedor" widgetVar="dlgRegistro" modal="true" height="400" width="800">
+		<h:form id="frmRegistro">
+			<p:growl id="msgs2" sticky="true" showDetail="true" />
+			<p:panel header="Datos del Producto">
+				<h:panelGrid columns="4" columnClasses="label, value">
+					<h:outputLabel value="Nombre:" />
+					<h:panelGroup>
+						<p:inputText id="nombre1" value="#{productoControlador.facProducto.prdNombre}" required="true" label="nombre" autocomplete="off" />
+						<p:message for="nombre1" />
+					</h:panelGroup>
+					<h:outputLabel value="Detalle Producto" />
+					<h:panelGroup>
+						<p:inputTextarea id="detalleProducto" value="#{productoControlador.facProducto.prdDetalleProducto}" rows="2" cols="33" required="true" label="detalle Producto" autocomplete="off" />
+						<p:message for="detalleProducto" />
+					</h:panelGroup>
+					<h:outputLabel value="Precio Venta" />
+					<h:panelGroup>
+						<p:inputText id="precioVenta" value="#{productoControlador.facProducto.prdPrecioVenta}" required="true" label="precio Venta" autocomplete="off" />
+						<p:message for="precioVenta" />
+						<p:tooltip for="precioVenta" value="Punto Ejemplo: 5.5"></p:tooltip>
+					</h:panelGroup>
+					<h:outputLabel value="Proveedor" />
+					<h:panelGroup>
+						<p:selectOneMenu id="proveedor" value="#{productoControlador.facProducto.prIdProveedor.prIdProveedor}" required="true" filter="true" filterMatchMode="startsWith">
+							<f:selectItem itemValue="" itemLabel="Seleccione un opción" />
+							<f:selectItems value="#{productoControlador.facProveedorLst}" var="p" itemValue="#{p.prIdProveedor}" itemLabel="#{p.prNombre}" />
+						</p:selectOneMenu>
+						<p:message for="proveedor" />
+					</h:panelGroup>
+					<h:outputLabel value="Tipo Producto" />
+					<p:selectOneMenu value="#{productoControlador.facProducto.prdTipoProducto}" required="true">
+						<f:selectItem itemValue="" itemLabel="Seleccione un opción" />
+						<f:selectItems value="#{productoControlador.sysCatalogos}" var="c" itemValue="#{c.ctgIdCatalogo}" itemLabel="#{c.ctgDescripcion}" />
+					</p:selectOneMenu>
+					<h:outputLabel value="Estado:" />
+					<h:panelGroup>
+						<p:selectOneMenu id="estado" value="#{productoControlador.facProducto.prdEstado}" required="true">
+							<f:selectItem itemValue="" itemLabel="Seleccione un opción" />
+							<f:selectItem itemValue="false" itemLabel="Inactivo" />
+							<f:selectItem itemValue="true" itemLabel="Activo" />
+						</p:selectOneMenu>
+						<p:message for="estado" />
+					</h:panelGroup>
+				</h:panelGrid>
+				<p:panel header="Datos adicionales Registro">
+					<h:panelGrid columns="4">
+						<h:outputLabel value="Dias Duración" />
+						<h:panelGroup>
+							<p:inputText id="diasDuracion" value="#{productoControlador.facProducto.prdDiasDuracion}" autocomplete="off" />
+							<p:tooltip for="diasDuracion" value="dias de duracion " />
+						</h:panelGroup>
+						<h:outputLabel value="Dias Consumo" />
+						<h:panelGroup>
+							<p:inputText id="diasConsumo" value="#{productoControlador.facProducto.prdDiasConsumo}" autocomplete="off" />
+							<p:tooltip for="diasConsumo" value="Dias de Consumo en que el cliente puede usar" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:panel>
+
+
+			</p:panel>
+			<h:panelGroup>
+				<center>
+					<p:commandButton value="Guardar" icon="ui-icon-disk" actionListener="#{productoControlador.guardarRegistro()}" update=":frmRegistro,:frmProducto"></p:commandButton>
+					<p:commandButton value="Cancelar" icon="ui-icon-cancel" actionListener="#{productoControlador.cancelarPersona()}" update=":frmRegistro" process="@this">
+						<p:ajax update=":frmRegistro,:frmProducto" resetValues="true"></p:ajax>
+					</p:commandButton>
+				</center>
+			</h:panelGroup>
+		</h:form>
+	</p:dialog>
+
+
+
+
+	<p:dialog id="dialogWait" header="Procesando" widgetVar="dlgWait" modal="true" closable="#{registroInformacionControl.flagWaiting}">
+		<h:form id="waitingForm">
+			<h:graphicImage url="/img/cargando/ani_cargando.gif" />
+		</h:form>
+	</p:dialog>
+
+
+</h:body>
+
+</html>
