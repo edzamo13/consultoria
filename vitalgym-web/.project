@@ -3,6 +3,7 @@
 	<name>senagua-web</name>
 	<comment></comment>
 	<projects>
+		<project>vitalgym-ejb</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
