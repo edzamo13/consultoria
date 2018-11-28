@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Presidentes de la Republica</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <h:outputStylesheet library="css" name="style.css"  />
+    </h:head>
+
+    <h:body>
+        <div id="container" align="center">
+            <div class="dualbrand">
+
+                <h:graphicImage library="img" name="head1.png" />
+
+                <h:form id="form">
+                    <p:panel header="Login CNE Presidentes">
+                        <h:panelGrid>
+                            <p:outputLabel value="Usuario:"></p:outputLabel>
+                            <p:inputText value=""></p:inputText>
+                            <p:outputLabel value="Password:"></p:outputLabel>
+                            <p:inputText value=""></p:inputText>
+                        </h:panelGrid>
+                        <p:separator style="width:500px;height:2px" />
+                        <p:commandButton value="Login"></p:commandButton>
+                        <p:commandButton value="Cancelar"></p:commandButton>
+                    </p:panel>
+
+                </h:form>
+
+            </div>
+            <!--
+               <div id="content">
+                   <h2>Selecciones el año de un proceso electoral!</h2>
+               </div>
+               <div id="aside">
+                 
+               </div>
+            -->
+
+            <div id="footer">
+                <p>
+                    Consejo Nacional Electroral<br/>
+                </p>
+            </div>
+        </div>
+
+    </h:body>
+</html>
