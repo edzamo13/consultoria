@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Presidentes de la Republica</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link href="../resources/css/screen.css" rel="stylesheet" type="text/css"/>
+    </h:head>
+
+    <h:body>
+        <div id="container" align="center">
+            <div class="dualbrand">
+
+                <img src="../resources/img/head1.png" alt=""/>
+                <h1>Elecciones Presidenciales!</h1>
+
+
+                <h:form id="form">
+                    <p:dataGrid var="gob" value="#{principalControlador.respuestaGobernanteDto.gobernanteDtos}" columns="3" layout="grid"
+                                rows="12" paginator="true" id="gober"
+                                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                rowsPerPageTemplate="6,12,16">
+
+                        <f:facet name="header">
+                            Gobernantes
+                        </f:facet>
+
+                        <p:panel header="#{gob.fechaMandatoinicio}" style="text-align:center">
+                            <h:panelGrid columns="1" style="width:100%">
+                                <p:graphicImage name="demo/images/car/#{gob.personaDto.imagen}.gif"/> 
+
+                                <h:outputText value="#{gob.personaDto.nombres}" />
+                                <h:outputText value="#{gob.personaDto.apellidos}" />
+
+                                <p:link outcome="detalleGobernante" value="#{gob.fechaMandatoinicio}">
+                                    <f:param name="gobernateId" value="#{gob.idGobernate}" />
+                                </p:link>
+
+                             
+                            </h:panelGrid>
+                        </p:panel>
+
+                    </p:dataGrid>
+
+                </h:form>
+
+            </div>
+            <!--
+               <div id="content">
+                   <h2>Selecciones el año de un proceso electoral!</h2>
+               </div>
+               <div id="aside">
+                 
+               </div>
+            -->
+
+            <div id="footer">
+                <p>
+                    Consejo Nacional Electroral<br/>
+                </p>
+            </div>
+        </div>
+
+    </h:body>
+</html>
