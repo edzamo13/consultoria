@@ -1,0 +1,44 @@
+<mat-card class="example-card">
+  <mat-card-header>
+    <h3>Catálogo Nacional de Cualificaciones para Operadores de Capacitación</h3>
+  </mat-card-header>
+
+  <mat-tab-group mat-align-tabs="start">
+    <mat-tab label="Operadores de Capacitación">
+      <mat-card>
+        <mat-card-content>
+          <h4>Campo </h4>
+          <mat-form-field>
+            <mat-label>Selecciones un opción:</mat-label>
+            <mat-select [(ngModel)]="campo" name="lst" (selectionChange)="seleccionCampo($event)"
+            required >
+              <mat-option *ngFor="let lst of listaServicio" [value]="lst.valor">
+                {{lst.nombre}}  
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <h4 *ngIf="true">{{etiquetaH4}} </h4>
+          <mat-form-field *ngIf="isFiltro">
+            <mat-label>Selecciones un opción:</mat-label>
+            <mat-select [(ngModel)]="filtro" name="filtro">
+              <mat-option *ngFor="let filtro of filtros" [value]="filtro.detalle"> 
+                {{filtro.detalle}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field *ngIf="isDescripcion">
+            <input matInput placeholder="Ingrese la descripción" value="descripcion" [(ngModel)]="descripcion"
+              autocomplete="off">
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-tab>
+    <mat-tab label="Organismos Evaluadores de la Conformidad">Organismos Evaluadores de la Conformidad</mat-tab>
+    <mat-tab label="Reporte">Reporte</mat-tab>
+  </mat-tab-group>
+
+
+
+
+</mat-card>

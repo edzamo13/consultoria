@@ -1,0 +1,11 @@
+<mat-toolbar color="primary">
+  <div class="header_logo">
+    <img src="./assets/img/logoSetec.png"> </div>
+  <div class="mat-down">
+    <i class="fa fa-bars fa-lg" (click)="sidenav.toggle()" matTooltip="Ocultar Panel"></i>
+  </div>
+  <span class="toolbar-right"></span>
+  <div class="toolbar-icons-menu">
+    <i class="fas fa-home" [routerLink]="['/portal/online']" matTooltip="Menú Principal"></i>
+  </div>
+</mat-toolbar>

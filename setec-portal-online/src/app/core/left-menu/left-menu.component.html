@@ -1,0 +1,20 @@
+<div class="menu-list-divider"> v.1.0 </div>
+<mat-list>
+  <mat-list-item routerLinkAntive="active">
+    Setec
+    <i class="fas fa-address-card"></i>
+  </mat-list-item>
+  <div class="menu-list-divider"> Servicios </div>
+  <div appDropdown class="drop-down">
+
+    <h5>Servicios SETEC</h5>
+    <mat-list-item *ngFor="let link of links">
+      <a matLine href="{{link.url}}" matTooltip="{{link.name}}">
+        <button class="{{link.icono}}"></button>
+      </a>
+
+    </mat-list-item>
+
+
+  </div>
+</mat-list>
