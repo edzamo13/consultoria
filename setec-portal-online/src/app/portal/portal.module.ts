@@ -9,6 +9,7 @@ import {
   MatTooltipModule,
   MatTabGroup,
   MatTabsModule,
+  MatNativeDateModule,
 } from '@angular/material';
 import { PortalMainComponent } from './portal-main/portal-main.component';
 import { PortalRoutingModule } from './portal-routing.module';
@@ -19,9 +20,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { SwiperModule } from 'angular2-useful-swiper';
 import { CatalogoOperadoresComponent } from './catalogo-operadores/catalogo-operadores.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PortalMainCarruselComponent } from './portal-main-carrusel/portal-main-carrusel.component';
-import { SliderItemDirective } from './portal-main-carrusel/slider-item.directive';
+import { HttpClientModule } from '@angular/common/http';
+
 
 
 @NgModule({
@@ -33,7 +35,7 @@ import { SliderItemDirective } from './portal-main-carrusel/slider-item.directiv
 
     PortalMainCarruselComponent,
 
-    SliderItemDirective,
+
 
 
 
@@ -56,11 +58,13 @@ import { SliderItemDirective } from './portal-main-carrusel/slider-item.directiv
     MatSelectModule,
     FormsModule,
     MatTooltipModule,
-    MatTabsModule
-
-
-
-
+    MatTabsModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    HttpClientModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
 
 
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { retry, catchError } from 'rxjs/operators';
-import { Filtro } from './model/familia.model';
+import { Filtro, ConsultaPerfil } from './model/catalogoNacional.model';
 
 
 
@@ -35,7 +35,6 @@ export class CatalogoOperadoresService {
       )
   }
 
-  // HttpClient API get() method => Fetch employee
   public getSector(): Observable<Filtro[]> {
     return this._http.get<Filtro[]>(this.urlApi + 'consultaPerfil/listarSector')
       .pipe(
@@ -45,6 +44,17 @@ export class CatalogoOperadoresService {
   }
 
 
+  public obtenerConsultaPerfilPorCampoOEC(entrada: ConsultaPerfil): Observable<ConsultaPerfil[]> {
+    return this._http.post<ConsultaPerfil[]>
+      (this.urlApi + 'consultaPerfil/listarConsultaPerfilPorCampoOEC', JSON.stringify(entrada), this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.handleError)
+      )
+
+
+
+  }
 
 
 
