@@ -1,0 +1,114 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://mag.gob.ec/interoperabilidad/soap-service"
+           targetNamespace="http://mag.gob.ec/interoperabilidad/soap-service" elementFormDefault="qualified">
+
+    <xs:element name="getCabeceraGuiaPrimariaRequest">
+        <xs:complexType>
+            <xs:sequence>
+               
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCabeceraGuiaPrimariaResponse">
+        <xs:complexType>
+            <xs:sequence>
+               <xs:element maxOccurs="unbounded" minOccurs="0" name="cabeceraGuiaPrimaria" nillable="true" type="tns:cabeceraGuiaPrimaria" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="cabeceraGuiaPrimaria">  
+        <xs:sequence>
+            <xs:element name="gmvCodigo" type="xs:string"/>
+            <xs:element name="gmvId" type="xs:int"/>
+            <xs:element name="prgId" type="xs:string"/>
+            <xs:element name="gmvFechaInicio" type="xs:string"/>
+            <xs:element name="gmvTipoDestino" type="xs:string"/>
+            <xs:element name="licSecuencia" type="xs:string"/>
+            <xs:element name="prgCodigo" type="xs:string"/>
+            <xs:element name="propietarioRazzonsocial" type="xs:string"/> 
+            <xs:element name="ejecutorNombres" type="xs:string"/>
+            <xs:element name="ejecutorRazonsocial" type="xs:string"/>
+            <xs:element name="ejecutorRuc" type="xs:string"/>
+            <xs:element name="predioProvincia" type="xs:string"/>
+            <xs:element name="predioCanton" type="xs:string"/>
+            <xs:element name="predioParroquia" type="xs:string"/>
+            <xs:element name="predioSitio" type="xs:string"/>   
+            <xs:element name="vehiculoPlaca" type="xs:string"/>
+            <xs:element name="vehiculoColor" type="xs:string"/>
+            <xs:element name="vehiculoMarca" type="xs:string"/>
+            <xs:element name="vehiculoTipo" type="xs:string"/>
+            <xs:element name="guipriFechainicio" type="xs:string"/>
+            <xs:element name="guipriDuracionhoras" type="xs:string"/>
+            <xs:element name="guiapriFechafin" type="xs:string"/>
+            <xs:element name="sucIdDestino" type="xs:string"/>  
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="destinoClienteFinalGp" nillable="true" type="tns:destinoClienteFinalGp" />
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="destinoExportacionGp" nillable="true" type="tns:destinoExportacionGp" />
+             <xs:element maxOccurs="unbounded" minOccurs="0" name="destinoIndustriaForestalGp" nillable="true" type="tns:destinoIndustriaForestalGp" />
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="detalleGuiaPrimaria" nillable="true" type="tns:detalleGuiaPrimaria" />
+        </xs:sequence>
+    </xs:complexType>
+    
+     <xs:complexType name="destinoClienteFinalGp"> 
+        <xs:sequence>
+            <xs:element name="gmvCodigo" type="xs:string"/>
+            <xs:element name="prgId" type="xs:int"/>
+            <xs:element name="gmvFechaInicio" type="xs:string"/>
+            <xs:element name="idCliente" type="xs:string"/>
+            <xs:element name="cedulaCliente" type="xs:string"/>
+            <xs:element name="razonsocial" type="xs:string"/>
+            <xs:element name="clfNumeroEstablecimiento" type="xs:string"/>
+            <xs:element name="direccionCliente" type="xs:string"/> 
+            <xs:element name="telefCliente" type="xs:string"/>
+            <xs:element name="provincia" type="xs:string"/>
+            <xs:element name="canton" type="xs:string"/>
+            <xs:element name="parroquia" type="xs:string"/>
+            <xs:element name="id" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+     <xs:complexType name="destinoExportacionGp"> 
+        <xs:sequence>
+            <xs:element name="gmvCodigo" type="xs:string"/>
+            <xs:element name="prgId" type="xs:int"/>
+            <xs:element name="gmvFechaInicio" type="xs:string"/>
+            <xs:element name="nombre" type="xs:string"/>
+            <xs:element name="direccion" type="xs:string"/>
+            <xs:element name="codCanton" type="xs:string"/>
+            <xs:element name="id" type="xs:string"/>          
+        </xs:sequence>
+    </xs:complexType>
+     <xs:complexType name="destinoIndustriaForestalGp"> 
+        <xs:sequence>
+            <xs:element name="gmvCodigo" type="xs:string"/>
+            <xs:element name="prgId" type="xs:int"/>
+            <xs:element name="gmvFechaInicio" type="xs:string"/>
+            <xs:element name="direccion" type="xs:string"/>
+            <xs:element name="conTelefo" type="xs:string"/>
+            <xs:element name="provincia" type="xs:string"/>
+            <xs:element name="canton" type="xs:string"/>   
+            <xs:element name="parroquia" type="xs:string"/>   
+            <xs:element name="id" type="xs:string"/>          
+        </xs:sequence>
+    </xs:complexType>
+     <xs:complexType name="detalleGuiaPrimaria"> 
+        <xs:sequence>
+            <xs:element name="licId" type="xs:string"/>
+            <xs:element name="espId" type="xs:int"/>
+            <xs:element name="especie" type="xs:string"/>
+            <xs:element name="espNombre" type="xs:string"/>
+            <xs:element name="gesTipo" type="xs:string"/>
+            <xs:element name="tipoEspecie" type="xs:string"/>
+            <xs:element name="espTipo" type="xs:string"/>   
+            <xs:element name="gesLargo" type="xs:string"/>   
+            <xs:element name="gesAncho" type="xs:string"/>
+            <xs:element name="gesEspesor" type="xs:string"/>
+            <xs:element name="gesUnidades" type="xs:string"/>
+            <xs:element name="gesVolumen" type="xs:string"/>  
+            <xs:element name="gesVolumenMovilizado" type="xs:string"/>  
+            <xs:element name="gesVolumenMovilizado" type="xs:string"/>          
+        </xs:sequence>
+    </xs:complexType>
+   
+    
+</xs:schema>
