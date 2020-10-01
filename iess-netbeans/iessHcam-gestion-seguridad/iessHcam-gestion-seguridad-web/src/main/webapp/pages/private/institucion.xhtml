@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/template/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form id="formInstituciones">
+
+            <p:growl id="growl" autoUpdate="true" showDetail="true" sticky="true" globalOnly="true"/>  
+            <p:toolbar>
+                    <f:facet name="left">
+                        <p:menuButton value="Opciones" iconPos="true">
+                            <p:menuitem value="Agregar" action="#{institucionControlador.muestraFormulario()}" icon="ui-icon-plusthick" />
+                        </p:menuButton>
+                    </f:facet>
+                </p:toolbar>
+
+
+            <p:panel>
+
+                
+                <p:dataTable style="width: 100%;"                  
+                             var="institucion" value="#{institucionControlador.institucionForm.instituciones}" rowKey="#{institucion.inIdInstitucion}" paginator="true" rows="10"  
+                             id="institucionesTable" paginatorPosition="bottom">
+
+                    <p:column width="20%" id="editar" style="text-align: center; margin: 0 auto"  headerText="Editar">
+                        <p:commandButton oncomplete ="PF('dialogInstitucion').show()" action ="#{institucionControlador.cargaFormularioIngreso()}" icon="ui-icon-pencil" title="Editar">
+                            <f:setPropertyActionListener value="#{institucion}" target="#{institucionControlador.institucionForm.institucion}" />
+                        </p:commandButton>
+                    </p:column>
+
+                    <p:column id="institucion" style="text-align: center; margin: 0 auto" headerText="Institución">
+                        <h:outputText value="#{institucion.inNombre}" />
+                    </p:column>
+
+                    <p:column width="20%" id="estado" style="text-align: center; margin: 0 auto" headerText="Estado">
+                        <h:outputText value="#{institucion.inEstado}" />
+                    </p:column>
+
+                </p:dataTable>
+            </p:panel>
+
+
+
+            <p:dialog header="Institución" dynamic="true" id="dialogInstitucion" widgetVar="dialogInstitucion" modal="true" showEffect="fade" hideEffect="fade" closable="false" resizable="false">
+                <div align="center">
+                    <p:panelGrid id="formulario" columns="2" columnClasses="backgroundColumn, sizeColumnSecondary">
+                         <h:panelGroup>
+                            <h:outputText value="Nombre " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:column>
+                            <p:inputText id="txtNombre" autocomplete="off" maxlength="120" style="width: 100%" value="#{institucionControlador.institucionForm.nombre}"
+                                         required="true" requiredMessage="Ingrese un nombre" onkeyup="this.value = this.value.toUpperCase()">
+                                <f:validateLength maximum="120" minimum="1" />
+                            </p:inputText>
+                            <p:message for="txtNombre" />
+                        </p:column>
+
+                         <h:panelGroup>
+                            <h:outputText value="Estado " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:selectOneMenu id="estado" style="width:125px" value="#{institucionControlador.institucionForm.estado}">
+                            <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                            <f:selectItem itemLabel="INACTIVO" itemValue="I" />
+                        </p:selectOneMenu>
+
+                    </p:panelGrid>
+
+                    <p:separator style="height:5px" />
+
+                    <p:commandButton value="Guardar" actionListener="#{institucionControlador.muestraConfirmacion()}" update="formulario" icon="ui-icon-disk" title="Guardar" />
+                    <p:commandButton value="Cancelar" update="dialogInstitucion" icon="ui-icon-close" title="Cancelar" />
+
+                </div>
+            </p:dialog>
+
+
+            
+            <p:dialog header="Mensaje" id="dlgConfirmacion" widgetVar="dlgConfirmacion" modal="true" showEffect="fade" hideEffect="fade" resizable="false" closable="false" width="300px">
+                <h:panelGrid columns="1" style="margin:0 auto" >
+                    <center>
+                        <h:panelGrid columns="2">
+
+                            <h:graphicImage value="/resources/img/plantilla/pregunta.jpg" width="50" height="50" />
+                            <p:outputLabel value="¿Desea Guardar el Registro?"/>
+
+                        </h:panelGrid>
+                        <br/>
+
+                        <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto">
+                            <p:commandButton value="Aceptar" icon="ui-icon-check" action ="#{institucionControlador.guardaFormularioIngreso()}" update="dialogInstitucion, dlgConfirmacion, :#{p:component('institucionesTable')}" title="Aceptar"/>
+                            <p:commandButton value="Cancelar" icon="ui-icon-close" update="dlgConfirmacion" title="Cancelar"/>
+                        </h:panelGrid>
+                    </center>
+
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

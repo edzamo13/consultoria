@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/template/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form id="formRolxDependencia" >
+
+            <p:growl id="growl" autoUpdate="true" showDetail="true" sticky="true" globalOnly="true" showSummary="false"/>  
+
+            <p:toolbar>
+                <f:facet name="left">
+                        <p:menuButton value="Opciones" iconPos="true">
+                            <p:menuitem value="Agregar" action="#{rolxDependenciaControlador.muestraFormulario()}" icon="ui-icon-plusthick" update="formRolxDependencia, :#{p:component('dialogAsignacion')}"/>
+                        </p:menuButton>
+                </f:facet>
+            </p:toolbar>
+            
+            <p:panel>
+                <p:panelGrid columns="2" style="margin: 0 auto; " styleClass="panelgrid-sin-bordes">
+                    <h:outputText value="Rol" styleClass="label"/>
+                    <p:selectOneMenu id="somRoles" value="#{rolxDependenciaControlador.rolxDependenciaForm.rol.roIdRol}" filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Selecione una Opción" itemValue="" />
+                        <f:selectItems value="#{rolxDependenciaControlador.rolxDependenciaForm.roles}" var="itemSeleccionado" itemLabel="#{itemSeleccionado.roNombre}" itemValue="#{itemSeleccionado.roIdRol}"/>
+                        <p:ajax listener="#{rolxDependenciaControlador.cargaDependenciasxRol()}" update="pnlPrincipal"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+
+                <br/>
+
+
+
+                <p:panel id="pnlPrincipal" visible ="#{rolxDependenciaControlador.rolxDependenciaForm.muestraPanel}">
+
+                    <br/>
+                    
+                    <p:dataTable style="width: 100%;"                  
+                                 var="dependencia" value="#{rolxDependenciaControlador.rolxDependenciaForm.dependenciasxRol}" rowKey="#{dependencia.deIdDependencia}" paginator="true" rows="10"  
+                                 id="dependenciasTable" paginatorPosition="bottom">
+
+                        <p:column width="50" id="editar" style="text-align: center; margin: 0 auto"  headerText="Editar">
+                            <p:commandButton oncomplete="PF('dialogAsignacion').show();" action="#{rolxDependenciaControlador.cargaFormularioIngreso()}" icon="ui-icon-pencil" title="Editar">
+                                <f:setPropertyActionListener value="#{dependencia}" target="#{rolxDependenciaControlador.rolxDependenciaForm.dependenciaxRol}" />
+                            </p:commandButton>
+                        </p:column>
+                        
+                        <p:column width="30%" id="tblInstitucion" style="text-align: center; margin: 0 auto" headerText="Institución">
+                            <h:outputText value="#{dependencia.deIdDependencia.inIdInstitucion.inNombre}" />
+                        </p:column>
+
+                        <p:column id="tblDependencia" style="text-align: center; margin: 0 auto" headerText="Dependencia" filterBy="#{dependencia.deIdDependencia.deNombre}" filterMatchMode="contains">
+                            <h:outputText value="#{dependencia.deIdDependencia.deNombre}" />
+                        </p:column>
+
+                        <p:column width="50" style="text-align: center; margin: 0 auto" headerText="Estado">
+                            <h:outputText value="#{dependencia.rdEstado}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </p:panel>
+
+            </p:panel>
+
+
+
+            <p:dialog dynamic="true" id="dialogAsignacion" widgetVar="dialogAsignacion" modal="true" showEffect="fade" hideEffect="fade" closable="false" resizable="false">
+                <div align="center">
+                    <p:panelGrid id="formulario" columns="2" columnClasses="backgroundColumn, sizeColumnSecondary">
+
+                        <h:panelGroup>
+                            <h:outputText value="Institución " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        
+                        <p:row>
+                            <p:selectOneMenu id="selectOneMenuUnme"  validatorMessage="Seleccione una Institución"
+                                         value="#{rolxDependenciaControlador.rolxDependenciaForm.institucion.inIdInstitucion}" disabled="#{rolxDependenciaControlador.rolxDependenciaForm.inactivaComponente}" >
+                                <f:selectItem itemLabel="Selecione una Opción" itemValue="0" />
+                                <f:selectItems value="#{rolxDependenciaControlador.rolxDependenciaForm.instituciones}" var="institucion" itemLabel="#{institucion.inNombre}" itemValue="#{institucion.inIdInstitucion}" />
+                                <p:ajax  listener="#{rolxDependenciaControlador.cargaDependencias()}" update="selectOneMenuDependencias, selectOneMenuUnme, msgInstitucion"/>
+                                <f:validateDoubleRange minimum="1" />
+                            </p:selectOneMenu>
+                            <br/>
+                            <h:message id="msgInstitucion" for="selectOneMenuUnme" style="color:red" />
+                        </p:row>
+
+                        <h:panelGroup>
+                            <h:outputText value="Dependencia " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+
+                        <p:row>
+                            <p:selectOneMenu id="selectOneMenuDependencias"  validatorMessage="Seleccione una Dependencia"
+                                         value="#{rolxDependenciaControlador.rolxDependenciaForm.dependencia.deIdDependencia}" disabled="#{rolxDependenciaControlador.rolxDependenciaForm.inactivaComponente}" >
+                                <f:selectItem itemLabel="Selecione una Opción" itemValue="0" />
+                                <f:selectItems value="#{rolxDependenciaControlador.rolxDependenciaForm.dependencias}" var="dependencia" itemLabel="#{dependencia.deNombre}" itemValue="#{dependencia.deIdDependencia}"/>
+                                <p:ajax update="selectOneMenuDependencias, msgDependencias"/>
+                                <f:validateDoubleRange minimum="1" />
+                            </p:selectOneMenu>
+                            <br/>
+                            <h:message id="msgDependencias" for="selectOneMenuDependencias" style="color:red" />
+                        </p:row>
+                        
+                        <h:outputText value="Estado " styleClass="label"/>
+                        <p:selectOneMenu id="estado" style="width:125px" value="#{rolxDependenciaControlador.rolxDependenciaForm.estado}">
+                            <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                            <f:selectItem itemLabel="INACTIVO" itemValue="I" />
+                        </p:selectOneMenu>
+
+                    </p:panelGrid>
+
+                    <p:separator style="height:5px" />
+
+                    <p:commandButton value="Guardar" action="#{rolxDependenciaControlador.muestraConfirmacion()}" update="formulario" icon="ui-icon-disk" title="Guardar" />
+                    <p:commandButton value="Cancelar" update="dialogAsignacion" icon="ui-icon-close" title="Cancelar" />
+
+                </div>
+            </p:dialog>
+
+            <p:dialog header="Mensaje" id="dlgConfirmacion" widgetVar="dlgConfirmacion" modal="true" showEffect="fade" hideEffect="fade" resizable="false" closable="false" width="300px">
+                <h:panelGrid columns="1" style="margin:0 auto" >
+                    <center>
+                        <h:panelGrid columns="2">
+
+                            <h:graphicImage value="/resources/img/plantilla/pregunta.jpg" width="50" height="50" />
+                            <p:outputLabel value="¿Desea Guardar el Registro?"/>
+
+                        </h:panelGrid>
+                        <br/>
+
+                        <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto">
+                            <p:commandButton value="Aceptar" icon="ui-icon-check" action ="#{rolxDependenciaControlador.guardaFormularioIngreso()}" update="dialogAsignacion, dlgConfirmacion, :#{p:component('pnlPrincipal')}" title="Aceptar"/>
+                            <p:commandButton value="Cancelar" icon="ui-icon-close" update="dlgConfirmacion" title="Cancelar"/>
+                        </h:panelGrid>
+                    </center>
+
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

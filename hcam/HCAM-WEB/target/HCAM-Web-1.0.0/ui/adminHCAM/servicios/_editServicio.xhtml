@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="form-edit">
+        <p:dialog header="Modificar Servicio" widgetVar="dlg3" showEffect="fold" hideEffect="fold" modal="true" >
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">  
+                <h:panelGrid id="gridEdit" columns="3" cellpadding="5">
+
+
+                    <p:outputLabel for="codServicio" value="Codigo Servicio:" style="font-weight:bold" />
+                    <p:inputText id="codServicio" value="#{serviciosView.selectedCenter.codeCet}" required="true" label="Codigo Servicio"/>
+                    <p:message for="codServicio"/>
+
+                    <p:outputLabel for="name" value="Nombre:" style="font-weight:bold" />
+                    <p:inputText id="name" value="#{serviciosView.selectedCenter.nameCet}" label="Nombre: " required="true" validatorMessage="Introduzca solamente caracteres alfanuméricos" >
+                        <f:validateRegex pattern="^[a-zA-Z0-9\s]{1,40}$" />
+                    </p:inputText>
+                    <p:message for="name"/> 
+
+                    <p:outputLabel for="observacion" value="Observación:" style="font-weight:bold" />
+                    <p:inputText id="observacion" value="#{serviciosView.selectedCenter.codeCet}" required="true" label="Observación"/>
+                    <p:message for="observacion"/>
+
+                    <p:outputLabel value="Activo:" for="active" />
+                    <p:selectBooleanCheckbox id="active" value="#{serviciosView.selectedCenter.active}" />
+
+
+                    <p:inplace id="id" style="visibility: hidden">
+                        <p:inputText value="#{serviciosView.selectedCenter.idCet}"  />
+                    </p:inplace>
+                    <p:outputLabel for="id" value="Id:" style="visibility: hidden" />               
+
+
+                    <br></br>
+                    <br></br>
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnEdit" value="Modificar" update=":form-edit:gridEdit" action="#{serviciosView.edit(serviciosView.selectedCenter)}" icon="ui-icon-pencil"/>
+                            <p:commandButton id="btnCancelar" value="Cancelar" onclick="window.location.replace(window.location.href);" icon="ui-icon-cancel" action="adminCenter?face-redirect=true"/>
+                        </h:panelGrid>
+                    </div>
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>
+

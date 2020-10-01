@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="formList">
+        <p:dataTable id="dtbUsuarios" var="usr" value="#{usersView.lstUsers}" style="margin-top: 20px" sortBy="#{usr.idUsr}">
+
+                <p:column headerText="Nombre de Usuario" sortBy="#{usr.loginUsr}" filterBy="#{usr.loginUsr}" filterMatchMode="contains" >
+                    <p:outputLabel value="#{usr.loginUsr}" />
+                </p:column> 
+
+                <p:column headerText="Nombres" sortBy="#{usr.firstNameUsr}" filterBy="#{usr.firstNameUsr}" filterMatchMode="contains">
+                    <p:outputLabel value="#{usr.firstNameUsr}" />
+                </p:column> 
+
+                <p:column headerText="Apellidos" sortBy="#{usr.lastNameUsr}" filterBy="#{usr.lastNameUsr}" filterMatchMode="contains">
+                    <p:outputLabel value="#{usr.lastNameUsr}" />
+                </p:column> 
+
+                <p:column headerText="Correo" sortBy="#{usr.emailUsr}" filterBy="#{usr.emailUsr}" filterMatchMode="contains">
+                    <p:outputLabel value="#{usr.emailUsr}" />
+                </p:column> 
+
+                <p:column headerText="Telefono Movil" sortBy="#{usr.mobilePhoneUsr}" filterBy="#{usr.mobilePhoneUsr}" filterMatchMode="contains">
+                    <p:outputLabel value="#{usr.mobilePhoneUsr}" />
+                </p:column> 
+
+                <p:column headerText="Telefono Fijo" sortBy="#{usr.phoneUsr}" filterBy="#{usr.phoneUsr}" filterMatchMode="contains">
+                    <p:outputLabel value="#{usr.phoneUsr}" />
+                </p:column>
+            
+            <p:column headerText="Activo"  sortBy="#{usr.activeUsr}" filterMatchMode="contains" width="40" >
+                        <div align="center">
+                            <p:selectBooleanCheckbox value="#{usr.activeUsr}" disabled="true"/>
+                        </div>
+                </p:column>
+            
+                <p:column headerText="Editar" width="40">
+                    <p:commandButton actionListener="#{usersView.setSelected(usr)}" onclick="PF('dlg3').show();" icon="ui-icon-pencil" title="Editar"/>                 
+                </p:column>
+                <p:column width="60" style="text-align: center" headerText="Activar/Desactivar">
+                    <p:commandButton icon="ui-icon-check" title="Borrar" action="#{usersView.remove(usr)}" rendered="#{usr.activeUsr == false}">
+                        <p:confirm header="Confirmation" message="¿Está Seguro de Activar el Usuario?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:commandButton icon="ui-icon-closethick" title="Borrar" action="#{usersView.remove(usr)}" rendered="#{usr.activeUsr == true}">
+                        <p:confirm header="Confirmation" message="¿Está Seguro de Desactivar el Usuario?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>  
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog> 
+    </h:form>
+</ui:composition>

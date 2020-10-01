@@ -1,0 +1,230 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/template/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        
+
+        
+            <h:form id="formBusquedaUsuario" >
+                <p:growl id="growl" autoUpdate="true" showDetail="true" sticky="true" globalOnly="true" showSummary="false"/>  
+                
+                <p:toolbar>
+                        <f:facet name="left">
+                            <p:menuButton value="Opciones" iconPos="true">
+                                <p:menuitem value="Limpiar" action="/pages/private/rolxUsuario.jsf"  ajax="false" immediate="true" icon="ui-icon-document"/>
+                                <p:menuitem value="Agregar" action="#{rolxUsuarioControlador.nuevoRol()}" update=" :#{p:component('dialogRol')}" icon="ui-icon-plusthick"/>
+                            </p:menuButton>
+                        </f:facet>
+                </p:toolbar>
+
+                <p:panel>
+                    <p:panel style="margin: 0 auto; width: 40%;">
+
+                        <h:panelGrid id="pnlBusqueda" width="100%" columns="3">
+
+                                <h:outputLabel value="Buscar por: " styleClass="label"/>
+
+                                <h:panelGrid columns="4" style="text-align: center !important;">
+                                    <p:radioButton id="opt1" for="tipoBusqueda" itemIndex="0" />
+                                    <h:outputLabel for="opt1" value="Identificación&#160;&#160;&#160; " styleClass="label"/>
+
+                                    <p:radioButton id="opt2" for="tipoBusqueda" itemIndex="1" />
+                                    <h:outputLabel for="opt2" value="Usuario" styleClass="label"/>
+                                </h:panelGrid>
+
+
+                                 <p:selectOneRadio id="tipoBusqueda" value="#{rolxUsuarioControlador.rolxUsuarioForm.tipoBusqueda}" layout="custom" styleClass="label">
+                                    <f:selectItem itemLabel="Cédula" itemValue="C" />
+                                    <f:selectItem itemLabel="Usuario" itemValue="U" />
+                                    <p:ajax listener="#{rolxUsuarioControlador.limpiaBusqueda()}" update="pnlBusqueda, :formEditaUsuario:pnlPrincipal" />
+                                </p:selectOneRadio>
+
+                                <p:outputLabel/>
+
+                                <p:inputText id="txtBusqueda" autocomplete="off" value="#{rolxUsuarioControlador.rolxUsuarioForm.busqueda}" onkeyup="this.value = this.value.toUpperCase()" maxlength="20" required="true" requiredMessage="Ingrese un nombre de usuario o una identificación">
+                                    <f:validateLength maximum="20" minimum="1" />
+                                </p:inputText>
+
+                                <p:outputLabel/>
+
+                                <p:outputLabel/>
+                                <p:message for="txtBusqueda" />
+
+                        </h:panelGrid>
+
+                        <br/>
+                        <center>
+                            <p:commandButton  icon="ui-icon-search" value="Buscar" action="#{rolxUsuarioControlador.buscarUsuario()}" update="pnlBusqueda, :formEditaUsuario:pnlPrincipal" />
+                        </center> 
+
+
+                    </p:panel> 
+                </p:panel>
+            </h:form>
+
+
+            <h:form id="formEditaUsuario" >
+                <p:panel id="pnlPrincipal" visible="#{rolxUsuarioControlador.rolxUsuarioForm.muestraPanel}">
+                    
+                    <p:dataTable style="width: 100%;" id="rolesTable"           
+                                 var="rol" value="#{rolxUsuarioControlador.rolxUsuarioForm.usuario.segRolxusuarioTblList}" rowKey="#{rol.roIdRol}">
+
+                        <f:facet name="header" >
+                            <h:outputText value="Roles asignados al usuario #{rolxUsuarioControlador.rolxUsuarioForm.usuario.usUsuario}" styleClass="label"/>
+                        </f:facet>
+
+                        <p:column width="20%" id="editar" style="text-align: center; margin: 0 auto"  headerText="Editar">
+                            <p:commandButton oncomplete="PF('dialogRol').show();" action="#{rolxUsuarioControlador.muestraFormularioRol()}" icon="ui-icon-pencil" title="Editar" update=":formRol:formularioRol">
+                                <f:setPropertyActionListener value="#{rol}" target="#{rolxUsuarioControlador.rolxUsuarioForm.rolxUsuario}" />
+                            </p:commandButton>
+                        </p:column>
+                        
+                        <p:column id="rol" style="text-align: center; margin: 0 auto" headerText="Rol">
+                            <h:outputText value="#{rol.roIdRol.roNombre}" />
+                        </p:column>
+
+                        <p:column id="descripcion" style="text-align: center; margin: 0 auto" headerText="Descripción">
+                            <h:outputText value="#{rol.roIdRol.roDescripcion}" />
+                        </p:column>
+
+                        <p:column id="estAsigna" style="text-align: center; margin: 0 auto" headerText="Estado Asignación">
+                            <h:outputText value="#{rol.ruEstado}" />
+                        </p:column>
+
+                        
+                    </p:dataTable>
+
+                    <br/><br/><br/>
+                </p:panel>
+
+            </h:form>
+
+            <p:dialog header="Usuarios" dynamic="true" id="dialogUsuarios" widgetVar="dialogUsuarios" modal="true" showEffect="fade" hideEffect="fade" closable="false" resizable="false">
+                <div align="center">
+                    <p:panelGrid id="formulario" columns="2" style="margin: 0 auto; width: 700px;">
+                        <p:dataTable style="width: 100%;" id="institucionesTable"
+                                     var="usuario" value="#{rolxUsuarioControlador.rolxUsuarioForm.usuarios}" rowKey="#{usuario.usIdUsuario}" paginator="true" rows="10"  paginatorPosition="bottom">
+
+                            <p:column width="35" id="editar" style="text-align: center; margin: 0 auto"  headerText="Editar">
+                                <p:commandButton oncomplete="PF('dialogUsuarios').hide();" action="#{rolxUsuarioControlador.cargaFormularioUsuario()}" icon="ui-icon-pencil" title="Editar" >
+                                    <f:setPropertyActionListener value="#{usuario}" target="#{rolxUsuarioControlador.rolxUsuarioForm.usuario}" />
+                                </p:commandButton>
+                            </p:column>
+                            
+                            <p:column width="15" id="idUsuario" style="text-align: center; margin: 0 auto" headerText="ID">
+                                <h:outputText value="#{usuario.usIdUsuario}" />
+                            </p:column>
+
+                            <p:column width="100" id="usuario" style="text-align: center; margin: 0 auto" headerText="Usuario">
+                                <h:outputText value="#{usuario.usUsuario}" />
+                            </p:column>
+
+                            <p:column id="nombre" style="margin: 0 auto" headerText="Nombre">
+                                <h:outputText style="text-align: left;" value="#{usuario.usNombrePersona}" />
+                            </p:column>
+
+                            <p:column width="90" id="identificacion" style="text-align: center; margin: 0 auto" headerText="Identificación">
+                                <h:outputText value="#{usuario.usNumDocumento}" />
+                            </p:column>
+
+
+
+                        </p:dataTable>
+                    </p:panelGrid>
+
+                    <p:separator style="height:5px" />
+
+                    <p:commandButton value="Cancelar" action="#{rolxUsuarioControlador.cierraFormulario()}" update=":#{p:component('dialogUsuarios')}" icon="ui-icon-close" title="Cancelar" />
+
+                </div>
+            </p:dialog>
+
+            <h:form id="formRol">
+                <p:dialog header="Rol" dynamic="true" id="dialogRol" widgetVar="dialogRol" modal="true" showEffect="fade" hideEffect="fade" closable="false" resizable="false">
+
+                    <div align="center">
+                        <p:panelGrid id="formularioRol" columns="2" columnClasses="backgroundColumn, sizeColumnSecondary">
+
+                            <h:panelGroup>
+                                <h:outputText value="Rol" styleClass="label"/>
+                                <h:outputText value=" *" styleClass="labelRed"/>
+                            </h:panelGroup>
+                            <p:column>
+                                <p:selectOneMenu disabled="#{rolxUsuarioControlador.rolxUsuarioForm.disabledSelectRol}" id="somRoles" value="#{rolxUsuarioControlador.rolxUsuarioForm.rolxUsuario.roIdRol.roIdRol}" 
+                                                 validatorMessage="Seleccione un Rol"  required="true">
+                                    <f:selectItem itemLabel="Selecione una Opción" itemValue="0" />
+                                    <f:selectItems value="#{rolxUsuarioControlador.rolxUsuarioForm.roles}" var="itemSeleccionado" itemLabel="#{itemSeleccionado.roNombre}" itemValue="#{itemSeleccionado.roIdRol}"/>
+                                    <f:validateDoubleRange minimum="1"  />
+                                    <p:ajax listener="#{rolxUsuarioControlador.cargaFormulario()}"  update="formularioRol"/>
+                                </p:selectOneMenu>
+                                <p:message id="msgRoles" for="somRoles" />
+                            </p:column>
+
+                            <h:panelGroup>
+                                <h:outputText value="Nombre del Rol" styleClass="label"/>
+                                <h:outputText value=" " styleClass="labelRed"/>
+                            </h:panelGroup>
+                            <p:column>
+                                <p:inputText readonly="true" id="txtRol" style="width: 100%" value="#{rolxUsuarioControlador.rolxUsuarioForm.rolxUsuario.roIdRol.roNombre}"/>
+                            </p:column>
+
+                            <h:panelGroup>
+                                <h:outputText value="Descripción" styleClass="label"/>
+                                <h:outputText value=" " styleClass="labelRed"/>
+                            </h:panelGroup>
+                            <p:column>
+                                <p:inputText readonly="true" id="txtDescripcion" style="width: 100%" value="#{rolxUsuarioControlador.rolxUsuarioForm.rolxUsuario.roIdRol.roDescripcion}" />
+                            </p:column>
+
+                            <h:panelGroup>
+                                <h:outputText value="Estado" styleClass="label"/>
+                                <h:outputText value=" *" styleClass="labelRed"/>
+                            </h:panelGroup>
+                            <p:selectOneMenu id="somEstado" style="width:125px" value="#{rolxUsuarioControlador.rolxUsuarioForm.rolxUsuario.ruEstado}">
+                                <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="I" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+
+                        <p:separator style="height:5px" />
+
+                        <p:commandButton value="Guardar" action="#{rolxUsuarioControlador.muestraConfirmacion()}" update="formularioRol" icon="ui-icon-disk" title="Guardar" />
+                        <p:commandButton value="Cancelar" action="#{rolxUsuarioControlador.cierraFormulario()}" update="dialogRol" icon="ui-icon-close" title="Cancelar" />
+
+                    </div>
+
+                </p:dialog>
+
+                <p:dialog header="Mensaje" id="dlgConfirmacion" widgetVar="dlgConfirmacion" modal="true" showEffect="fade" hideEffect="fade" resizable="false" closable="false" width="300px">
+                    <h:panelGrid columns="1" style="margin:0 auto" >
+                        <center>
+                            <h:panelGrid columns="2">
+
+                                <h:graphicImage value="/resources/img/plantilla/pregunta.jpg" width="50" height="50" />
+                                <p:outputLabel value="¿Desea Guardar el Registro?"/>
+
+                            </h:panelGrid>
+                            <br/>
+
+                            <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto">
+                                <p:commandButton value="Aceptar" icon="ui-icon-check" action ="#{rolxUsuarioControlador.guardaAsignacionRol()}" update="dialogRol, dlgConfirmacion, :#{p:component('rolesTable')}" title="Aceptar"/>
+                                <p:commandButton value="Cancelar" icon="ui-icon-close" update="dlgConfirmacion" title="Cancelar"/>
+                            </h:panelGrid>
+                        </center>
+
+                    </h:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
+        
+
+    </ui:define>
+</ui:composition>
+

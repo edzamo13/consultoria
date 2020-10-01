@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+        <p:dialog id="mdlNewHierLev" header="Crear Grupo" widgetVar="dlg2" showEffect="fold" hideEffect="fold" modal="true" height="400">
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">               
+                <h:panelGrid id="grid" columns="3" cellpadding="5">                    
+
+                    <p:outputLabel value="Nombre:" for="inpNombre" />
+                    <p:inputText id="inpNombre" value="#{groupChatNotificationView.groupChatNotification.nameGcn}" required="true" validatorMessage="Introduzca datos correctos(Alfanuméricos)">
+                        <f:validateRegex pattern="^[a-zA-Z0-9\s]{1,100}$" />
+                    </p:inputText>
+                    <p:message for="inpNombre"/>
+
+                    <p:outputLabel value="Activo:" for="inpActivo"/>
+                    <p:selectBooleanCheckbox id="inpActivo" value="#{groupChatNotificationView.groupChatNotification.activeGcn}" /> 
+                    <p:message for="inpActivo"/>
+
+                    <p:outputLabel value="Comunicacion con Centros:" for="inpComCentros"/>
+                    <p:selectBooleanCheckbox id="inpComCentros" value="#{groupChatNotificationView.groupChatNotification.comunicationCentersGcn}" /> 
+                    <p:message for="inpComCentros"/>
+
+                    <p:outputLabel value="Tipo:" for="inpTipo" />
+                    <p:selectOneMenu id="inpTipo" value="#{groupChatNotificationView.groupChatNotification.groupTypeGcn}" required="true">
+                        <f:selectItem itemLabel="Escoja uno"/>
+                        <f:selectItem itemLabel="Chat" itemValue="Chat" />
+                        <f:selectItem itemLabel="Notificacion" itemValue="Notificacion" />
+                    </p:selectOneMenu>
+                    <p:message for="inpTipo"/>
+
+                    <p:outputLabel value="Descripcion:" for="inpDescripcion" />
+                    <p:inputTextarea id="inpDescripcion" rows="6" cols="33" value="#{groupChatNotificationView.groupChatNotification.descriptionGcn}" required="true" maxlength="100">
+                    </p:inputTextarea>
+                    <p:message for="inpDescripcion"/>
+
+                    <br></br>
+                    <br></br>
+
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{groupChatNotificationView.save}" icon="ui-icon-disk"/>
+                            <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" 
+                                             action="groupChatNotification?faces-redirect=true" />
+                        </h:panelGrid>
+                    </div>
+
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

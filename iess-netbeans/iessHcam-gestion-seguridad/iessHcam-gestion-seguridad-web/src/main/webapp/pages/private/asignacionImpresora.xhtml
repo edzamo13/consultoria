@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/template/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form id="formImpresora">
+
+            <p:growl id="growl" life="8000" autoUpdate="true" showDetail="true" globalOnly="true" showSummary="false"/> 
+
+            <p:panel header="Asignación de Impresora" >
+
+                <h:panelGrid id="pnlPlanilla" columns="2" style="margin: 0 auto; text-align: center; width: 100%" >
+
+                    <p:outputLabel value="Impresora de Manillas:"/>
+
+                    <p:selectOneMenu id="somImpresoras" value="#{asignacionImpresoraControlador.asignacionImpresoraForm.impresora}" tabindex="#{asignacionImpresoraControlador.asignacionImpresoraForm.tabIndex}" converter="impresoraConverter" panelStyle="width:180px"
+                                     effect="fade" var="i" style="width:600px" filter="true" filterMatchMode="startsWith">
+                        <f:selectItem itemLabel="Selecione una Impresora" itemValue="" />
+                        <f:selectItems value="#{asignacionImpresoraControlador.asignacionImpresoraForm.impresoras}" var="impresora" itemLabel="#{impresora.imDirecIpImpre}" itemValue="#{impresora}" />
+
+                        <p:column style="width:20px">
+                            <h:outputText value="#{i.imDirecIpImpre}" />
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="#{i.imDescripcion}" />
+                        </p:column>
+                        <p:ajax update="pnlInformacionImpresora"/>
+                    </p:selectOneMenu>
+
+                </h:panelGrid>
+
+                <br/>
+                
+                <p:panel header="Información de la Impresora" id="pnlInformacionImpresora" style="border-style: none" visible="#{not empty asignacionImpresoraControlador.asignacionImpresoraForm.impresora}">
+                    <p:panelGrid style="margin: 0 auto; text-align: center; width: 100%" >
+                        <p:row>
+                            <p:column styleClass ="backgroundColumn">
+                                <h:outputText escape="false" value="Dirección Ip  &lt;br/&gt;  Impresora:" styleClass="label"/>
+                            </p:column>
+                            <p:column style="text-align: left">
+                                <h:outputText value="#{asignacionImpresoraControlador.asignacionImpresoraForm.impresora.imDirecIpImpre}" />
+                            </p:column>
+
+                            <p:column styleClass ="backgroundColumn">
+                                <h:outputText value="Tipo de Manilla:" styleClass="label"/>
+                            </p:column>
+                            <p:column style="text-align: left">
+                                <h:outputText value="#{asignacionImpresoraControlador.asignacionImpresoraForm.impresora.tiIdTipoManilla.tiDescripcion}" />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="1" styleClass ="backgroundColumn">
+                                <h:outputText value="Descripción:" styleClass="label"/>
+                            </p:column>
+                            <p:column colspan="3" style="text-align: left" >
+                                <h:outputText value="#{asignacionImpresoraControlador.asignacionImpresoraForm.impresora.imDescripcion}" />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>   
+
+                    <br/>
+                        
+                    <br/>
+                    
+                    <p:dataTable style="width: 100%;"                  
+                                 var="asignacion" value="#{asignacionImpresoraControlador.asignacionImpresoraForm.impresora.asignacionTblList}" rowKey="#{asignacion.asIdAsignacion}" paginator="true" rows="10"  
+                                 id="asignacionTbl" paginatorPosition="bottom" >
+
+                        <f:facet name="header">
+
+                            <p:panelGrid style="border-width: 0px !important">
+                                
+                                <p:column style="border-width: 0px !important">
+                                  <p:outputLabel value="Usuarios Asignados a la Impresora"/>
+                                  <p:commandButton value="Agregar" style="float: left; clear: left;" action="#{asignacionImpresoraControlador.muestraFormulario()}" update=":#{p:component('formulario')}" icon="ui-icon-plusthick" process="@this" resetValues="true" />
+                                </p:column>
+                            </p:panelGrid>
+                        </f:facet>
+ 
+                        
+                        <p:column width="5%" id="editar" style="text-align: center; margin: 0 auto"  headerText="Editar">
+                            <p:commandButton action="#{asignacionImpresoraControlador.cargaFormulario(asignacion)}" update=":#{p:component('formulario')}" process="@this" icon="ui-icon-pencil" title="Editar"/>                           
+                        </p:column>
+
+                        <p:column width="10%" id="ipUsuario" style="text-align: center; margin: 0 auto" headerText="IP Usuario">
+                            <h:outputText value="#{asignacion.asDirecIpUsua}" />
+                        </p:column>
+
+                        <p:column id="descripcion" headerText="Descripción Usuario">
+                            <h:outputText value="#{asignacion.asDescripcion}" />
+                        </p:column>
+
+                        <p:column width="4%" id="estado" style="text-align: center; margin: 0 auto" headerText="Estado">
+                            <h:outputText value="#{asignacion.asEstado}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </p:panel>
+
+            </p:panel>
+
+
+            <p:dialog header="Asignación de Impresora" dynamic="true" id="dlgImpresora" widgetVar="dlgImpresora" width="550" modal="true" showEffect="fade" hideEffect="fade" closable="false" resizable="false">
+                <div align="center">
+                    <p:panelGrid id="formulario" columns="2" columnClasses="backgroundColumn, sizeColumnSecondary" style="width: 100%">
+                        <h:panelGroup>
+                            <h:outputText value="Dirección IP Usuario:" styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:column>
+                            <p:inputText id="txtIp" autocomplete="off" maxlength="45" style="width: 100%" value="#{asignacionImpresoraControlador.asignacionImpresoraForm.asignacion.asDirecIpUsua}"
+                                         required="true" requiredMessage="Ingrese una Dirección IP" onkeyup="this.value = this.value.toUpperCase()">
+                                <f:validateLength maximum="45" minimum="1" />
+                            </p:inputText>
+                            <p:message for="txtIp" />
+                        </p:column>
+
+                        <h:panelGroup>
+                            <h:outputText value="Descripción:" styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:column>
+                            <p:inputTextarea id="txtDesccripcion" rows="7" maxlength="190" style="width: 100%" value="#{asignacionImpresoraControlador.asignacionImpresoraForm.asignacion.asDescripcion}"
+                                             required="true" requiredMessage="Ingrese una Descripción" autoResize="false">
+                                <f:validateLength maximum="120" minimum="1" />
+                            </p:inputTextarea>
+                            <p:message for="txtDesccripcion" />
+                        </p:column>
+
+                        <h:panelGroup>
+                            <h:outputText value="Estado " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:selectOneMenu id="estado" style="width:125px" value="#{asignacionImpresoraControlador.asignacionImpresoraForm.asignacion.asEstado}">
+                            <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                            <f:selectItem itemLabel="INACTIVO" itemValue="I" />
+                        </p:selectOneMenu>
+
+                    </p:panelGrid>
+
+                    <p:separator style="height:5px" />
+
+                    <p:commandButton value="Guardar" actionListener="#{asignacionImpresoraControlador.muestraConfirmacion()}" update="formulario" icon="ui-icon-disk" title="Guardar" />
+                    <p:commandButton value="Cancelar" update="dlgImpresora" icon="ui-icon-close" title="Cancelar" />
+
+                </div>
+            </p:dialog>
+
+
+
+            <p:dialog header="Mensaje" id="dlgConfirmacion" widgetVar="dlgConfirmacion" modal="true" showEffect="fade" hideEffect="fade" resizable="false" closable="false" width="300px">
+                <h:panelGrid columns="1" style="margin:0 auto" >
+                    <center>
+                        <h:panelGrid columns="2">
+
+                            <h:graphicImage value="/resources/img/plantilla/pregunta.jpg" width="50" height="50" />
+                            <p:outputLabel value="¿Desea Guardar el Registro?"/>
+
+                        </h:panelGrid>
+                        <br/>
+
+                        <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto">
+                            <p:commandButton value="Aceptar" icon="ui-icon-check" id="btnConfirmacion" action ="#{asignacionImpresoraControlador.guardaFormularioIngreso()}" update=":#{p:component('formImpresora')}" title="Aceptar"/>
+                            <p:commandButton value="Cancelar" icon="ui-icon-close" update="dlgConfirmacion" title="Cancelar"/>
+                        </h:panelGrid>
+                    </center>
+
+                </h:panelGrid>
+
+            </p:dialog>
+
+
+            <p:blockUI block="formImpresora" trigger=":#{p:component('btnConfirmacion')} ">
+                <h:graphicImage value="/resources/img/plantilla/iconWaiting.gif" width="50" height="50" />
+            </p:blockUI>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

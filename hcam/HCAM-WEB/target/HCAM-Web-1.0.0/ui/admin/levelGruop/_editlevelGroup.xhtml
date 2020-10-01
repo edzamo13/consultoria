@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="form-editLG">
+        <p:dialog header="Modificar Nivel Jerarquico" widgetVar="dlg3" modal="true" height="400" showEffect="fold" hideEffect="fold">
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">  
+                 <h:panelGrid id="gridEdit" columns="2" cellpadding="5">
+                  <p:outputLabel for="somGroup" value="Grupo:" style="font-weight:bold" />
+                    <p:selectOneMenu id="somGroup"  style="width:175px"  value="#{levelGroupView.groupChatNotification.idGcn}" disabled="true" >
+                        <f:selectItem itemLabel="#{levelGroupView.selectedGroupChatNotification.nameGcn}"  itemValue="#{levelGroupView.selectedGroupChatNotification.idGcn}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="" />
+                 
+                <p:dataTable id="radioDT" var="Heral" value="#{levelGroupView.lstHierarchicalLevel}" selection="#{levelGroupView.lstEditHierarchicalLevel}" 
+                         rowKey="#{Heral.idHle}" style="margin-bottom:0 ;width: 200px;">
+                       <f:facet name="header">
+                            Asignar Jerarquias
+                        </f:facet>   
+                       <p:column selectionMode="multiple" style="width:15px;text-align:center"/>
+                       <p:column headerText="Jerarquias">
+                          <h:outputText value="#{Heral.nameHle}" />
+                       </p:column>
+                                                       
+                </p:dataTable>
+                    <br></br>
+                    <br></br>
+                <div align="center"> 
+               <h:panelGrid columns="2" cellpadding="5" >
+                   <p:commandButton id="btnGuar" value="Guardar" update=":form-editLG:gridEdit" action="#{levelGroupView.edit()}" icon="ui-icon-disk"/>
+                   <p:commandButton id="btnCancel" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" action="adminlevelGroup?faces-redirect=true"/>
+              </h:panelGrid>
+                </div>
+              </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

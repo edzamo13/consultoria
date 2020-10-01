@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form> 
+
+            <br />
+            <p>Facturacion HCAM1</p>
+            <p>Generar Proceso Completo</p>
+            <h:commandButton id="general"
+                             action="#{lectorInformacionServicioDependencia.generarPlanillaje()}" value="Generar Planillaje" />
+            <p>Honorarios Medicos</p>
+            <h:commandButton id="obtenerRegistrosHM"
+                             action="#{lectorInformacionServicioDependencia.obtenerRegistrosHM}" value="Honorarios Medicos" />
+            
+            <p>Honorarios Medicos CE</p>
+            <h:commandButton id="hmce"
+                             action="#{lectorInformacionServicioDependencia.obtenerRegistrosCE}" value="Honorarios Medicos CE" />
+                             
+
+            <p>Informacion de consulta por ejbF</p>
+            <h:commandButton id="infodependenciaEJBF"
+                             action="#{lectorInformacionServicioDependencia.obtenerRegistrosFarmacos}" value="Recupera Farmacos por ejb" />
+             <p>Informacion de laboratorios por ejbF</p>                    
+            <h:commandButton id="infodependenciaEJBLab"
+                             action="#{lectorInformacionServicioDependencia.obtenerRegistrosLaboratorio}" value="Recupera Laboratorio por ejb" />
+            <p>Informacion de consulta por ejbFS</p>
+
+            <h:commandButton id="infodependenciaEJBFS"
+                             action="#{lectorInformacionServicioDependencia.obtenerRegistrosFarmacosSer}" value="Recupera Farmacos de servicios por ejb" />
+
+            <p>Informacion de consulta por ejbI</p>
+            <h:commandButton id="infodependenciaEJBI"
+                             action="#{lectorInformacionServicioDependencia.obtenerRegistrosImagen}" value="Recupera Imagenes por ejb" />
+
+            <p>Insumos Servicios</p>
+            <h:commandButton id="infodependenciaEJBServic"
+                             action="#{lectorInformacionServicioDependencia.obtenerInsumosServicios()}" value="Recupera Insumos Servicios por ejb" />                 
+            <p>Insumos Enfermeria</p>
+            <h:commandButton id="infodependenciaEJBServicEnf"
+                             action="#{lectorInformacionServicioDependencia.obtenerInsumosEnfermeria()}" value="Recupera Insumos Enfermeria por ejb" />
+            <p>Derechos de Sala</p>
+            <h:commandButton id="infodependenciaEJBDerechoSala"
+                             action="#{lectorInformacionServicioDependencia.obtenerRegistrosDerechosSala}" value="Derechos de Sala" />
+
+            <p>Equipos Especiales Quirofano </p>
+            <h:commandButton id="infodependenciaEJBEquipQuir"
+                             action="#{lectorInformacionServicioDependencia.obtenerEquiposQuirofano()}" value="Obtener registros Equipos Quirofano" />
+
+            <p>Equipos Especiales Emergencias </p>
+            <h:commandButton id="infodependenciaEJBEquipEmerg"
+                             action="#{lectorInformacionServicioDependencia.obtenerEquiposEmergencias()}" value="Obtener registros Equipos Emergencias" />
+
+            <p>Equipos Especiales Hospitalizacion </p>
+            <h:commandButton id="infodependenciaEJBEquipHosp"
+                             action="#{lectorInformacionServicioDependencia.obtenerEquiposHospitalizacion()}" value="Obtener registros Equipos Hospitalizacion" />
+
+            <p>Procedimientos</p>
+            <h:commandButton id="procedimientoEmer"
+                             action="#{lectorInformacionServicioDependencia.obtenerProcedimientos()}" value="Obtener Procedimientos Emergencia" />
+            
+            <h:commandButton id="procedimientoRehabilitacion"
+                             action="#{lectorInformacionServicioDependencia.obtenerProcedimientosRehabilitacion()}" value="Obtener Procedimientos Rehabilitacion" />
+            
+            <p>Servicios Institucionales </p>
+            <h:commandButton id="infodependenciaEJBServInstit"
+                             action="#{lectorInformacionServicioDependencia.obtenerServiciosInstitucionales()}" value="Obtener registros Servicios Institucionales" />
+            
+            <p>Gases Medicinales </p>
+            <h:commandButton id="infodependenciaEJBGasesMedic"
+                             action="#{lectorInformacionServicioDependencia.obtenerRegistrosGasesMedicinales()}" value="Obtener registros Gases Medicinales" />
+            
+            <p>Altas Medicas </p>
+            <h:commandButton id="infodependenciaEJBAltas"
+                             action="#{lectorInformacionServicioDependencia.obtenerRegistrosAltasHospitalarias()}" value="Obtener registros Altas" />
+
+
+        </h:form>
+
+    </h:body>
+</html>

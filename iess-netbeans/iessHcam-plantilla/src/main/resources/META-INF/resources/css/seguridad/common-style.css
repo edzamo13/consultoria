@@ -1,0 +1,22 @@
+html, body 
+{ 
+    height: 100%; 
+} 
+#header{
+    height: 100px;
+    margin: -8px -8px 10px;
+}
+
+#content{
+    min-height: 100%; 
+    height: auto !important; /*Cause footer to stick to bottom in IE 6*/
+    height: 100%; 
+    margin: 0 auto -100px; /*Allow for footer height*/
+    vertical-align:bottom;
+}
+
+#footer{
+    height: 20px; /*Push must be same height as Footer */
+}
+
+

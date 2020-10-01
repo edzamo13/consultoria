@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+        <p:dialog id="dlgParamQueries" header="Crear Parámetro de Query" widgetVar="dlg2" showEffect="fold" hideEffect="fold" modal="true" >
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">
+                <h:panelGrid id="grid" columns="3" cellpadding="5">
+
+                    <p:outputLabel for="nombre" value="Nombre:" style="font-weight:bold" />
+                    <p:inputText id="nombre" value="#{serviciosView.Center.codeCet}" required="true" label="Nombre"/>
+                    <p:message for="nombre"/>
+
+                    <p:outputLabel for="tipo" value="Tipo:" style="font-weight:bold" />
+                    <p:inputText id="tipo" value="#{serviciosView.Center.codeCet}" required="true" label="Tipo"/>
+                    <p:message for="tipo"/>
+
+                    <p:outputLabel for="tamanio" value="Tamaño:" style="font-weight:bold" />
+                    <p:inputText id="tamanio" value="#{serviciosView.Center.codeCet}" required="true" label="Tamaño"/>
+                    <p:message for="tamanio"/>
+
+                    <p:outputLabel for="es" value="E/S:" style="font-weight:bold" />
+                    <p:selectOneMenu id="es" value="#{selectOneMenuView.console}" style="width:125px">
+                        <f:selectItem itemLabel="Entrada" itemValue="" />
+                        <f:selectItem itemLabel="Salida" itemValue="" />
+                    </p:selectOneMenu>
+                    <p:message for="es"/>
+
+                    <p:outputLabel value="Activo:" for="active" style="font-weight:bold"  />
+                    <p:selectBooleanCheckbox id="active" value="#{serviciosView.Center.active}" />
+
+                    <br></br>
+                    <br></br>
+
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{serviciosView.save(serviciosView.centers)}" icon="ui-icon-disk"/>
+                            <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" action="adminCenter?faces-redirect=true" />
+                        </h:panelGrid>
+                    </div>
+
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

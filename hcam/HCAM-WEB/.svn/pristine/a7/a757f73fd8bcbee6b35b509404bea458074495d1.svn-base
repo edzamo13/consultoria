@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dataTable id="emergencieskeysDataTable" var="emergencieskeys" value="#{emergenciesKeysView.lstEmergenciesKeys}" sortBy="#{emergencieskeys.idEmk}">
+            
+            <p:column headerText="Nombre" sortBy="#{emergencieskeys.nameEmk}" filterBy="#{emergencieskeys.nameEmk}" filterMatchMode="contains">
+                <h:outputText value="#{emergencieskeys.nameEmk}" />
+            </p:column>
+
+            <p:column headerText="Descripcion" sortBy="#{emergencieskeys.descriptionEmk}" filterBy="#{emergencieskeys.descriptionEmk}" filterMatchMode="contains">
+                <h:outputText value="#{emergencieskeys.descriptionEmk}" />
+            </p:column>
+
+            <p:column headerText="Prioridad" sortBy="#{emergencieskeys.priorityEmk}" filterBy="#{emergencieskeys.priorityEmk}" filterMatchMode="contains">
+                <h:outputText value="#{emergencieskeys.priorityEmk}" />
+            </p:column>
+            <p:column headerText="Editar" style="text-align: center" width="40">
+                <p:commandButton  icon="ui-icon-pencil" 
+                                  title="Editar"
+                                  actionListener="#{emergenciesKeysView.setSelected(emergencieskeys)}"
+                                  onclick="PF('dlg3').show();"/> 
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton action="#{emergenciesKeysView.remove(emergencieskeys)}" 
+                                 icon="ui-icon-trash"
+                                 title="Eliminar">
+                    <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar la Clave?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+</ui:composition>
+

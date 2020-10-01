@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      >
+
+    <ui:composition>
+
+        <p:dialog header="Usuario sin Logear" widgetVar="sessionTimeOutDialog"
+                  modal="true"  closable="false" width="400" resizable="false"
+                  visible="#{plantillaControlador.plantillaBb.salida.usuario == null or plantillaControlador.plantillaBb.salida.usuario == ''}" 
+                  rendered="#{plantillaControlador.plantillaBb.salida.usuario == null or plantillaControlador.plantillaBb.salida.usuario == ''}">
+            <center>
+                <img src="#{resource['img/plantilla/noLogin.png']}" height="110" width="125" alt=""/>
+                <br/>
+                <br/>
+                <h:outputText value="Usted no se ha logueado favor pulse sobre el botón para volver a acceder a la aplicación" />
+                <br/>
+                <br/>
+                <p:commandButton action="#{plantillaControlador.cerrarSession()}" value="Logearse" icon="ui-icon-unlocked"/>
+            </center>
+        </p:dialog>
+
+    </ui:composition>
+</html>

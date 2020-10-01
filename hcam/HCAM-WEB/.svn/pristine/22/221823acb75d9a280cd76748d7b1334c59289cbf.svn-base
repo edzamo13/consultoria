@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+        <p:dialog id="dlgQueries" header="Crear Query" widgetVar="dlg2" showEffect="fold" hideEffect="fold" modal="true" >
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">               
+                <h:panelGrid id="grid" columns="3" cellpadding="5">
+
+                    <p:outputLabel for="query" value="Query:" style="font-weight:bold" />
+                    <p:inputText id="query" value="#{serviciosView.centers.codeCet}" required="true" label="Query"/>
+                    <p:message for="query"/>
+                    
+                    <p:outputLabel for="orden" value="Orden:" style="font-weight:bold" />
+                    <p:inputText id="orden" value="#{serviciosView.centers.codeCet}" required="true" label="Orden"/>
+                    <p:message for="orden"/>
+
+                    <p:outputLabel value="Activo:" for="active" style="font-weight:bold" />
+                    <p:selectBooleanCheckbox id="active" value="#{incidentCategoriesView.incidentCategory.activeInc}" />
+                    
+                    <br></br>
+                    <br></br>
+
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{serviciosView.save(serviciosView.centers)}" icon="ui-icon-disk"/>
+                            <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" action="adminCenter?faces-redirect=true" />
+                        </h:panelGrid>
+                    </div>
+
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

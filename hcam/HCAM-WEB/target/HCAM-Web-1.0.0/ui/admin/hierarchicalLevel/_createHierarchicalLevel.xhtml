@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+        <p:dialog id="mdlNewHierLev" header="Crear Nivel Jerarquico" widgetVar="dlg2" modal="true" height="400" showEffect="fold" hideEffect="fold">
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">               
+                <h:panelGrid id="grid" columns="3" cellpadding="5">                    
+
+
+                    <p:outputLabel value="Nombre:" for="inpNombre" />
+                    <p:inputText id="inpNombre" value="#{hierarchicalLevelView.hierarchicalLevel.nameHle}" required="true" validatorMessage="Introduzca datos correctos(Alfanuméricos, no mayor a 15)">
+                        <f:validateRegex pattern="^[a-zA-Z0-9\s]{1,15}$" />
+                    </p:inputText>
+                    <p:message for="inpNombre"/>
+                    
+                    <p:outputLabel value="Nivel Jerarquico Superior" for="grupoPertenece" />
+                    <p:selectOneMenu id="grupoPertenece" value="#{hierarchicalLevelView.idPadre}" >
+                        <f:selectItem itemLabel="Sin grupo" itemValue="#{0}" />
+                        <f:selectItems value="#{hierarchicalLevelView.lstHierarchicalLevel}" 
+                                       var="entry" itemValue="#{entry.idHle}" itemLabel="#{entry.nameHle}"/>
+                    </p:selectOneMenu>
+                    <p:message for="grupoPertenece"/>
+                    
+                    <p:outputLabel value="Prioridad:" for="prioridadMenu" />
+                    <p:selectOneMenu id="prioridadMenu" value="#{hierarchicalLevelView.hierarchicalLevel.priorityHle}" required="true">
+                        <f:selectItem itemLabel="Escoja uno"/>
+                        <f:selectItem itemLabel="Alto" itemValue="Alto" />
+                        <f:selectItem itemLabel="Medio" itemValue="Medio" />
+                        <f:selectItem itemLabel="Bajo" itemValue="Bajo" />
+                    </p:selectOneMenu>
+                    <p:message for="prioridadMenu"/>
+
+                    <p:outputLabel value="Descripcion:" for="inpDescripcion" />
+                    <p:inputTextarea id="inpDescripcion" rows="6" cols="33" value="#{hierarchicalLevelView.hierarchicalLevel.descriptionHle}" required="true" maxlength="100">
+                    </p:inputTextarea>
+                    <p:message for="inpDescripcion"/>
+
+                    <br></br>
+                    <br></br>
+
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{hierarchicalLevelView.save}" icon="ui-icon-disk"/>
+                            <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" action="adminHierarchicalLevel?faces-redirect=true" />
+                        </h:panelGrid>
+                    </div>
+
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

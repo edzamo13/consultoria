@@ -1,0 +1,213 @@
+<!DOCTYPE html [
+    <!ENTITY nbsp "&#160;">
+    <!ENTITY bull "&#8226;">
+    <!ENTITY copy "&#169;">
+    ]>
+    <html xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:ui="http://java.sun.com/jsf/facelets"
+          xmlns:p="http://primefaces.org/ui">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <link rel="shortcut icon" type="image/png" href="#{request.contextPath}/resources/main/images/favicon.png" />
+            </f:facet>
+
+            <title>HCAM</title>
+            <h:outputStylesheet name="main/css/showcase.css" />
+            <h:outputStylesheet name="main/css/perfect-scrollbar.css" />
+            <h:outputStylesheet name="main/css/sh.css" />
+            <h:outputStylesheet name="main/css/customStyles.css" />
+            <h:outputScript name="jquery/jquery.js" library="primefaces" />
+            <h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
+            <h:outputScript name="main/js/perfect-scrollbar.js" />
+            <h:outputScript name="main/js/showcase.js" />
+            <ui:insert name="head" />
+
+            <!--            <script type="text/javascript">
+                            var _gaq = _gaq || [];
+                            _gaq.push(['_setAccount', 'UA-12200033-1']);
+                            _gaq.push(['_trackPageview']);
+            
+                            (function () {
+                                var ga = document.createElement('script');
+                                ga.type = 'text/javascript';
+                                ga.async = true;
+                                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                                var s = document.getElementsByTagName('script')[0];
+                                s.parentNode.insertBefore(ga, s);
+                            })();
+                        </script>-->
+
+
+        </h:head>
+
+        <h:body >
+
+            <!-- PC CONTENT STARTS HERE-->
+            <div class="PC">
+
+                <div id="MENUSIDE">
+                    <div id="MENUSIDEindent">
+                        <span id="LOGO" >
+                            <h:graphicImage name="main/images/iess_cabecera.png" />
+                        </span>
+
+                        <!--                        <span id="SubMenu-Admin" class="MenuSideMainLink bordersOfMenuSide" onclick="Showcase.openSubMenu(this);" style="display: none"><h:graphicImage name="main/images/catalogoGray.png" /><h:graphicImage styleClass="hiddenIcons" name="main/images/catalogoRed.png" /><span class="MainLinkText">Administración</span></span>
+                                                <div class="SubMenuLinkContainer">
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/emergenciesKeys/adminEmergenciesKeys.xhtml">&bull; Claves de Emergencias</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/centers/adminCenter.xhtml">&bull; Centros</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/fileStatus/adminFileStatus.xhtml">&bull; Estado Ficha</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/profiles/adminProfiles.xhtml">&bull; Perfiles</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/users/adminUser.xhtml">&bull; Usuarios</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/hierarchicalLevel/adminHierarchicalLevel.xhtml">&bull; Niveles Jerarquicos</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/groupChatNotification/adminGroupChatNotification.xhtml">&bull; Grupos</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/menus/adminMenu.xhtml">&bull; Menús</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/modules/adminmodules.xhtml" >&bull; Módulos</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/incidentCategories/adminincidentCategories.xhtml" >&bull; Categorías de Incidencia</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/profilesMenus/adminProfilesMenus.xhtml" >&bull; Asignar Menús a Perfiles</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/levelGruop/adminlevelGroup.xhtml" >&bull; Asignar Jerarquias a Grupos</a>
+                                                    <a class="SubMenuLink" href="#{request.contextPath}/ui/admin/userGroup/adminUserGroup.xhtml" >&bull; Asignar Usuarios a Grupos</a>
+                                                </div>-->
+
+
+                        <span id="SubMenu-User" class="MenuSideMainLink bordersOfMenuSide" onclick="Showcase.openSubMenu(this);"><h:graphicImage name="main/images/catalogoGray.png" /><h:graphicImage styleClass="hiddenIcons" name="main/images/catalogoRed.png" /><span class="MainLinkText">Administración</span></span>
+                        <div class="SubMenuLinkContainer">
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/servicios/adminServicio.xhtml">&bull; Servicios</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/tiposServicio/adminTiposServicio.xhtml">&bull; Tipos de Servicio</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/tipoDependencia/adminTipoDependencia.xhtml">&bull; Tipo de Dependencia</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/Dependencia/adminDependencia.xhtml">&bull; Dependencia</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/cabeceraTarifario/adminCabeceraTarifario.xhtml">&bull; Cabecera Tarifario</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/queries/adminQueries.xhtml">&bull; Queries</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/parametrosQuery/adminParamQueries.xhtml">&bull; Parametros de Query</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/detalleTarifario/adminDetalleTarifario.xhtml">&bull; Detalle Tarifario</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/unidadesMedicas/adminUnidadMedica.xhtml">&bull; Unidad Medica</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/areas/adminAreas.xhtml">&bull; Areas</a>
+                            <a class="SubMenuLink" href="#{request.contextPath}/ui/adminHCAM/ubicacion/adminUbicacion.xhtml">&bull; Ubicacion</a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                    restoreMenuState();
+                </script>
+
+                <div id="CONTENTSIDE">
+                    <div id="CONTENTSIDEindent">
+
+                        <!-- header bar start-->
+<!--                        <div class="ContentSideSections" id="PFTopLinksCover" style="height:58px;">-->
+                            <a class="PFTopLinks" id="LOGOTEXTSIDE" href="#{request.contextPath}/ui/index.xhtml">
+                                <!--                                <span class="dispBlock ecugray fontSize30">HCAM</span>-->
+                                <!--                                <span class="dispBlock darkred fontSize30 mediumFont">911</span>-->
+                            </a>
+<!--                            <h:graphicImage name="main/images/cabecera_popupCC.png" class="amaLaVidaImage"/>                            -->
+                            <div class="floatRight ">
+                                <h:outputLabel class="fontSize30 ecublue" value="#{loginBean.strLoggeduser}"/><br/>
+<!--                                <h:form><p:commandButton style="margin-left: 15%;margin-right: auto" action="#{authBackingBean.logout}" value="Logout" /></h:form>-->
+                            </div>
+
+                            <span class="PFTopLinks floatRight boldFont marginRight20" id="themeSwitcher">  
+                                <h:form>
+                                    <!--                                    <h:graphicImage name="main/images/themeswitcher.svg" /><span class="PFDarkText">Temas</span>-->
+                                    <div id="GlobalThemeSwitcher" class="navOverlay">
+                                        <ui:repeat value="#{themeSwitcherView.themes}" var="theme">
+                                            <a href="#" data-theme="#{theme.name}"><span class="ui-theme ui-theme-#{theme}"></span><span class="ui-text">#{theme.displayName}</span></a>
+                                        </ui:repeat>
+                                    </div>
+                                    <p:remoteCommand name="changeTheme" actionListener="#{guestPreferences.changeTheme}" />
+                                </h:form>
+                            </span>
+                            <select id="mobilemenu" class="selectmenu floatLeft">
+                                <option>Menú</option>
+                                <option value="#{request.contextPath}/ui/index.xhtml" class="LEVEL1" >Home</option>
+                                <optgroup id="mobileMenuAdmin" label="Administración" class="LEVEL1" style="display: none">
+                                    <option value="#{request.contextPath}/ui/admin/emergenciesKeys/adminEmergenciesKeys.xhtml" class="LEVEL1">&bull;Claves de Emergencia</option>
+                                    <option value="#{request.contextPath}/ui/admin/centers/adminCenter.xhtml" class="LEVEL1">&bull;Centros</option>
+                                    <option value="#{request.contextPath}/ui/admin/fileStatus/adminFileStatus.xhtml" class="LEVEL1">&bull;Estado Ficha</option>
+                                    <option value="#{request.contextPath}/ui/admin/profiles/adminProfiles.xhtml" class="LEVEL1">&bull;Perfiles</option>
+                                    <option value="#{request.contextPath}/ui/admin/users/adminUser.xhtml" class="LEVEL1">&bull;Usuarios</option>
+                                    <option value="#{request.contextPath}/ui/admin/hierarchicalLevel/adminHierarchicalLevel.xhtml" class="LEVEL1">&bull;Niveles Jerarquicos</option>
+                                    <option value="#{request.contextPath}/ui/admin/groupChatNotification/adminGroupChatNotification.xhtml" class="LEVEL1">&bull;Grupos</option>
+                                    <option value="#{request.contextPath}/ui/admin/menus/adminMenu.xhtml" class="LEVEL1">&bull;Menús</option>
+                                    <option value="#{request.contextPath}/ui/admin/modules/adminmodules.xhtml" class="LEVEL1">&bull;Módulos</option>
+                                    <option value="#{request.contextPath}/ui/admin/incidentCategories/adminincidentCategories.xhtml" class="LEVEL1">&bull;Categorías de Incidencia</option>
+                                    <option value="#{request.contextPath}/ui/admin/profilesMenus/adminProfilesMenus.xhtml" class="LEVEL1">&bull;Asignar Menús a Perfiles</option>
+                                    <option value="#{request.contextPath}/ui/admin/levelGruop/adminlevelGroup.xhtml" class="LEVEL1">&bull;Asignar Jerarquias a Grupos</option>
+                                </optgroup>
+                                <optgroup id="mobileMenuAdmin" label="Usuario" class="LEVEL1" >
+                                    <option value="#{request.contextPath}/ui/users/newjsf.xhtml" class="LEVEL1">&bull;Menú usuario</option>
+                                </optgroup>
+                            </select>
+<!--                        </div>-->
+                        <!-- header bar end-->
+
+                        <ui:insert name="content">
+
+                            <ui:insert name="subsubmenu"></ui:insert>
+
+                            <div class="ContentSideSections">
+                                <div class="Content100 overHidden TextShadow">
+                                    <span class="fontSize30 TextShadow ecublue mediumFont marginBottom20 dispBlock"><ui:insert name="title" /></span>
+                                    <span class="defaultText dispTable"><ui:insert name="description" />
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="ContentSideSections Implementation" >
+                                <ui:insert name="implementation" />
+                            </div>
+
+                            <div id="SourceContentSide" class="ContentSideSections Source">
+                                <div class="Content100 overHidden TextShadow">
+                                    <span class="defaultText">
+                                        <span class="fontSize18 logoBlueText">
+                                            <ui:insert name="source" />
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </ui:insert>
+
+                        <!-- footer start-->
+                        <div class="ContentSideSections">
+                            <!--                            <span class="floatLeft fontSize14 gray"><a href="http://www.primetek.com.tr">ECU 911</a>, Copyright &copy; 2015<br />All rights reserved.</span>-->
+                                                        <!--<span class="floatRight fontSize14 gray">Running #{build.primefacesVersion} on #{build.jsfVersion}.</span>-->
+                            <div style="clear:both" />
+                        </div>
+                        <!-- footer end-->
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- PC CONTENT END-->
+
+            <ui:insert name="status">
+                <p:ajaxStatus style="width:64px;height:64px;position:fixed;right:5px;bottom:5px">
+                    <f:facet name="start">
+                        <p:graphicImage name="main/images/loader.gif" />
+                    </f:facet>
+
+                    <f:facet name="complete">
+                        <h:outputText value="" />
+                    </f:facet>
+                </p:ajaxStatus>
+            </ui:insert>
+
+            <ui:insert name="highlight">
+                <h:outputScript name="main/js/sh.js" target="body"/>
+            </ui:insert>
+
+            <ui:insert name="body"></ui:insert>
+            <script>
+                menuf("#{loginBean.profileLoggedUser}");
+            </script>
+        </h:body>
+    </html>

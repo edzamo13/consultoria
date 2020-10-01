@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/template/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form id="form"> 
+            
+            <br/>
+            <p:panel style="border:0">
+                
+                <center>
+                    <p:outputLabel value="Gestor de Seguridad" style="font-size: medium; font-weight: bold"/>
+                </center>
+                    <p align="justify" style="font-size: 13px; font-family: sans-serif !important; padding-left: 25px; padding-right:25px;">
+                    El Gestor de Seguridad es un sistema que permite la administración, gestión y configuración de los accesos a los usuarios, aplicaciones y diferentes roles a los que se pueden acceder.
+                    Por lo tanto Gestor de seguridad permite asegurarse que los recursos del sistema se utilizan de la manera en la que se espera y que quienes puedan acceder a la información que en él se encuentran sean las personas acreditadas para hacerlo.
+
+                    <br/><br/>
+                    El Gestor de Seguridad posee las siguientes características:                 
+                </p>
+                
+                <table style="font-size: 13px;text-align: justify !important; padding-left: 75px;padding-right:75px; font-family: sans-serif !important;">
+                    <tr>
+                      <td><li><b>Usuarios:</b></li></td>
+                      <td>Gestión y administracion de usuarios y asignación de roles a cada uno de ellos.</td>
+                    </tr>
+                     
+                    <tr>
+                      <td><li><b>Roles:</b></li></td>
+                      <td>Gestión y administración de los diferentes roles, para las dependecnias y el menú de las aplicaciones.</td>
+                    </tr>
+                     
+                     <tr>
+                         <td style="vertical-align: top !important"><li><b>Aplicaciones:</b></li></td>
+                      <td>Gestión, administración y creacion de aplicaciones y sus respectivos menús de acceso a los sitemas. Habilitado solo para usuario administrador.</td>
+                    </tr>
+                     
+                     <tr>
+                      <td><li><b>Instituciones:</b></li></td>
+                      <td>Gestión, administración y creación de instituciones y dependencias.</td>
+                    </tr>
+                  </table> 
+                
+                
+
+                <center>
+                    <h:graphicImage value="/resources/img/pantalla/seguridad_logo.jpg" width="210" height="170"/>
+                </center>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

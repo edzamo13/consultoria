@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="form-createModules">
+        <p:dialog header="Crear Módulos" showEffect="fold" hideEffect="fold" widgetVar="dlCreateMd" modal="true" height="400">        
+          <p:panel id="panelmod" header="Ingrese los datos" style="margin-bottom:10px;"> 
+            <p:messages id="messages" autoUpdate="true" closable="true"/>
+            <h:panelGrid columns="3" cellpadding="5">                
+                <p:outputLabel for="name" value="Nombre:" style="font-weight:bold" />
+                <p:inputText id="name" value="#{modulesView.modules.nameMod}" required="true" label="Nombre: " validatorMessage="Introduzca datos correctos(Alfanuméricos, no mayor a 15)">  
+                    <f:validateRegex pattern="^[a-zA-Z0-9\s]{1,15}$" />
+                </p:inputText> 
+                <p:message for="name"/>
+                <p:outputLabel for="description" value="Descripción: " style="font-weight:bold" />
+                <p:inputText id="description" value="#{modulesView.modules.descriptionMod}" required="true" label="Descripción: "/>
+                <p:message for="description"/>
+                <br></br>
+                <br></br>
+                <div align="modules">
+                    <h:panelGrid columns="2" cellpadding="5" >
+                        <p:commandButton       id="btnGuardar" 
+                                               value="Guardar"                                                
+                                               action="#{modulesView.save()}" 
+                                               icon="ui-icon-disk" 
+                                               update=":formModules:dtbModule"/>
+                        <p:commandButton       id="btnCancelar" 
+                                               action="modules?faces-redirect=true"
+                                               value="Cancelar" 
+                                               onclick="window.location.replace(window.location.href);" 
+                                               icon="ui-icon-cancel" />
+                    </h:panelGrid>
+                </div>               
+            </h:panelGrid>
+          </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

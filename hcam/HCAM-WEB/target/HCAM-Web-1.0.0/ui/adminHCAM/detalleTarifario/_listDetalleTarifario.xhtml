@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="formList">
+        <br></br>  
+        <p:dataTable id="dtbCenter" var="centers" value="#{centerView.listCenters}" style="margin-bottom:20px" sortBy="#{centers.idCet}" scrollable="true" liveScroll="true" scrollWidth="98%">
+
+            <p:column headerText="Nombre Cabecera" sortBy="#{centers.provinceCet}" width="150" filterBy="#{centers.provinceCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.provinceCet}" />
+            </p:column>
+            <p:column headerText="Código:" sortBy="#{centers.cantonCet}" width="150" filterBy="#{centers.cantonCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.cantonCet}" />
+            </p:column>
+            <p:column headerText="Descripción" sortBy="#{centers.addressCet}" width="150" filterBy="#{centers.addressCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.addressCet}" />
+            </p:column>
+            <p:column headerText="Fecha Inicio Vigencia" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Fecha Fin Vigencia" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Valor" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="U.V.R." sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Observación" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Factor de Conversión Monetario" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="U.V.R. Anestesia" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="F.C.M. Anestesia" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Valor Anestesia" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Tipo" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Estado" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Incremento Costa" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Incremento Insular" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Bilateral" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Modificador" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Tiempo Cirujía Inicio" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Tiempo Cirujía Fin" sortBy="#{centers.phoneCet}" width="150" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            
+            <p:column width="40" style="text-align: center" headerText="Editar">
+                <p:commandButton  icon="ui-icon-pencil" 
+                                  title="Editar"
+                                  actionListener="#{centerView.setSelected(centers)}"
+                                  onclick="PF('dlg3').show();"/>            
+
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" 
+                                 action="#{centerView.remove(centers)}" >
+                    <p:confirm header="Confirmación" message="¿Está Seguro de Eliminar el Detalle de Tarifario?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</ui:composition>

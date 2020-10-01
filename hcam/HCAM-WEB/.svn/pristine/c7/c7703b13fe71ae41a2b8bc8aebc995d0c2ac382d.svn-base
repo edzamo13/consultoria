@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">
+        Administración - <span class="subitem">Perfiles</span>
+    </ui:define>
+
+    <ui:define name="description">
+        Registro de los Perfiles
+    </ui:define>
+
+    <ui:define name="implementation">
+        <ui:include src="_createProfiles.xhtml"/>
+        <ui:include src="_editProfiles.xhtml"/>
+
+            <h:form id="ProfilesForm">
+                <p:commandButton id="crear" value="Crear" onclick="PF('dlCreatePr').show();"/>
+                <p:messages id="messages" autoUpdate="false" closable="true"/>
+                <br/>
+                <p:dataTable id="dtbProfile" var="profiles" value="#{profilesView.listProfiles}" sortBy="#{profiles.idPrf}">
+                                     
+                    <p:column headerText="Nombre" sortBy="#{profiles.namePrf}" filterBy="#{profiles.namePrf}" filterMatchMode="contains">
+                        <h:outputText value="#{profiles.namePrf}" />
+                    </p:column>
+                    <p:column headerText="Descripcion" sortBy="#{profiles.descriptionPrf}" filterBy="#{profiles.descriptionPrf}" filterMatchMode="contains">
+                        <h:outputText value="#{profiles.descriptionPrf}" />
+                    </p:column>
+                    
+                   <p:column headerText="Fecha Registro" sortBy="#{profiles.registerDatePrf}" filterBy="#{profiles.registerDatePrf}" filterMatchMode="contains">
+                        <h:outputText value="#{profiles.registerDatePrf}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Activo"  sortBy="#{profiles.activePrf}" filterMatchMode="contains" width="40" >
+                        <div align="center">
+                          <p:selectBooleanCheckbox value="#{profiles.activePrf}" disabled="true"/>
+                        </div>
+                    </p:column>
+                    
+                    <p:column headerText="Fecha Inactivo" sortBy="#{profiles.inactiveDatePrf}" filterBy="#{profiles.inactiveDatePrf}" filterMatchMode="contains">
+                        <h:outputText value="#{profiles.inactiveDatePrf}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column width="40" headerText="Editar" style="text-align: center">
+                        <p:commandButton  icon="ui-icon-pencil" 
+                                          title="Editar"
+                                          actionListener="#{profilesView.setSelected(profiles)}"
+                                          onclick="PF('dlEditPr').show();"/> 
+                    </p:column>
+                    <p:column width="60" style="text-align: center" headerText="Eliminar">
+                        <p:commandButton icon="ui-icon-trash" 
+                                         action="#{profilesView.remove(profiles)}" 
+                                         update=":ProfilesForm:dtbProfile"
+                                         title="Eliminar">
+                            <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar el Perfil?" icon="ui-icon-alert" />  
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </h:form>
+    </ui:define>
+</ui:composition>
+

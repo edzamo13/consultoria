@@ -1,0 +1,178 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ec.hcam.orquestrator;
+
+import ec.hcam.data.Dependencia;
+import ec.hcam.data.InsumosServicios;
+import ec.hcam.entity.Cabplantbl;
+import ec.hcam.entity.Detplantbl;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.AsyncResult;
+import javax.ejb.Asynchronous;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import static javax.ejb.TransactionManagementType.BEAN;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+
+/**
+ *
+ * @author Programacion
+ */
+@Stateless
+@TransactionManagement(BEAN)
+public class InsumosEnfermeriaService extends Basica implements InsumosEnfermeriaServiceRemote {
+
+    @Override
+    public void registrarDetallePlanillaje(InsumosServicios registro, String uniMed, String iofeor) {
+        Detplantbl detalle = new Detplantbl();
+        //Datos Cabecera        
+        Cabplantbl cab = (Cabplantbl) bag.get("cabplantbl");
+        // TODO Solicitar a bdd que cree la BDD SEQUENCE para poder autogenrer secuenciales
+
+        //Empieza            
+        Calendar c1 = Calendar.getInstance();
+
+        //detalle.setReidpk(2);poner la correspondiente
+        detalle.setNumplad(cab.getNumplanilla());
+        detalle.setCoditem(registro.getCodigoItem());//Verificar Campo
+        detalle.setHistoCli(String.valueOf(registro.getHistoria()));
+        detalle.setFechaReg(c1.getTime());
+        detalle.setDescItem(registro.getDescripcionItem()); //imp
+
+        detalle.setDepRea(NombreDependenciaSQL(BigDecimal.valueOf(registro.getDependencia()).toBigInteger()));
+        detalle.setCoddepsol(BigDecimal.valueOf(registro.getDependencia()).toBigInteger());
+        detalle.setCoddeprea(BigDecimal.valueOf(registro.getDependencia()).toBigInteger());
+        detalle.setTipSer(9904);  //ver este campo
+        detalle.setSubtipser(9904);
+        detalle.setCantidad(registro.getCantidad());
+        detalle.setValorUnit(registro.getPrecioUnitario()); //ver este campo
+
+        double precio;
+
+        if (registro.getPrecioUnitario() == null) {
+            precio = 0;
+        } else {
+            precio = registro.getPrecioUnitario();
+        }
+
+        detalle.setValorTotal(registro.getCantidad() * precio);
+
+        detalle.setNumOrden(0); //ver este campo
+        detalle.setTipoRubro("IMM"); //Tipo de servicio
+        //DATOS DEL MEDICO
+        //No se ingresen 
+        //En insumos no se ingresan diagnosticos
+
+        detalle.setTimeAntestesia(Short.parseShort("0"));  //no aplica anestencia en farmacos
+        detalle.setCodDerivacion("CD"); //ver este campo
+        detalle.setSecDerivacion(Short.parseShort("0")); //ver este campo
+        detalle.setContingenCubre(0);
+
+        //PACIENTE
+        //detalle=registrarDetallePaciente(detalle, uniMed, String.valueOf(registro.getHistoria()));
+        cab.setDetplantblList(null);
+        detalle.setCpidpk(cab);
+        //Termina
+
+        // TODO Completar el objeto detalle para que pueda ser almacenado correctamente sin restriccionescab.setDetplantblList(null);
+        cab.setDetplantblList(null);
+        detalle.setCpidpk(cab);
+
+        listaDetalles.add(detalle);
+        registrarPorBloque(listaDetalles);
+    }
+
+    @Override
+    @Asynchronous
+    public Future obtenerRegistrosInsumosEnfermeria(String iounme, Integer iofeor, Integer nivel, Integer unidpk, Integer ubicapk) {
+        utx = ctx.getUserTransaction();
+        System.out.println("Hora Inicio InsumosEnfermeria:" + imprimirHora().toString());
+        cargarDependencias(iounme, String.valueOf(iofeor));
+        List<Dependencia> lstDependencias = (List<Dependencia>) bagDependecia.get("lstDependencias");
+                
+        for (Dependencia depend : lstDependencias) {
+            
+            String mesSt = String.valueOf(iofeor).substring(4, 6);
+            String diaSt = String.valueOf(iofeor).substring(6, 8);
+            String anioSt = String.valueOf(iofeor).substring(0, 4);
+
+            Integer mesI = Integer.parseInt(mesSt);
+            Integer diaI = Integer.parseInt(diaSt);
+            Integer anioI = Integer.parseInt(anioSt);
+
+            existenciaCabecera(mesI, diaI, anioI, unidpk, ubicapk);
+
+            obtenerTodosLosInsumosEnfermeria(iounme, String.valueOf(iofeor), depend.getIR2DEP());
+        }
+        try {
+            utx.begin();
+            for (Detplantbl detplantbl : listaDetalles) {
+                detalleService.createDetplantbl(detplantbl);
+            }
+            utx.commit();
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException | SystemException ex) {
+            try {
+                utx.rollback();
+            } catch (IllegalStateException | SecurityException | SystemException ex1) {
+                Logger.getLogger(InsumosEnfermeriaService.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(InsumosEnfermeriaService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (bag != null) {
+            bag.clear();
+        }
+        if (bagDependecia != null) {
+            bagDependecia.clear();
+        }
+        if (listaDetalles != null) {
+            listaDetalles.clear();
+        }
+        System.out.println("Hora Fin InsumosEnfermeria:" + imprimirHora().toString());
+        return new AsyncResult("OK");
+
+    }
+
+    @Override
+    public List<InsumosServicios> obtenerTodosLosInsumosEnfermeria(String iounme, String iofeor, Double depend) {
+        String sqlInsumosServicios = "select TRCDUN unidadmedica,TRNUHI HISTORIA,ITTIIT||ITGRIT||ITSBIT||ITGEIT||ITCOIT CODIGOITEM, ITCANT CANTIDAD, TREXN1 DEPENDENCIA, TRFEAP FECHAACTUALIZACION,c.ffprec PRECIOUNITARIO, D.CODESC DESCRIPCIONITEM from paclibme.enff24 a inner join paclibme.enff25 b on ITCDUN=TRCDUN and ITCODE=TRCODE and ITCOBO=TRCOBO and ITTITR=TRTITR and ITCOTR=TRCOTR and ITNUTR=TRNUTR left join invlib.invf35 c on a.TRCDUN=C.FFUNME and ITTIIT||ITGRIT||ITSBIT||ITGEIT||itcoit= FFTIPO||FFGRUP||FFSUBG||FFORDI||ffespe LEFT JOIN INVLIB.INVF11 D ON D.COCDUN= A.TRCDUN AND D.COTIPO||D.COGRUP||D.COSUBG||D.COORDI||D.COESPE = ITTIIT||ITGRIT||ITSBIT||ITGEIT||ITCOIT where trestr='APL' AND TRNUHI>0 AND TRTITR='EGR' AND TRFEAP=:iofeor AND TRCDUN=:iounme and itesta='APL' and TREXN1=:iodep";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("iounme", iounme);
+        params.put("iofeor", iofeor);
+        params.put("iodep", depend);
+        List<InsumosServicios> InsumosEnferList = queryExecutor.executeQuery(sqlInsumosServicios, params, InsumosServicios.class);
+
+        for (InsumosServicios InsumosEnferList1 : InsumosEnferList) {
+            registrarDetallePlanillaje(InsumosEnferList1, iounme, iofeor);
+        }
+        return InsumosEnferList;
+    }
+
+    public void cargarDependencias(String ir2unm, String ir2cit) {
+        String sqlString1 = "select   DISTINCT TREXN1 IR2DEP from paclibme.enff24 a inner join paclibme.enff25 b on ITCDUN=TRCDUN and ITCODE=TRCODE and ITCOBO=TRCOBO and ITTITR=TRTITR and ITCOTR=TRCOTR and ITNUTR=TRNUTR left join invlib.invf35 c on a.TRCDUN=C.FFUNME and ITTIIT||ITGRIT||ITSBIT||ITGEIT= FFTIPO||FFGRUP||FFSUBG||FFORDI LEFT JOIN INVLIB.INVF11 D ON D.COCDUN= A.TRCDUN AND D.COTIPO||D.COGRUP||D.COSUBG||D.COORDI||D.COESPE = ITTIIT||ITGRIT||ITSBIT||ITGEIT||ITCOIT where trestr='APL' AND TRNUHI>0 AND TRTITR='EGR' AND TRFEAP=:iofeor AND TRCDUN=:iounme and itesta='APL'";
+        Map<String, Object> params = new HashMap<>();
+        params.put("iounme", ir2unm);
+        params.put("iofeor", ir2cit);
+        List<Dependencia> informacionDependenciaList = queryExecutor.executeQuery(sqlString1, params, Dependencia.class);
+        if (bagDependecia == null) {
+            bagDependecia = new HashMap<>();
+        }
+        bagDependecia.clear();
+        bagDependecia.put("lstDependencias", informacionDependenciaList);
+    }
+
+}

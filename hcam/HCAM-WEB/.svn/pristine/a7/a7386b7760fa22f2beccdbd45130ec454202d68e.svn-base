@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="formList">
+        <p:dataTable id="dtbMenus" var="mnu" value="#{menusView.lstMenus}" sortBy="#{mnu.idMnu}" >
+
+            <p:column headerText="Nombre" filterBy="#{mnu.nameMnu}" filterMatchMode="contains">
+                <h:outputText value="#{mnu.nameMnu}" />
+            </p:column>
+            <p:column headerText="Descripción" filterBy="#{mnu.descriptionMnu}" filterMatchMode="contains">
+                <h:outputText value="#{mnu.descriptionMnu}" />
+            </p:column>
+
+            <p:column headerText="Módulo" sortBy="#{mnu.idMod.nameMod}" filterBy="#{mnu.idMod.nameMod}" filterMatchMode="contains">
+                <h:outputText value="#{mnu.idMod.nameMod}" />
+            </p:column>
+
+            <p:column headerText="Activo"  sortBy="#{mnu.statusMnu}" filterMatchMode="contains" width="40" >
+                <div align="center">
+                    <p:selectBooleanCheckbox value="#{mnu.statusMnu}" disabled="true"/>
+                </div>
+            </p:column>
+            <p:column headerText="Editar" width="40">
+                <p:commandButton actionListener="#{menusView.setSelected(mnu)}" onclick="PF('dlg3').show();" icon="ui-icon-pencil" title="Editar"/>                 
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" title="Borrar" action="#{menusView.remove(mnu)}"/>
+            </p:column>
+        </p:dataTable>       
+    </h:form>
+</ui:composition>

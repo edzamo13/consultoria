@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="hcam_HCAM-JPA-API_jar_1.0.0PU" transaction-type="JTA">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <jta-data-source>jdbc/hcam</jta-data-source>
+    <!-- <class>ec.hcam.entities1.Irsi022</class> -->
+    <class>ec.hcam.entity.Histclitbl</class>
+    <class>ec.hcam.entity.Parmfactbl</class>
+    <class>ec.hcam.entity.Deunitbl</class>
+    <class>ec.hcam.entity.Cabtaritbl</class>
+    <class>ec.hcam.entity.Reglastbl</class>
+    <class>ec.hcam.entity.Consultbl</class>
+    <class>ec.hcam.entity.Servtbl</class>
+    <class>ec.hcam.entity.Unimdeptbl</class>
+    <class>ec.hcam.entity.Paramtbl</class>
+    <class>ec.hcam.entity.Tipostbl</class>
+    <class>ec.hcam.entity.Unidmedtbl</class>
+    <class>ec.hcam.entity.Repatbl</class>
+    <class>ec.hcam.entity.Formutbl</class>
+    <class>ec.hcam.entity.Areatbl</class>
+    <class>ec.hcam.entity.Tipoacrtbl</class>
+    <class>ec.hcam.entity.Esquematbl</class>
+    <class>ec.hcam.entity.Tarifaftbl</class>
+    <class>ec.hcam.entity.Proceditbl</class>
+    <class>ec.hcam.entity.Zonastbl</class>
+    <class>ec.hcam.entity.Esttbl</class>
+    <class>ec.hcam.entity.Ubicatbl</class>
+    <class>ec.hcam.entity.Detplantbl</class>
+    <class>ec.hcam.entity.Cabplantbl</class>
+    <class>ec.hcam.entity.Paranivetbl</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:as400://172.16.4.11/S101719R"/>
+      <property name="javax.persistence.jdbc.password" value="webFactura"/>
+      <property name="javax.persistence.jdbc.driver" value="com.ibm.as400.access.AS400JDBCDriver"/>
+      <property name="javax.persistence.jdbc.user" value="conexFact"/>
+      <!--  <validation-mode>NONE</validation-mode>   -->
+      <property name="eclipselink.logging.parameters" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>

@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">
+        Administración - <span class="subitem">Niveles Jerarquicos</span>
+    </ui:define>
+
+    <ui:define name="description">
+        Definir los niveles jerarquicos dentro de los centros
+    </ui:define>
+
+    <ui:define name="implementation">
+
+        <h:form id="form"> 
+            <p:commandButton id="crear" value="Crear" onclick="PF('dlg2').show();" />
+            <p:messages id="messages" autoUpdate="false" closable="true"/>
+            
+            <br></br>
+
+            <ui:include src="_listHierarchicalLevel.xhtml" />
+        </h:form> 
+
+        <ui:include src="_createHierarchicalLevel.xhtml" />
+        <ui:include src="_editHierarchicalLevel.xhtml" />
+
+
+    </ui:define>
+</ui:composition>
+

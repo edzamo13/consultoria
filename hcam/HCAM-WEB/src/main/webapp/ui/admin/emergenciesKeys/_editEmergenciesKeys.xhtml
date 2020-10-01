@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-edit">
+        <p:dialog header="Modificar Clave de Emergencia" widgetVar="dlg3" modal="true" showEffect="fold" hideEffect="fold" height="400">
+          <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;"> 
+            <h:panelGrid id='gridEdit' columns="3" cellpadding="5">
+                
+                                
+                <p:outputLabel for="name" value="Nombre:" style="font-weight:bold" />
+                <p:inputText id="name" value="#{emergenciesKeysView.selectedEmergenciesKeys.nameEmk}" required="true"  label="Nombre: " validatorMessage="Introduzca datos correctos(Alfanuméricos, no mayor a 15">
+                   <f:validateRegex pattern="^[a-zA-Z0-9\s]{1,15}$" />
+                 </p:inputText>
+                 <p:message for="name"/>
+                
+                
+                <p:outputLabel for="description" value="Descripción:" style="font-weight:bold" />
+                <p:inputText  id="description" value="#{emergenciesKeysView.selectedEmergenciesKeys.descriptionEmk}" required="true"   label="Nombre: "/>
+                 <p:message for="description"/>
+               
+                <p:outputLabel for="priority" value="Prioridad:" style="font-weight:bold" /> 
+                <p:inputText id="priority" value="#{emergenciesKeysView.selectedEmergenciesKeys.priorityEmk}" required="true" label="Prioridad: " validatorMessage="Introduzca datos Correctos(Alfanuméricos sin espacios)">
+                     <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                </p:inputText>
+                <p:message for="priority"/>
+                
+                <p:outputLabel for="id" value="Id:" style="visibility: hidden" />
+                <p:inplace id="id" style="visibility: hidden">
+                    <p:inputText value="#{emergenciesKeysView.selectedEmergenciesKeys.idEmk}" />
+                </p:inplace>
+
+                <br></br>
+                <br></br>
+                <div align="center">
+                    <h:panelGrid columns="2" cellpadding="5" >
+                        <p:commandButton       id="btnEdit" 
+                                               value="Modificar" 
+                                               update=":form-edit:gridEdit"
+                                               action="#{emergenciesKeysView.edit(emergenciesKeysView.selectedEmergenciesKeys)}"
+                                               icon="ui-icon-pencil">
+                        </p:commandButton>
+                        <p:commandButton       id="btnCancelar" 
+                                               value="Cancelar" 
+                                               onclick="window.location.replace(window.location.href);" 
+                                               icon="ui-icon-cancel" />
+                    </h:panelGrid>
+                </div>
+            </h:panelGrid>
+          </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

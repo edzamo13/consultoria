@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="form-edit">
+        <p:dialog header="Modificar Parámetro de Query" widgetVar="dlg3" showEffect="fold" hideEffect="fold" modal="true" >
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">  
+                <h:panelGrid id="gridEdit" columns="3" cellpadding="5">
+                    
+                    <p:outputLabel for="nombre" value="Nombre:" style="font-weight:bold" />
+                    <p:inputText id="nombre" value="#{serviciosView.selectedCenter.codeCet}" required="true" label="Nombre"/>
+                    <p:message for="nombre"/>
+
+                    <p:outputLabel for="tipo" value="Tipo:" style="font-weight:bold" />
+                    <p:inputText id="tipo" value="#{serviciosView.selectedCenter.codeCet}" required="true" label="Tipo"/>
+                    <p:message for="tipo"/>
+                    
+                    <p:outputLabel for="tamanio" value="Tamaño:" style="font-weight:bold" />
+                    <p:inputText id="tamanio" value="#{serviciosView.selectedCenter.codeCet}" required="true" label="Tamaño"/>
+                    <p:message for="tamanio"/>
+                    
+                    <p:outputLabel for="es" value="E/S:" style="font-weight:bold" />
+                    <p:selectOneMenu id="es" value="#{selectOneMenuView.console}" style="width:125px">
+                        <f:selectItem itemLabel="Entrada" itemValue="" />
+                        <f:selectItem itemLabel="Salida" itemValue="" />
+                    </p:selectOneMenu>
+                    <p:message for="es"/>
+                                        
+                    <p:outputLabel value="Activo:" for="active" style="font-weight:bold"  />
+                    <p:selectBooleanCheckbox id="active" value="#{serviciosView.selectedCenter.active}" />
+
+
+                    <p:inplace id="id" style="visibility: hidden">
+                        <p:inputText value="#{serviciosView.selectedCenter.idCet}"  />
+                    </p:inplace>
+                    <p:outputLabel for="id" value="Id:" style="visibility: hidden" />               
+
+
+                    <br></br>
+                    <br></br>
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnEdit" value="Modificar" update=":form-edit:gridEdit" action="#{serviciosView.edit(serviciosView.selectedCenter)}" icon="ui-icon-pencil"/>
+                            <p:commandButton id="btnCancelar" value="Cancelar" onclick="window.location.replace(window.location.href);" icon="ui-icon-cancel" action="adminCenter?face-redirect=true"/>
+                        </h:panelGrid>
+                    </div>
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>
+

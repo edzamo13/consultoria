@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="form-edit">
+        <p:dialog header="Modificar Centro" widgetVar="dlg3" showEffect="fold" hideEffect="fold" modal="true" >
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">  
+                <h:panelGrid id="gridEdit" columns="3" cellpadding="5">
+
+                    <p:outputLabel for="name" value="Nombre:" style="font-weight:bold" />
+                    <p:inputText id="name" value="#{centerView.selectedCenter.nameCet}" required="true" label="Nombre: " validatorMessage="Introduzca datos correctos(Alfanuméricos, no mayor a 15)">
+                     <f:validateRegex pattern="^[a-zA-Z0-9\s]{1,15}$" />
+                   </p:inputText>
+                    <p:message for="name"/>
+                
+                <p:outputLabel for="province" value="Provincia:" style="font-weight:bold" />
+                <p:inputText id="province" value="#{centerView.selectedCenter.provinceCet}" required="true" label="Provincia: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                     <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                </p:inputText>
+                <p:message for="province"/>
+                
+                <p:outputLabel for="canton" value="Canton:" style="font-weight:bold" />
+                <p:inputText id="canton" value="#{centerView.selectedCenter.cantonCet}" required="true" label="Canton: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                     <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                </p:inputText>
+                <p:message for="canton"/>
+                
+                <p:outputLabel for="address" value="Direccion:" style="font-weight:bold" />
+                <p:inputText id="address" value="#{centerView.selectedCenter.addressCet}" required="true" label="Direccion: "/>
+                <p:message for="address"/>
+                
+                <p:outputLabel for="phone" value="Telefono:" style="font-weight:bold" />
+                <p:inputText id="phone" value="#{centerView.selectedCenter.phoneCet}" required="true" label="Telefono" validatorMessage="Introduzca datos Correctos(Número de 9 dígitos)">
+                        <f:validateRegex pattern="([0-9]{09})?"/>
+                    </p:inputText>
+                <p:message for="phone"/>
+                
+                <p:outputLabel for="codCenter" value="Codigo Centro:" style="font-weight:bold" />
+                <p:inputText id="codCenter" value="#{centerView.selectedCenter.codeCet}" required="true" label="Codigo Centro"/>
+                <p:message for="codCenter"/>
+
+                    <p:inplace id="id" style="visibility: hidden">
+                        <p:inputText value="#{centerView.selectedCenter.idCet}"  />
+                    </p:inplace>
+                    <p:outputLabel for="id" value="Id:" style="visibility: hidden" />               
+                    
+
+                    <br></br>
+                    <br></br>
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnEdit" value="Modificar" update=":form-edit:gridEdit" action="#{centerView.edit(centerView.selectedCenter)}" icon="ui-icon-pencil"/>
+                            <p:commandButton id="btnCancelar" value="Cancelar" onclick="window.location.replace(window.location.href);" icon="ui-icon-cancel" action="adminCenter?face-redirect=true"/>
+                        </h:panelGrid>
+                    </div>
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>
+

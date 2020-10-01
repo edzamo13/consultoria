@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="formList">
+        <br></br>  
+        <p:dataTable id="dtbCenter" var="dependencia" value="#{dependenciaView.listDependencia}" style="margin-bottom:20px" sortBy="#{dependencia.depunpk}">
+
+            <p:column headerText="Nombre" sortBy="#{dependencia.denombre}" filterBy="#{dependencia.denombre}" filterMatchMode="contains">
+                <h:outputText value="#{dependencia.denombre}" />
+            </p:column>
+            <p:column headerText="Codigo" sortBy="#{dependencia.dedepend}" filterBy="#{dependencia.dedepend}" filterMatchMode="contains">
+                <h:outputText value="#{dependencia.dedepend}" />
+            </p:column>
+            <p:column headerText="Tipo Dependencia" sortBy="#{dependencia.tdidpk.tdnombre}" filterBy="#{dependencia.tdidpk.tdnombre}" filterMatchMode="contains">
+                <h:outputText value="#{dependencia.tdidpk.tdnombre}" />
+            </p:column>
+            <p:column headerText="Area" sortBy="#{dependencia.areapk.ubnombre}" filterBy="#{dependencia.areapk.ubnombre}" filterMatchMode="contains">
+                <h:outputText value="#{dependencia.areapk.ubnombre}" />
+            </p:column>
+            <p:column headerText="Descripción" sortBy="#{dependencia.deardescri}" filterBy="#{dependencia.deardescri}" filterMatchMode="contains">
+                <h:outputText value="#{dependencia.deardescri}" />
+            </p:column>
+            <p:column headerText="Estado" sortBy="#{dependencia.deestado}" filterBy="#{dependencia.deestado}" filterMatchMode="contains">
+                <h:outputText value="#{dependencia.deestado}" />
+            </p:column>
+            <p:column width="40" style="text-align: center" headerText="Editar">
+                <p:commandButton  icon="ui-icon-pencil" 
+                                  title="Editar"
+                                  actionListener="#{dependenciaView.setSelected(dependencia)}"
+                                  onclick="PF('dlg3').show();"/>            
+
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" 
+                                 action="#{dependenciaView.remove(dependencia)}" >
+                    <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar la Dependencia?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</ui:composition>

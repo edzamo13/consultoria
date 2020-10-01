@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="prueba1">
+		<class>prueba1.Irsi02</class>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2Dialect"/>
+			<property name="hibernate.connection.driver_class" value="COM.ibm.db2.jdbc.app.DB2Driver"/>
+			<property name="hibernate.connection.url" value="jdbc:as400:172.16.7.11"/>
+			<property name="hibernate.default_schema" value="CEDDTADE"/>
+			<property name="hibernate.default_catalog" value="S108EEFD"/>
+			<property name="hibernate.connection.username" value="MODERJLL"/>
+			<property name="hibernate.connection.password" value="karlita3"/>
+		</properties>
+	</persistence-unit>
+</persistence>

@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="formList">
+        <br></br>  
+
+        <!--
+        id datatable:       dtbCenter -> dtbServicio
+        var:                centers -> servicios
+        
+        -->
+        <p:dataTable id="dtbServicio" var="servicios" value="#{serviciosView.listCenters}" style="margin-bottom:20px" sortBy="#{servicios.idCet}">
+
+            <p:column headerText="Codigo" sortBy="#{servicios.nameCet}" filterBy="#{servicios.nameCet}" filterMatchMode="contains"> 
+                <h:outputText value="#{servicios.nameCet}" />
+            </p:column>
+
+            <p:column headerText="Nombre" sortBy="#{servicios.provinceCet}" filterBy="#{servicios.provinceCet}" filterMatchMode="contains">
+                <h:outputText value="#{servicios.provinceCet}" />
+            </p:column>
+
+            <p:column headerText="Observacion" sortBy="#{servicios.cantonCet}" filterBy="#{servicios.cantonCet}" filterMatchMode="contains">
+                <h:outputText value="#{servicios.cantonCet}" />
+            </p:column>
+
+            <p:column headerText="Activo"  sortBy="#{incident.activeInc}" filterMatchMode="contains" width="40" >
+                <p:selectBooleanCheckbox value="#{incident.activeInc}" />
+            </p:column>
+
+
+            <p:column width="40" style="text-align: center" headerText="Editar">
+                <p:commandButton  icon="ui-icon-pencil" 
+                                  title="Editar"
+                                  actionListener="#{serviciosView.setSelected(servicios)}"
+                                  onclick="PF('dlg3').show();"/>            
+
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" 
+                                 action="#{serviciosView.remove(servicios)}" >
+                    <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar el Centro?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</ui:composition>

@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="formList">
+        <br></br>  
+
+        <p:dataTable id="dtbParamQueries" var="paramQueries" value="#{paramQueriesView.listCenters}" style="margin-bottom:20px" sortBy="#{paramQueries.idCet}">
+
+            <p:column headerText="Nombre" sortBy="#{paramQueries.nameCet}" filterBy="#{paramQueries.nameCet}" filterMatchMode="contains"> 
+                <h:outputText value="#{paramQueries.nameCet}" />
+            </p:column>
+
+            <p:column headerText="Tipo" sortBy="#{paramQueries.nameCet}" filterBy="#{paramQueries.nameCet}" filterMatchMode="contains" width="200"> 
+                <h:outputText value="#{paramQueries.nameCet}" />
+            </p:column>
+
+            <p:column headerText="Tamaño" sortBy="#{paramQueries.provinceCet}" filterBy="#{paramQueries.provinceCet}" filterMatchMode="contains">
+                <h:outputText value="#{paramQueries.nameCet}" />
+            </p:column>
+
+            <p:column headerText="E/S" sortBy="#{paramQueries.provinceCet}" filterBy="#{paramQueries.provinceCet}" filterMatchMode="contains">
+                <h:outputText value="#{paramQueries.nameCet}" />
+            </p:column>
+
+            <p:column headerText="Activo"  sortBy="#{incident.activeInc}" filterMatchMode="contains" width="40" >
+                <p:selectBooleanCheckbox value="#{incident.activeInc}" />
+            </p:column>
+
+
+            <p:column width="40" style="text-align: center" headerText="Editar">
+                <p:commandButton  icon="ui-icon-pencil" 
+                                  title="Editar"
+                                  actionListener="#{paramQueriesView.setSelected(paramQueries)}"
+                                  onclick="PF('dlg3').show();"/>            
+
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" 
+                                 action="#{paramQueriesView.remove(paramQueries)}" >
+                    <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar el Centro?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</ui:composition>

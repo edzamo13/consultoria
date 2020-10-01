@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="formGCNList">
+        <p:dataTable id="groupChatNotificationList" var="groupChatNotification" value="#{groupChatNotificationView.lstGroupChatNotification}" sortBy="#{groupChatNotification.idGcn}" >
+            <p:column headerText="Nombre" sortBy="#{groupChatNotification.nameGcn}" filterBy="#{groupChatNotification.nameGcn}" filterMatchMode="contains">
+                <h:outputText value="#{groupChatNotification.nameGcn}" />
+            </p:column>
+            
+            <p:column headerText="Tipo de Grupo" filterBy="#{groupChatNotification.groupTypeGcn}" sortBy="#{groupChatNotification.groupTypeGcn}" filterMatchMode="contains">
+                <h:outputText value="#{groupChatNotification.groupTypeGcn}" />
+            </p:column>
+            
+            <p:column headerText="Fecha Registro" sortBy="#{groupChatNotification.registerDateGcn}" filterBy="#{groupChatNotification.registerDateGcn}" filterMatchMode="contains">
+                <h:outputText value="#{groupChatNotification.registerDateGcn}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                </h:outputText>
+            </p:column>
+            
+            <p:column headerText="Comunicación con Centros" sortBy="#{groupChatNotification.comunicationCentersGcn}"  filterMatchMode="contains" >
+                <div align="center">
+                    <p:selectBooleanCheckbox value="#{groupChatNotification.comunicationCentersGcn}" disabled="true"/>
+                </div>
+            </p:column>
+            
+            <p:column headerText="Activo" sortBy="#{groupChatNotification.activeGcn}"  filterMatchMode="contains" >
+                <div align="center">
+                    <p:selectBooleanCheckbox value="#{groupChatNotification.activeGcn}" disabled="true"/>
+                </div>
+            </p:column>
+            
+            <p:column headerText="Fecha Inactivo" sortBy="#{groupChatNotification.inactiveDateGcn}" filterBy="#{groupChatNotification.inactiveDateGcn}" filterMatchMode="contains">
+                <h:outputText value="#{groupChatNotification.inactiveDateGcn}" >
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Editar" width="40">
+                <p:commandButton actionListener="#{groupChatNotificationView.setSelected(groupChatNotification)}" onclick="PF('dlg3').show();" icon="ui-icon-pencil" title="Editar"/>                 
+            </p:column>
+
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" title="Eliminar" action="#{groupChatNotificationView.remove(groupChatNotification)}">
+                <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar el Grupo?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>   
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog> 
+    </h:form>
+</ui:composition>

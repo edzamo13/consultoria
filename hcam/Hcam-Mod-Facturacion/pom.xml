@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>hcam</groupId>
+    <artifactId>HCAM-Mod-Facturacion</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+  <modules>
+    <module>HCAM-JPA</module>
+    <module>HCAM-Service</module>
+    <module>HCAM-JPA-API</module>
+    <module>HCAM-Service-API</module>
+    <module>HCAM-WEB</module>
+    <module>HCAM-QueryExecutor</module>
+    <module>HCAM-QueryExecutor-API</module>
+    <module>TestOsgi</module>
+  </modules>
+</project>

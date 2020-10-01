@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="hcam_HCAM-JPA-API_jar_1.0.0PU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>hcam.entity.Esquematbl</class>
+    <class>hcam.entity.CtUmtbl</class>
+    <class>hcam.entity.Unidmedtbl</class>
+    <class>hcam.entity.Cabtaritbl</class>
+    <class>hcam.entity.Histclitbl</class>
+    <class>hcam.entity.Reglastbl</class>
+    <class>hcam.entity.Ubicatbl</class>
+    <class>hcam.entity.Tipostbl</class>
+    <class>hcam.entity.Parmfactbl</class>
+    <class>hcam.entity.Deunitbl</class>
+    <class>hcam.entity.Detplantbl</class>
+    <class>hcam.entity.Zonastbl</class>
+    <class>hcam.entity.Tarifartbl</class>
+    <class>hcam.entity.Serviciotbl</class>
+    <class>hcam.entity.Unimdeptbl</class>
+    <class>hcam.entity.Cabplantbl</class>
+    <class>hcam.entity.Areatbl</class>
+    <class>hcam.entity.Proceditbl</class>
+    <class>ec.hcam.entities1.Irsi02</class>
+    <validation-mode>NONE</validation-mode>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:as400://172.16.4.10/Produio"/>
+      <property name="javax.persistence.jdbc.password" value="webFactura"/>
+      <property name="javax.persistence.jdbc.driver" value="com.ibm.as400.access.AS400JDBCDriver"/>
+      <property name="javax.persistence.jdbc.user" value="conexFact"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.DB2Dialect"/>
+      <property name="hibernate.connection.driver_class" value="com.ibm.as400.access.AS400JDBCDriver"/>
+      <property name="hibernate.connection.url" value="jdbc:as400://172.16.4.10/Produio"/>
+      <property name="hibernate.default_schema" value="FACWEB"/>
+      <property name="hibernate.default_catalog" value="FACWEB"/>
+      <property name="hibernate.connection.username" value="conexFact"/>
+      <property name="hibernate.connection.password" value="webFactura"/>
+    </properties>
+  </persistence-unit>
+</persistence>

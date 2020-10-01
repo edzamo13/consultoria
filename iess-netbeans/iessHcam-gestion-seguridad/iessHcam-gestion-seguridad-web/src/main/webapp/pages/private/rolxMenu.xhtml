@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/template/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form id="formAplicacion">
+
+            <p:growl id="growl" autoUpdate="true" showDetail="true" sticky="true" globalOnly="true" showSummary="false" />  
+
+            <p:toolbar>
+                        <f:facet name="left">
+                            <p:menuButton value="Opciones" iconPos="true">
+                                <p:menuitem value="Guardar" action="#{rolxMenuControlador.muestraConfirmacion()}" icon="ui-icon-disk" update="formAplicacion, growl"/>
+                            </p:menuButton>
+                        </f:facet>
+            </p:toolbar>
+            
+            
+            <p:panel>
+
+                <p:panelGrid columns="2" style="margin: 0 auto; width: 70%" styleClass="panelgrid-sin-bordes">
+                    <h:outputText value="Rol" styleClass="label"/>
+                    <p:selectOneMenu id="selectOneMenuRoles" value="#{rolxMenuControlador.rolxMenuForm.rol.roIdRol}" style="width:300px" filter="true" filterMatchMode="contains" required="true">
+                        <f:selectItem itemLabel="Selecione una Opción" itemValue="" />
+                        <f:selectItems value="#{rolxMenuControlador.rolxMenuForm.roles}" var="itemSeleccionadoRol" itemLabel="#{itemSeleccionadoRol.roNombre}" itemValue="#{itemSeleccionadoRol.roIdRol}" />
+                        <p:ajax  listener="#{rolxMenuControlador.cargaDependenciasxRol()}" update="selectOneMenuDependencias, selectOneMenuAplicacion, pnlPrincipal"/>
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Dependencia " styleClass="label"/>
+                    <p:selectOneMenu id="selectOneMenuDependencias" value="#{rolxMenuControlador.rolxMenuForm.dependencia.deIdDependencia}" style="width:300px" filter="true" filterMatchMode="contains" required="true">
+                        <f:selectItem itemLabel="Selecione una Opción" itemValue="" />
+                        <f:selectItems value="#{rolxMenuControlador.rolxMenuForm.rolesxDependencias}" var="itemSeleccionadoDepe" itemLabel="#{itemSeleccionadoDepe.deIdDependencia.deNombre}" itemValue="#{itemSeleccionadoDepe.deIdDependencia.deIdDependencia}"/>
+                        <p:ajax listener="#{rolxMenuControlador.cargaListaAplicaciones()}" update="selectOneMenuAplicacion, pnlPrincipal"/>
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Aplicacion " styleClass="label"/>
+                    <p:selectOneMenu id="selectOneMenuAplicacion" value="#{rolxMenuControlador.rolxMenuForm.aplicacion.apIdAplicacion}" style="width:300px" filter="true" filterMatchMode="contains" required="true">
+                        <f:selectItem itemLabel="Selecione una Opción" itemValue="" />
+                        <f:selectItems value="#{rolxMenuControlador.rolxMenuForm.aplicaciones}" var="itemSeleccionadoApli" itemLabel="#{itemSeleccionadoApli.apNombre}" itemValue="#{itemSeleccionadoApli.apIdAplicacion}"/>
+                        <p:ajax listener="#{rolxMenuControlador.cargaListaMenus()}" update="pnlPrincipal"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+
+                <br/>
+
+                <p:panel id="pnlPrincipal" visible ="#{rolxMenuControlador.rolxMenuForm.muestraPanel}" header="Menú Asignado al Rol" >
+                    
+                    <p:tree value="#{rolxMenuControlador.rolxMenuForm.root}" dynamic="true" var="node" style="margin: 0 auto">
+                        <p:treeNode >
+                            <h:panelGrid columns="3"  >
+                                <p:selectBooleanCheckbox id="check" value="#{node.habilitado}" >
+                                    <p:ajax update=":#{p:component('pnlPrincipal')}" listener="#{rolxMenuControlador.validarArbolCheck(node)}" />
+                                </p:selectBooleanCheckbox>
+                                <h:outputText value="#{node.meEtiqueta}" escape="false" />
+                                <p:tooltip  for="check" value="Check Menú Habilitado" />
+                            </h:panelGrid>
+                        </p:treeNode>
+                    </p:tree>
+                </p:panel>
+                <br/><br/><br/><br/>
+            </p:panel>
+            
+            <p:dialog header="Mensaje" id="dlgConfirmacion" widgetVar="dlgConfirmacion" modal="true" showEffect="fade" hideEffect="fade" resizable="false" closable="false" width="300px">
+                <h:panelGrid columns="1" style="margin:0 auto" >
+                    <center>
+                        <h:panelGrid columns="2">
+
+                            <h:graphicImage value="/resources/img/plantilla/pregunta.jpg" width="50" height="50" />
+                            <p:outputLabel value="¿Desea Guardar el Registro?"/>
+
+                        </h:panelGrid>
+                        <br/>
+
+                        <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto">
+                            <p:commandButton value="Aceptar" icon="ui-icon-check" action ="#{rolxMenuControlador.guardaMenuAsignado()}" update="dlgConfirmacion" title="Aceptar"/>
+                            <p:commandButton value="Cancelar" icon="ui-icon-close" update="dlgConfirmacion" title="Cancelar"/>
+                        </h:panelGrid>
+                    </center>
+
+                </h:panelGrid>
+
+            </p:dialog>
+           
+        </h:form>
+    </ui:define>
+</ui:composition>
+

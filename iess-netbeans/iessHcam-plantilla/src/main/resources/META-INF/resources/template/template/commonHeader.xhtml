@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition>
+            <h:head>
+                <h:outputStylesheet name="#{resource['css/default.css']}"  /> 
+            </h:head>
+            <div id="fondoHeader">
+                <table style="width:100%;" >
+                    <tr>
+                        <td style="margin: 0 auto; text-align: center; width: 10%;">
+                            <img src="#{resource['img/plantilla/logoIess.png']}" height="110" width="125" alt=""/>
+                        </td>
+                        <td id="tituloPrincipal" style="margin: 0 auto;">
+                            <h:outputText value="#{plantillaControlador.plantillaBb.descripcionUnme}" style="font-size: 0.83em; vertical-align: 10px"/>
+                            <br/>
+                            <h:outputText value="#{plantillaControlador.plantillaBb.salida.aplicativo}" style="font-size: 0.82em"/>
+                        </td>
+                        <td>
+                            <span id="resalto">
+                                <table style="text-align: center">
+
+                                    <tr>
+                                        <td style="font-size: 12px" colspan="2">
+                                            <p:outputLabel id="txtNombre" value="#{plantillaControlador.plantillaBb.salida.nombrePersona}"></p:outputLabel>
+                                            <br/>
+                                            <p:outputLabel id="txtusr" value="usuario:  #{plantillaControlador.plantillaBb.salida.usuario}"></p:outputLabel>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="font-size: 13px">
+                                            <p:commandButton value="" styleClass="buttonHeader home"  title="Volver a Inicio" action="#{plantillaControlador.volverInicio()}" />
+                                        </td>
+                                        <td style="font-size: 13px">
+                                            <p:commandButton value="" styleClass="buttonHeader cerrarSesion" title="Cerrar Sesión" action="#{plantillaControlador.cerrarSession()}" />
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <p:dialog visible="#{plantillaControlador.plantillaBb.dialogEspera}" dynamic="true" id="dialogEspera" widgetVar="dialogEspera" modal="true" closable="false" showEffect="fade" hideEffect="fade" resizable="false">
+                <table>
+                    <tr>
+                        <td align="center">
+                            <img src="#{resource['img/plantilla/iconWaiting.gif']}" alt=""/>
+                        </td>
+                        <td>
+                            <p:outputLabel value="Procesando..." style="font-size: 14px"/>
+                        </td>
+                    </tr>
+
+                </table>        
+            </p:dialog>
+        </ui:composition>
+
+    </body>
+</html>

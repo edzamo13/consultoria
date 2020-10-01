@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="form-edit">
+        <p:dialog header="Modificar Nivel Jerarquico" showEffect="fold" hideEffect="fold" widgetVar="dlg3" modal="true" >
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">  
+                <h:panelGrid id="gridEdit" columns="3" cellpadding="5">
+
+                    <p:outputLabel value="Nombre:" for="inpNombre" style="font-weight:bold" />
+                    <p:inputText id="inpNombre" value="#{menusView.selectedMenu.nameMnu}" validatorMessage="Introduzca datos correctos(Alfanuméricos y guión, sin espacios)">
+                        <f:validateRegex pattern="^[a-zA-Z0-9-_]{1,30}$" />
+                    </p:inputText>
+                    <p:message for="inpNombre"/>
+
+                    <p:outputLabel value="Descripción:" for="inpDesc" style="font-weight:bold"/>
+                    <p:inputText id="inpDesc" value="#{menusView.selectedMenu.descriptionMnu}" required="true"/>
+                    <p:message for="inpDesc"/>
+            
+                   <p:outputLabel for="inpMod" value="Modulo:" style="font-weight:bold" />
+                    <p:selectOneMenu id="inpMod"  style="width:175px" required="true" value="#{menusView.modules.idMod}" validatorMessage="" >
+                        <f:selectItem itemLabel="Seleccione el Módulo"/>
+                        <f:selectItems value="#{menusView.lstModules}" var="modl" itemLabel="#{modl.nameMod}" itemValue="#{modl.idMod}"/>
+                    </p:selectOneMenu>
+                    <p:message for="inpMod"/>
+                     
+                    <p:outputLabel value="Activo:" for="active" style="font-weight:bold"/>
+                    <p:selectBooleanCheckbox id="active" value="#{menusView.selectedMenu.statusMnu}" />
+                    <p:outputLabel value=""/>
+
+                    <p:inplace id="id" style="visibility: hidden">
+                        <p:inputText value="#{menusView.selectedMenu.idMnu}"  />
+                    </p:inplace>
+                    <h:outputLabel for="id" value="Id:" style="visibility: hidden" />               
+                    
+
+                    <br></br>
+                    <br></br>
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnEdit" value="Modificar" update=":form-edit:gridEdit" action="#{menusView.edit()}" icon="ui-icon-pencil"/>
+                            <p:commandButton id="btnCancelar" value="Cancelar" icon="ui-icon-cancel" onclick="window.location.replace(window.location.href);" action="adminMenu?face-redirect=true"/>
+                        </h:panelGrid>
+                    </div>
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>
+

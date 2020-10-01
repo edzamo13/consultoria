@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+          <p:dialog id="mdlNewHierLev" header="Crear Usuario" widgetVar="dlg2" modal="true" showEffect="fold" hideEffect="fold" height="600" class="transparentDlg" >
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">               
+                <h:panelGrid id="grid" columns="3" cellpadding="5">                    
+                  
+                    <p:outputLabel for="inpLogin" value="Nombre Usuario:" style="font-weight:bold" />
+                    <p:inputText id="inpLogin" label="Nombre Usuario: " required="true" value="#{usersView.user.loginUsr}" validatorMessage="Introduzca datos correctos(Alfanuméricos y guión, sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9_-]{3,15}" />
+                    </p:inputText>
+                    <p:message for="inpLogin"/> 
+
+                    <p:outputLabel for="inpCedula" value="Cedula:" style="font-weight:bold" />
+                    <p:inputText id="inpCedula" label="Cedula" required="true" value="#{usersView.user.identityCardUsr}" validatorMessage="Introduzca datos correctos(Número de 10 dígitos)">
+                        <f:validateRegex pattern="[0-9]{10}" />
+                    </p:inputText>
+                    <p:message for="inpCedula"  />
+
+                    <p:outputLabel for="inpNombres" value="Nombres:" style="font-weight:bold" />
+                    <p:inputText id="inpNombres" label="Nombres" required="true" value="#{usersView.user.firstNameUsr}" validatorMessage="Introduzca datos correctos(Solo letras)">
+                        <f:validateRegex pattern="[A-Za-záéíóúñ]{2,}([\s][A-Za-záéíóúñ]{2,})?" />
+                    </p:inputText>
+                    <p:message for="inpNombres"  />
+
+                    <p:outputLabel for="inpApellidos" value="Apellidos:" style="font-weight:bold" />
+                    <p:inputText id="inpApellidos" label="Apellidos" required="true" value="#{usersView.user.lastNameUsr}" validatorMessage="Introduzca datos correctos(Solo letras y los dos Apellidos)">
+                        <f:validateRegex pattern="[A-Za-záéíóúñ]{2,}([\s][A-Za-záéíóúñ]{2,})+" />
+                    </p:inputText>
+                    <p:message for="inpApellidos"  />
+
+                    <p:outputLabel for="inpCorreo" value="Correo Electronico:" style="font-weight:bold" />
+                    <p:inputText id="inpCorreo" label="Correo Electronico" required="true" value="#{usersView.user.emailUsr}" validatorMessage="Introduzca un E-mail válido(Una @ y almenos un punto)">
+                        <f:validateRegex pattern="^([\da-z_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$" />
+                    </p:inputText>
+                    <p:message for="inpCorreo"  />
+
+                    <p:outputLabel for="pwd1" value="Contraseña :" style="font-weight:bold" />
+                    <p:password id="pwd1"  match="pwd2" label="Password 1" required="true" value="#{usersView.user.passwordUsr}" validatorMessage="Las contraseñas no coincide"/>
+                    <p:message for="pwd1" />
+
+                    <p:outputLabel for="pwd2" value="Repetir Contraseña:" style="font-weight:bold" />
+                    <p:password id="pwd2"  label="Password 2" required="true" />
+                    <p:outputLabel value="" />
+
+                    <p:outputLabel for="inpHclUser" value="Nivel Jerarquico:" style="font-weight:bold" />
+                    <p:selectOneMenu id="inpHclUser"  style="width:175px" required="true" value="#{usersView.hierarchicalLevel.idHle}" >
+                        <f:selectItem itemLabel="Seleccione el Nivel Jerarquico"/>
+                        <f:selectItems value="#{usersView.lstHierarchicalLevels}" var="hcl" itemLabel="#{hcl.nameHle}" itemValue="#{hcl.idHle}"/>
+                    </p:selectOneMenu>
+                    <p:message for="inpHclUser" />               
+
+                    <p:outputLabel for="inpCenterUser" value="Centro:" style="font-weight:bold" />
+                    <p:selectOneMenu id="inpCenterUser"  style="width:175px" required="true"  value="#{usersView.center.idCet}" >
+                        <f:selectItem itemLabel="Seleccione el Centro"/>
+                        <f:selectItems value="#{usersView.lstCenters}" var="cnt" itemLabel="#{cnt.nameCet}" itemValue="#{cnt.idCet}"/>
+                    </p:selectOneMenu>
+                    <p:message for="inpCenterUser" />
+
+                    <p:outputLabel for="inpCargo" value="Cargo:" style="font-weight:bold" />
+                    <p:inputText id="inpCargo" label="Cargo" value="#{usersView.user.positionUsr}" validatorMessage="Introduzca datos correctos(Solo letras, no mayor a 15)">
+                        <f:validateRegex pattern="^[a-zA-Z\s]{1,15}$" />
+                    </p:inputText>
+                    <p:message for="inpCargo" />
+
+                    <p:outputLabel for="inpUnit" value="Unidad:" style="font-weight:bold" />
+                    <p:inputText id="inpUnit" label="Unidad" value="#{usersView.user.unitUsr}" validatorMessage="Introduzca datos correctos(Alfanuméricos, no mayor a 15)">
+                        <f:validateRegex pattern="^[a-zA-Z0-9\s]{1,15}$" />
+                    </p:inputText>
+                    <p:message for="inpUnit" />
+
+                    <p:outputLabel for="somProfile" value="Perfil:" style="font-weight:bold" />
+                    <p:selectOneMenu id="somProfile"  style="width:175px" required="true" value="#{usersView.profile.idPrf}" >
+                        <f:selectItem itemLabel="Seleccione el Perfil"/>
+                        <f:selectItems value="#{usersView.lstProfiles}" var="prf" itemLabel="#{prf.namePrf}" itemValue="#{prf.idPrf}"/>
+                    </p:selectOneMenu>
+                    <p:message for="somProfile" />
+
+                    <p:outputLabel for="inpMovil" value="Teléfono Móvil:" style="font-weight:bold" />
+                    <p:inputText id="inpMovil" label="Teléfono Móvil" required="true" value="#{usersView.user.mobilePhoneUsr}" validatorMessage="Introduzca datos correctos(Número de 10 dígitos)">
+                        <f:validateRegex pattern="([0-9]{10})?" />
+                    </p:inputText>
+                    <p:message for="inpMovil" />
+
+                    <p:outputLabel for="inpFijo" value="Teléfono Fijo:" style="font-weight:bold" />
+                    <p:inputText id="inpFijo" label="Teléfono Fijo" required="true" value="#{usersView.user.phoneUsr}" validatorMessage="Introduzca datos correctos(Número de 9 dígitos)">
+                        <f:validateRegex pattern="([0-9]{09})?"/>
+                    </p:inputText>
+                    <p:message for="inpFijo" />
+
+                    <p:outputLabel for="inpDireccion" value="Dirección:" style="font-weight:bold" />
+                    <p:inputText id="inpDireccion" label="Dirección" required="true" value="#{usersView.user.addressUsr}">
+                    </p:inputText>
+                    <p:message for="inpDireccion" />
+
+                    <p:outputLabel for="somSOSM" value="SO SmartPhone:" style="font-weight:bold" />
+                    <p:selectOneMenu id="somSOSM" style="width:175px" value="#{usersView.user.osSmartphoneUsr}">
+                        <f:selectItem itemLabel="Android" itemValue="0" />
+                        <f:selectItem itemLabel="iOS" itemValue="1" />
+                    </p:selectOneMenu>
+                    <p:outputLabel value="" />
+
+                    <p:outputLabel for="formImage" value="Imagen de Usuario:" style="font-weight:bold" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    
+                    <h:form id="formImage" enctype="multipart/form-data">
+                        <p:fileUpload id="imgUpload" fileUploadListener="#{usersView.uploadImage}" 
+                                      label="Escojer Imagen" uploadLabel="Subir" cancelLabel="Cancelar"
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="512000"/>
+                        <p:message for="imgUpload" />
+                    </h:form>
+                    <p:outputLabel value="" />
+                    
+                    
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{usersView.save(usersView.user)}" icon="ui-icon-disk"/>
+                            <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" />
+                        </h:panelGrid>
+                    </div>
+
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="formList">
+        <p:dataTable id="hierarchicalLevelList" var="hierarchicalLevel" value="#{hierarchicalLevelView.lstHierarchicalLevel}" sortBy="#{hierarchicalLevel.idHle}" >
+            <p:column headerText="Nombre" filterBy="#{hierarchicalLevel.nameHle}" filterMatchMode="contains">
+                <h:outputText value="#{hierarchicalLevel.nameHle}" />
+            </p:column>
+            <p:column headerText="Grupo" filterBy="#{hierarchicalLevel.hieIdHle.nameHle}" filterMatchMode="contains">
+                <h:outputText value="#{hierarchicalLevel.hieIdHle.nameHle}" />
+            </p:column>
+            <p:column headerText="Prioridad" filterBy="#{hierarchicalLevel.priorityHle}" filterMatchMode="contains">
+                <h:outputText value="#{hierarchicalLevel.priorityHle}" />
+            </p:column>
+            <p:column headerText="Descripcion" filterBy="#{hierarchicalLevel.descriptionHle}" filterMatchMode="contains">
+                <h:outputText value="#{hierarchicalLevel.descriptionHle}" />
+            </p:column>
+            <p:column headerText="Editar" width="40">
+                <p:commandButton actionListener="#{hierarchicalLevelView.setSelected(hierarchicalLevel)}" onclick="PF('dlg3').show();" icon="ui-icon-pencil" title="Editar"/>                 
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" title="Borrar" action="#{hierarchicalLevelView.remove(hierarchicalLevel)}">
+                    <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar la Jerarquía?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+    </h:form>
+</ui:composition>

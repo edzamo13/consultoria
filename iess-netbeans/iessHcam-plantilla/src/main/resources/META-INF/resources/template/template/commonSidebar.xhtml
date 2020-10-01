@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      >
+    <body>
+        <ui:composition>
+            <h:head>
+                <h:outputStylesheet  name="css/default.css"  /> 
+            </h:head>
+            <h:form>
+                <p:panel header="Menú">
+                    <p:tree value="#{plantillaControlador.plantillaBb.root}" var="node" dynamic="true" style="font-size: 12px; width: 100%">
+                        <p:treeNode>
+                            <h:outputText value="#{node.meEtiqueta}" rendered="#{node.meNodoFinal eq '0' ? true : false}" escape="false"/>
+
+                            <p:commandLink onclick="PF('dialogEspera').show();" ajax="true" actionListener ="#{plantillaControlador.redirect(node)}" update=":formP:miga" rendered="#{node.meNodoFinal eq '1' ? true : false}" >
+                                <h:outputText value="#{node.meEtiqueta}" escape="false"/>
+                            </p:commandLink>    
+                        </p:treeNode>
+                    </p:tree>
+                </p:panel>
+            </h:form>
+
+        </ui:composition>
+    </body>
+</html>
+
+

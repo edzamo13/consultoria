@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="formList">
+        <br></br>  
+        <p:dataTable id="dtbCenter" var="tipDep" value="#{tipoDependenciaView.listTipos}" style="margin-bottom:20px" sortBy="#{tipDep.tdidpk}">
+
+            <p:column headerText="Nombre" sortBy="#{tipDep.tdnombre}" filterBy="#{tipDep.tdnombre}" filterMatchMode="contains">
+                <h:outputText value="#{tipDep.tdnombre}" />
+            </p:column>
+            <p:column headerText="Codigo" sortBy="#{tipDep.tdcodigo}" filterBy="#{tipDep.tdcodigo}" filterMatchMode="contains">
+                <h:outputText value="#{tipDep.tdcodigo}" />
+            </p:column>
+            <p:column headerText="Descripción" sortBy="#{tipDep.tddescrip}" filterBy="#{tipDep.tddescrip}" filterMatchMode="contains">
+                <h:outputText value="#{tipDep.tddescrip}" />
+            </p:column>
+            <p:column headerText="Estado" sortBy="#{tipDep.tdestado}" filterBy="#{tipDep.tdestado}" filterMatchMode="contains">
+                <h:outputText value="#{tipDep.tdestado}" />
+            </p:column>
+            <p:column width="40" style="text-align: center" headerText="Editar">
+                <p:commandButton  icon="ui-icon-pencil" 
+                                  title="Editar"
+                                  actionListener="#{tipoDependenciaView.setSelected(tipDep)}"
+                                  onclick="PF('dlg3').show();"/>            
+
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" 
+                                 action="#{tipoDependenciaView.remove(tipDep)}" >
+                    <p:confirm header="Confirmación" message="¿Está Seguro de Eliminar el Tipo de Dependencia?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</ui:composition>

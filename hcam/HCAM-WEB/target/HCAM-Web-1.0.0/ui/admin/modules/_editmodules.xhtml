@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <h:form id="form-edit">
+        <p:dialog header="Modificar Módulos " showEffect="fold" hideEffect="fold" widgetVar="editMd" modal="true" height="400">
+          <p:panel id="panelEidt" header="Ingrese los datos" style="margin-bottom:10px;">
+            <h:panelGrid id='gridEdit' columns="3" cellpadding="5">
+                
+                <p:outputLabel for="name_e" value="Nombre:" style="font-weight:bold" />
+                <p:inputText id="name_e" value="#{modulesView.selectmodules.nameMod}" required="true" label="Nombre: " validatorMessage="Introduzca datos correctos(Alfanuméricos, no mayor a 15)">
+                     <f:validateRegex pattern="[a-zA-Z0-9\s]{3,15}" />
+                   </p:inputText>
+                 <p:message for="name_e"/>
+                 
+                <p:outputLabel for="description_e" value="Descripción:" style="font-weight:bold" />
+                <p:inputText id="description_e" value="#{modulesView.selectmodules.descriptionMod}" required="true" label="Descripción: "/>
+                 <p:message for="description_e"/>
+    
+                <p:outputLabel for="id" value="Id:" style="visibility: hidden"/>
+                <h:inputText id="id" value="#{modulesView.selectmodules.idMod}" style="visibility: hidden"/>
+                
+                
+                <br></br>
+                <br></br>
+                <div align="Modulos">
+                    <h:panelGrid columns="2" cellpadding="5" >
+                        <p:commandButton       id="btnEdit" 
+                                               value="Modificar"  
+                                               action="#{modulesView.edit(modulesView.selectmodules)}"
+                                               icon="ui-icon-pencil"  
+                                               update=":form-edit:gridEdit">
+                        </p:commandButton>
+                        <p:commandButton       id="btnCancelar" 
+                                               value="Cancelar" 
+                                               onclick="window.location.replace(window.location.href);"
+                                               icon="ui-icon-cancel" />
+                    </h:panelGrid>
+                </div>
+            </h:panelGrid>
+          </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

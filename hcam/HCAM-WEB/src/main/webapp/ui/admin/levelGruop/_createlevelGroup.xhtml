@@ -1,0 +1,57 @@
+ <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="form-createLG">
+        <p:dialog header="Asignar jerarquiar a los grupos" widgetVar="dlg_2" modal="true" height="400" showEffect="fold" hideEffect="fold">
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">  
+              
+                
+                <p:outputLabel value="Seleccione Tipo:" />
+             <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5" >
+                 <p:selectOneRadio id="console" value="#{levelGroupView.value}" onchange="#{levelGroupView.cargaraListaPorTipo()}">
+                 <f:selectItem itemLabel="Chat" itemValue="#{true}" />
+                 <f:selectItem itemLabel="Notificación" itemValue="#{false}" />
+                 <p:ajax update="panel" listener="#{levelGroupView.type2}" />
+                </p:selectOneRadio>
+               </h:panelGrid> 
+             <h:panelGrid title="Seleccione un tipo" id="grid_creat" columns="3" style="margin-bottom:10px" cellpadding="5">  
+                  
+                 <p:outputLabel value="Grupo" for="inpgrup" />
+                 <p:selectOneMenu value="#{levelGroupView.groupChatNotification.idGcn}" id="inpgrup" required="true" effect="fold" >
+                      <f:selectItem itemLabel="Seleccione el grupo" />
+                      <f:selectItems value="#{levelGroupView.lstGroupType}" var="type"  itemLabel="#{type.nameGcn}" itemValue="#{type.idGcn}" />
+                 </p:selectOneMenu> 
+                 <p:message for="inpgrup" /> 
+               </h:panelGrid>
+                
+                
+                <p:dataTable style="width:300px" id="radioDT" var="Heral" value="#{levelGroupView.lstHierarchicalLevel}" selection="#{levelGroupView.lstSelectHierarchicalLevel}" 
+                         rowKey="#{Heral.idHle}">
+                          
+                       <p:column selectionMode="multiple" style="width:5px;text-align:center"/>
+                          <p:column headerText="Asignar Jerarquias" style="width:50px;text-align:center">
+                          <h:outputText value="#{Heral.nameHle}" />
+                       </p:column>
+                                                       
+                </p:dataTable>
+                <br></br>
+                <br></br>
+             <div align="center"> 
+               <h:panelGrid columns="2" cellpadding="5" >
+                   <p:commandButton id="btnGuar" value="Guardar" 
+                                    update=":form-createLG:grid_creat"
+                                    action="#{levelGroupView.save(levelGroupView.hierarchicalLevelGroup)}" 
+                                    icon="ui-icon-disk"
+                                     />
+                   <p:commandButton id="btnCancel" value="Cancelar" 
+                                    onclick="window.location.replace(window.location.href);"
+                                    icon="ui-icon-cancel" action="adminlevelGroup?faces-redirect=true" />
+              </h:panelGrid>
+             </div>
+            </p:panel>
+        </p:dialog>    
+    </h:form>
+</ui:composition>

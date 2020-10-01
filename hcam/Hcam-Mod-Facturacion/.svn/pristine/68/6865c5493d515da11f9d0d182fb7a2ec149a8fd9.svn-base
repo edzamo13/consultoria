@@ -1,0 +1,656 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ec.hcam.orquestrator;
+
+import ec.hcam.data.Dependencia;
+import ec.hcam.data.Procedimientos;
+import ec.hcam.data.ProcedimientosCobroAdicional;
+import ec.hcam.data.ProcedimientosRehabilitacion;
+import ec.hcam.entity.Cabplantbl;
+import ec.hcam.entity.Detplantbl;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.AsyncResult;
+import javax.ejb.Asynchronous;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import static javax.ejb.TransactionManagementType.BEAN;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+
+/**
+ *
+ * @author ezamora
+ */
+@Stateless
+@TransactionManagement(BEAN)
+public class ProcedimientosService extends Basica implements ProcedimientosServiceRemote {
+
+    private List<Procedimientos> procedimientoLstCobroAd;
+     private List<Procedimientos> procedimientoLstCobroAdAux;
+    private List<ProcedimientosRehabilitacion> procedimientoRehabiliLstCobroAd;
+    private List<ProcedimientosRehabilitacion> procedimientoRehabiliLstCobroAdAux;
+    private List<Procedimientos> procedimientoLst;
+    List<ProcedimientosRehabilitacion> procedimientoRehaLst;
+
+    @Asynchronous
+    public Future obtenerRegistrosProcedimientoEmergecia(String IOUNME, Integer IOTISE, Integer fecharecibida, Integer nivel, Integer unidpk, Integer ubicapk) {
+        String IOXDAT = fecharecibida.toString();
+        utx = ctx.getUserTransaction();
+        System.out.println("Hora Inicio Procedimiento Emergecia:" + imprimirHora().toString());
+
+        String fecha = String.valueOf(IOXDAT);
+        Integer mesI = Integer.parseInt(fecha.substring(4, 6));
+        Integer diaI = Integer.parseInt(fecha.substring(6, 8));
+        Integer anioI = Integer.parseInt(fecha.substring(0, 4));
+
+        procedimientoLst = new ArrayList<Procedimientos>();
+        existenciaCabecera(mesI, diaI, anioI, unidpk, ubicapk);
+        procedimientoLst = obtenerProcedimientos(IOUNME, IOTISE, IOXDAT, nivel);
+//Cobros Adicionales 
+        procedimientoLstCobroAd = new ArrayList<Procedimientos>();
+        Integer tarifario = obtenerTarifario(IOUNME);
+        for (Procedimientos pro : procedimientoLst) {
+            //Codigo Tipo Rubro
+            pro.setTipoRubro("PRA");
+            obtenerCobroAdicional(pro, nivel);
+        }
+         procedimientoLstCobroAdAux= duplicados(procedimientoLstCobroAd);
+
+        if (procedimientoLstCobroAdAux.size() != 0) {
+            procedimientoLst.addAll(procedimientoLstCobroAdAux);
+        } else {
+            System.err.println("No existe pagos adicionales por: Procedimientos no informados");
+        }
+//LLenar Detalles
+        for (Procedimientos procedimientos : procedimientoLst) {
+            registrarDetallePlanillaje(procedimientos, IOXDAT);
+        }
+        // cabeceraRegistraDetalles(mesI, diaI, anioI);
+        try {
+            utx.begin();
+            for (Detplantbl detplantbl : listaDetalles) {
+                detalleService.createDetplantbl(detplantbl);
+            }
+            utx.commit();
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException | SystemException ex) {
+            try {
+                utx.rollback();
+            } catch (IllegalStateException | SecurityException | SystemException ex1) {
+                Logger.getLogger(FarmacosPrescritosService.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(FarmacosPrescritosService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        bag.clear();
+        if (listaDetalles != null) {
+            listaDetalles.clear();
+        }
+        //  bagDependecia.clear();
+        System.out.println("Hora Fin Procedimiento Emergencia:" + imprimirHora().toString());
+        return new AsyncResult("OK");
+    }
+
+    public void adicionalUnico(ProcedimientosRehabilitacion pr) {
+        int cont = 0;
+        for (ProcedimientosRehabilitacion c : procedimientoRehabiliLstCobroAd) {
+            if (pr.getHISTORIA() == c.getHISTORIA()) {
+                cont++;
+                if (cont == 1) {
+                    procedimientoRehabiliLstCobroAdAux.add(c);
+                }
+
+            }
+        }
+    }
+
+    @Override
+    @Asynchronous
+    public Future obtenerRegistrosProcedimientoRehabilitacion(String IOUNME, Integer IOXDAT, Integer nivel, Integer unidpk, Integer ubicapk) {
+        //int IOUNME = Integer.parseInt(unimed);
+        utx = ctx.getUserTransaction();
+        System.out.println("Hora Inicio Procedimiento Rehabilitacion __:" + imprimirHora().toString());
+        //  List<ProcedimientosRehabilitacion> procedimientoLst;
+        String fecha = String.valueOf(IOXDAT);
+        Integer mesI = Integer.parseInt(fecha.substring(4, 6));
+        Integer diaI = Integer.parseInt(fecha.substring(6, 8));
+        Integer anioI = Integer.parseInt(fecha.substring(0, 4));
+
+        existenciaCabecera(mesI, diaI, anioI, unidpk, ubicapk);
+        procedimientoRehaLst = obtenerProcedimientosRehabilitacion(IOUNME, IOXDAT, nivel);
+        System.out.println("tamaño lista:" + procedimientoRehaLst.size());
+        //Cobros Adicionales 
+        procedimientoRehabiliLstCobroAd = new ArrayList<ProcedimientosRehabilitacion>();
+        procedimientoRehabiliLstCobroAdAux= new ArrayList<ProcedimientosRehabilitacion>();
+        Integer tarifario = obtenerTarifario(IOUNME);
+        for (ProcedimientosRehabilitacion pro : procedimientoRehaLst) {
+            //Cogigo Tipo rubro
+            pro.setTipoRubro("PRA");
+            obtenerCobroAdicional(pro, tarifario);
+        }
+       procedimientoRehabiliLstCobroAdAux= duplicadosV(procedimientoRehabiliLstCobroAd);
+
+        //Cobros Adicionales Unico
+        if (procedimientoRehabiliLstCobroAdAux.size() != 0) {
+            procedimientoRehaLst.addAll(procedimientoRehabiliLstCobroAdAux);
+        } else {
+            System.out.println("No existe pagos adicionales");
+        }
+
+        //  LLenar Detalles
+        for (ProcedimientosRehabilitacion procedimientos : procedimientoRehaLst) {
+            registrarDtllPlaProcedimientoRehabilitacion(procedimientos, IOXDAT);
+        }
+        // cabeceraRegistraDetalles(mesI, diaI, anioI);
+        try {
+            utx.begin();
+            for (Detplantbl detplantbl : listaDetalles) {
+                detalleService.createDetplantbl(detplantbl);
+            }
+            utx.commit();
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException | SystemException ex) {
+            try {
+                utx.rollback();
+            } catch (IllegalStateException | SecurityException | SystemException ex1) {
+                Logger.getLogger(FarmacosPrescritosService.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(FarmacosPrescritosService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        bag.clear();
+        if (listaDetalles != null) {
+            listaDetalles.clear();
+        }
+        //  bagDependecia.clear();
+        System.out.println("Hora Fin Procedimiento Rehabilitacion:" + imprimirHora().toString());
+        return new AsyncResult("OK");
+    }
+
+    /**
+     * Lista de Obtener Procedimientos
+     *
+     * @param IOUNME
+     * @param IOTISE
+     * @param IOXDAT
+     * @return
+     */
+    public List<Procedimientos> obtenerProcedimientos(String IOUNME, Integer IOTISE, String IOXDAT, Integer tarifario) {
+        utx = ctx.getUserTransaction();
+
+        List<Dependencia> dependencias;
+        List<Procedimientos> procedimientoLts;
+        List<Procedimientos> procedimientoAllLts;
+        procedimientoAllLts = new ArrayList();
+        //Integer tarifario = obtenerTarifario(IOUNME);
+        dependencias = obtenerDependencia(IOUNME, IOTISE, IOXDAT, tarifario);
+
+        for (Dependencia dep : dependencias) {
+
+            procedimientoLts = obtenerProcedxDependecia(IOUNME, IOTISE, IOXDAT, dep.getIR2DEP(), tarifario);
+            procedimientoAllLts.addAll(procedimientoLts);
+        }
+
+        return procedimientoAllLts;
+
+    }
+
+    /**
+     * Lista de Obtener Procedimientos Rehabilitacion
+     *
+     * @param IOUNME
+     * @param IOXDAT
+     * @return
+     */
+    public List<ProcedimientosRehabilitacion> obtenerProcedimientosRehabilitacion(String IOUNME, Integer IOXDAT, Integer tarifario) {
+        List<Dependencia> dependencias;
+        List<ProcedimientosRehabilitacion> procedimientoLts;
+        List<ProcedimientosRehabilitacion> procedimientoAllLts;
+        procedimientoAllLts = new ArrayList();
+        // Integer tarifario = obtenerTarifario(IOUNME);
+        dependencias = obtenerDependenciaRehabilitacion(IOUNME, IOXDAT, tarifario);
+
+        for (Dependencia dep : dependencias) {
+
+            procedimientoLts = obtenerProcedxDependeciaRehabilitacion(IOUNME, IOXDAT, dep.getIR2DEP(), tarifario);
+            procedimientoAllLts.addAll(procedimientoLts);
+        }
+
+        return procedimientoAllLts;
+
+    }
+
+    /**
+     * Obtiene las dependencias Emergencia
+     *
+     * @param IOUNME
+     * @param IOTISE
+     * @param IOXDAT
+     * @param TARIFARIO
+     * @return
+     */
+    public List<Dependencia> obtenerDependencia(String IOUNME, Integer IOTISE, String IOXDAT, Integer TARIFARIO) {
+        List<Dependencia> dependencias;
+        String sqlString = "SELECT distinct B.IODEPE as IR2DEP "
+                + "FROM CEDDTA.IOXI01 A "
+                + "JOIN CEDDTA.IORD01 B "
+                + "ON A.IOUNME = B.IOUNME "
+                + "AND A.IONUOR = B.IONUOR "
+                + "left join FACWEB.TARIFAFTBL C "
+                + "on C.TACODIGO = A.IOITEM and c.ctidpk=:TARIFA "
+                + "WHERE A.IOUNME =:IOUNME "
+                + "AND A.IOTISE =:IOTISE "
+                + "AND A.IOXDAT =:IOXDAT "
+                + "AND A.IOSBTP<>10 "
+                + "order by B.IODEPE";//Limite en las consulta quitar fetch first 1 rows only
+        Map<String, Object> params = new HashMap<>();
+        params.put("IOUNME", IOUNME);
+        params.put("IOTISE", IOTISE);
+        params.put("IOXDAT", IOXDAT);
+        params.put("TARIFA", TARIFARIO);
+
+        dependencias = queryExecutor.executeQuery(sqlString, params, Dependencia.class);
+
+        return dependencias;
+    }
+
+    /**
+     * Obtiene una lista de Procedimientos de acuerdo a las independencias
+     * seleccionadas
+     *
+     * @param IOUNME
+     * @param IOTISE
+     * @param IOXDAT
+     * @param IODEPE
+     * @return
+     */
+    public List<Procedimientos> obtenerProcedxDependecia(String IOUNME, Integer IOTISE, String IOXDAT, Double IODEPE, Integer tarifario) {
+        List<Procedimientos> procedimientoList;
+        String sqlString = "SELECT "
+                + "A.IOUNME, A.IONUOR, A.IOTISE, A.IOSBTP, "
+                + "A.IOITEM, A.IOCAOR, A.IOXDAT, A.IOXTIM, "
+                + "B.IORHIS, B.IOMEDI, B.IODEPE, COALESCE( C.TAVALOR,0) AS VALOR, "
+                + "COALESCE( C.TADESCRIPC,'TARIFARIO ANTERIOR SIN VALOR') AS DESCRIPCION "
+                + "FROM CEDDTA.IOXI01 A "
+                + "JOIN CEDDTA.IORD01 B "
+                + "ON A.IOUNME = B.IOUNME "
+                + "AND A.IONUOR = B.IONUOR "
+                + "left join FACWEB.TARIFAFTBL C "
+                + "on C.TACODIGO = A.IOITEM "
+                + "AND C.ctidpk =:tarifario "
+                + "WHERE A.IOUNME =:IOUNME "
+                + "AND A.IOTISE =:IOTISE "
+                + "AND A.IOXDAT =:IOXDAT "
+                + "AND B.IODEPE =:IODEPE";
+        Map<String, Object> params = new HashMap<>();
+        params.put("IOUNME", IOUNME);
+        params.put("IOTISE", IOTISE);
+        params.put("IOXDAT", IOXDAT);
+        params.put("IODEPE", IODEPE);
+        params.put("tarifario", tarifario);
+
+        procedimientoList = queryExecutor.executeQuery(sqlString, params, Procedimientos.class);
+
+        return procedimientoList;
+    }
+
+    /**
+     * Obtiene las dependencias
+     */
+    public List<Dependencia> obtenerDependenciaRehabilitacion(String IOUNME, Integer IOXDAT, Integer TARIFARIO) {
+        List<Dependencia> dependencias;
+        String sqlString = "select DISTINCT "
+                + "a.iodepe as IR2DEP "
+                + "from ceddta.ioxr01 I "
+                + "join CEDDTA.iord01 a on a.iounme=I.iounme and a.ionuor=I.ionuor "
+                + "join CEDDTA.iser01 b on b.isdunm=I.iounme and b.isdcod=I.iocosd "
+                + "left join facweb.tarifaftbl t on I.ioitem=t.tacodigo and t.ctidpk=:TARIFARIO "
+                + "where "
+                + "i.iounme =:IOUNME and i.ioxdat =:IOXDAT and i.iotise<>2    and i.iostde='V' "
+                + "and (I.IOTISE+I.IOSBTP)<>4 "
+                + "order by a.iodepe ";//Limite en las consulta quitar fetch first 1 rows only
+        Map<String, Object> params = new HashMap<>();
+        params.put("IOUNME", IOUNME);
+        params.put("IOXDAT", IOXDAT);
+        params.put("TARIFARIO", TARIFARIO);
+
+        dependencias = queryExecutor.executeQuery(sqlString, params, Dependencia.class);
+
+        return dependencias;
+    }
+
+    /**
+     * Obtiene una lista de Procedimientos de acuerdo a las independencias
+     * seleccionadas Proceso Rehabilitacion
+     *
+     * @param IOUNME
+     * @param IOXDAT
+     * @param IODEPE
+     * @return
+     */
+    public List<ProcedimientosRehabilitacion> obtenerProcedxDependeciaRehabilitacion(String IOUNME, Integer IOXDAT, Double IODEPE, Integer tarifario) {
+        List<ProcedimientosRehabilitacion> procedimientoList;
+        String sqlString = "select I.IOUNME UNIDAD_MEDICA, I.IONUOR NUM_ORDEN, I.IOCOSD COD_SERVICIO,  I.IOHIST HISTORIA, I.IOTISE TIPO_SERVICIO, "
+                + "I.IOSBTP SUBTIPO_SERVICIO, I.IOITEM ITEM_TARIFARIO, I.IOSTDE STS_VERIFICA, "
+                + "I.IOXDAT AS FE_CIT_RES, "
+                + "a.iodepe depe_solicita, a.iomedi medico_solicita , b.isddep depe_realiza , "
+                + "coalesce(t.tadescripc, 'TARIFARIO ANTERIOR SIN VALOR') AS DESCRIPCION  , "
+                + "COALESCE(t.tavalor, 0) AS VALOR "
+                + "from ceddta.ioxr01 I "
+                + "join CEDDTA.iord01 a on a.iounme=I.iounme and a.ionuor=I.ionuor "
+                + "join CEDDTA.iser01 b on b.isdunm=I.iounme and b.isdcod=I.iocosd "
+                + "left join facweb.tarifaftbl t on I.ioitem=t.tacodigo and t.ctidpk=:tarifario "
+                + "where "
+                + "i.iounme=:IOUNME and i.ioxdat=:IOXDAT and i.iotise<>2 and i.iostde='V' "
+                + "and (I.IOTISE+I.IOSBTP)<>4 "
+                + "and a.iodepe = :IODEPE";
+        Map<String, Object> params = new HashMap<>();
+        params.put("IOUNME", IOUNME);
+        params.put("IOXDAT", IOXDAT);
+        params.put("IODEPE", IODEPE);
+        params.put("tarifario", tarifario);
+
+        procedimientoList = queryExecutor.executeQuery(sqlString, params, ProcedimientosRehabilitacion.class);
+
+        return procedimientoList;
+    }
+
+    @Override
+    public void registrarDetallePlanillaje(Procedimientos registro, String iofeor) {
+
+        Detplantbl detalle = new Detplantbl();
+        //Datos Cabecera        
+        Cabplantbl cab = (Cabplantbl) bag.get("cabplantbl");
+        // TODO Solicitar a bdd que cree la BDD SEQUENCE para poder autogenrer secuenciales
+
+        //Empieza        
+        Integer mesI = Integer.parseInt(iofeor.substring(4, 6));
+        Integer diaI = Integer.parseInt(iofeor.substring(6, 8));
+        Integer anioI = Integer.parseInt(iofeor.substring(0, 4));
+
+        Calendar c1 = Calendar.getInstance();
+
+        detalle.setReidpk(2);
+        detalle.setNumplad(cab.getNumplanilla());
+        detalle.setCoditem(registro.getIOITEM());
+        detalle.setHistoCli(registro.getIORHIS());
+        detalle.setFechaReg(c1.getTime());//registro.getIOXDAT() 
+        detalle.setDescItem(registro.getDESCRIPCION()); //imp
+        detalle.setDepRea(String.valueOf(registro.getIODEPE()));
+        detalle.setCoddepsol(new BigInteger(String.valueOf(registro.getIODEPE())));
+        detalle.setCoddeprea(new BigInteger(String.valueOf(registro.getIODEPE())));
+        detalle.setTipSer(registro.getIOTISE());  //ver este campo
+        detalle.setSubtipser(registro.getIOSBTP());
+        detalle.setCantidad(registro.getIOCAOR());
+        detalle.setValorUnit(registro.getVALOR()); //ver este campo
+        detalle.setValorTotal(registro.getIOCAOR() * registro.getVALOR());
+        detalle.setNumOrden(registro.getIONUOR()); //ver este campo
+        detalle.setTipoRubro(registro.getTipoRubro()); //Tipo de servicio
+
+        detalle.setTimeAntestesia(Short.parseShort("0"));  //no aplica anestencia en farmacos
+        detalle.setCodDerivacion("CD"); //ver este campo
+        detalle.setSecDerivacion(Short.parseShort("0")); //ver este campo
+        detalle.setContingenCubre(0);
+        detalle.setEstado('P');
+
+        cab.setDetplantblList(null);
+        detalle.setCpidpk(cab);
+        //Termina
+
+        listaDetalles.add(detalle);
+        registrarPorBloque(listaDetalles);
+    }
+
+    public void registrarDtllPlaProcedimientoRehabilitacion(ProcedimientosRehabilitacion registro, Integer iofeor) {
+
+        Detplantbl detalle = new Detplantbl();
+        //Datos Cabecera        
+        Cabplantbl cab = (Cabplantbl) bag.get("cabplantbl");
+        // TODO Solicitar a bdd que cree la BDD SEQUENCE para poder autogenrer secuenciales
+
+        //Empieza        
+        Integer mesI = Integer.parseInt(String.valueOf(iofeor).substring(4, 6));
+        Integer diaI = Integer.parseInt(String.valueOf(iofeor).substring(6, 8));
+        Integer anioI = Integer.parseInt(String.valueOf(iofeor).substring(0, 4));
+
+        Calendar c1 = Calendar.getInstance();
+
+        detalle.setReidpk(2);
+        detalle.setNumplad(cab.getNumplanilla());
+        detalle.setCoditem(String.valueOf(registro.getITEM_TARIFARIO()));
+        detalle.setHistoCli(registro.getHISTORIA());
+        detalle.setFechaReg(c1.getTime());//registro.getIOXDAT() 
+        detalle.setDescItem(registro.getDESCRIPCION()); //imp
+        detalle.setDepRea(String.valueOf(registro.getDepe_solicita()));
+        detalle.setCoddepsol(new BigInteger(String.valueOf(registro.getDepe_solicita())));
+        detalle.setCoddeprea(new BigInteger(String.valueOf(registro.getDepe_solicita())));
+        detalle.setTipSer(registro.getTIPO_SERVICIO());  //ver este campoI.IOSTDE STS_VERIFICA
+        detalle.setSubtipser(registro.getSUBTIPO_SERVICIO());//I.IOSBTP SUBTIPO_SERVICIO
+        detalle.setCantidad(1);//Verificar la cantidad
+        detalle.setValorUnit(registro.getVALOR()); //ver este campo
+        detalle.setValorTotal(registro.getVALOR());
+        detalle.setNumOrden(registro.getNUM_ORDEN()); //ver este campo
+        detalle.setTipoRubro(registro.getTipoRubro()); //Tipo de servicio es PRA 
+
+        detalle.setTimeAntestesia(Short.parseShort("0"));  //no aplica anestencia en farmacos
+        detalle.setCodDerivacion("CD"); //ver este campo
+        detalle.setSecDerivacion(Short.parseShort("0")); //ver este campo
+        detalle.setContingenCubre(0);
+        detalle.setEstado('P');
+
+        cab.setDetplantblList(null);
+        detalle.setCpidpk(cab);
+        //Termina
+
+        listaDetalles.add(detalle);
+        registrarPorBloque(listaDetalles);
+    }
+
+
+    /*
+     *Obtiene el tarifario
+     */
+    public Integer obtenerTarifario(String IOUNME) {
+        List<Integer> tarifario = new ArrayList<Integer>();
+        try {
+
+            String sqlString = "SELECT  CAB.CTIDPK  FROM    FACWEB.UNIDMEDTBL U1, FACWEB.CT_UMTBL U2, FACWEB.CABTARITBL CAB WHERE   U1.UNCODIGO =:IOUNME AND  U1.UNIDPK = U2.UNIDPK "
+                    + "AND U1.UBICAPK = U2.UBICAPK "
+                    + "AND  U2.CTIDPK = CAB.CTIDPK";//Limite en las consulta quitar fetch first 1 rows only
+            Map<String, Object> params = new HashMap<>();
+            params.put("IOUNME", IOUNME);
+            tarifario = queryExecutor.executeQuery(sqlString, params, Integer.class);
+        } catch (Exception e) {
+            System.err.println(e.getMessage().toString() + "Error en Traer Tarifario: __");
+        }
+
+        return tarifario.get(0);
+    }
+
+    /**
+     * Procedimientos Adicional Emergencia
+     *
+     * @param procedimientos
+     * @param tarifario
+     */
+    public void obtenerCobroAdicional(Procedimientos procedimientos, Integer tarifario) {
+        // Integer tarifario = obtenerTarifario(IOUNME);
+        Procedimientos procedimientostmp = new Procedimientos();
+        List<ProcedimientosCobroAdicional> cobroAdicionals = new ArrayList<ProcedimientosCobroAdicional>();
+        String sqlString = "select  COALESCE( C.TAVALOR,0) AS VALOR, "
+                + "COALESCE( C.TADESCRIPC,'TARIFARIO ANTERIOR SIN VALOR') AS DESCRIPCION , a.pacodtar AS CODITEM from FAcWEB.PARANIVETBL a left join FACWEB.TARIFAFTBL C on C.TACODIGO = A.pacodtar and c.ctidpk =:tarifario "
+                + "join facweb.panicodtbl b on  a.panidpk=b.panidpk and a.panidh=b.panidh and b.ctidpk =:tarifario where a.PANIDH=5 "
+                + "and a.padet1 =:IOTISE  "
+                + "and a.padet2 =:IOSBTP ";
+        Map<String, Object> params = new HashMap<>();
+        params.put("tarifario", tarifario);
+        params.put("IOTISE", procedimientos.getIOTISE());
+        params.put("IOSBTP", procedimientos.getIOSBTP());
+
+        cobroAdicionals = queryExecutor.executeQuery(sqlString, params, ProcedimientosCobroAdicional.class);
+
+        if (cobroAdicionals.size() != 0) {
+            try {
+
+                procedimientostmp = (Procedimientos) procedimientos.clone();
+                procedimientostmp.setVALOR(Double.parseDouble(cobroAdicionals.get(0).getVALOR()));
+                procedimientostmp.setDESCRIPCION(cobroAdicionals.get(0).getDESCRIPCION());
+                procedimientostmp.setIOITEM(cobroAdicionals.get(0).getCODITEM());
+                procedimientostmp.setTipoRubro("DSE");
+                procedimientoLstCobroAd.add(procedimientostmp);
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(ProcedimientosService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+
+    /**
+     * Procedimiento cobro adicional Rehabilitacion
+     *
+     * @param procedimientos
+     * @param tarifario
+     */
+    public void obtenerCobroAdicional(ProcedimientosRehabilitacion procedimientos, Integer tarifario) {
+        // Integer tarifario = obtenerTarifario(IOUNME);
+        ProcedimientosRehabilitacion procedimientostmp = new ProcedimientosRehabilitacion();
+        List<ProcedimientosCobroAdicional> cobroAdicionals = new ArrayList<ProcedimientosCobroAdicional>();
+        String sqlString = "select  COALESCE( C.TAVALOR,0) AS VALOR, "
+                + "COALESCE( C.TADESCRIPC,'TARIFARIO ANTERIOR SIN VALOR') AS DESCRIPCION , a.pacodtar AS CODITEM from FAcWEB.PARANIVETBL a left join FACWEB.TARIFAFTBL C on C.TACODIGO = A.pacodtar and c.ctidpk=:tarifario "
+                + "join facweb.panicodtbl b on  a.panidpk=b.panidpk and a.panidh=b.panidh and b.ctidpk =:tarifario where a.PANIDH=5 "
+                + "and a.padet1 =:IOTISE  "
+                + "and a.padet2 =:IOSBTP ";
+        Map<String, Object> params = new HashMap<>();
+        params.put("tarifario", tarifario);
+        params.put("IOTISE", procedimientos.getTIPO_SERVICIO());
+        params.put("IOSBTP", procedimientos.getSUBTIPO_SERVICIO());
+
+        cobroAdicionals = queryExecutor.executeQuery(sqlString, params, ProcedimientosCobroAdicional.class);
+
+        if (cobroAdicionals.size() != 0) {
+            try {
+
+                procedimientostmp = (ProcedimientosRehabilitacion) procedimientos.clone();
+                procedimientostmp.setVALOR(Double.parseDouble(cobroAdicionals.get(0).getVALOR()));
+                procedimientostmp.setDESCRIPCION(cobroAdicionals.get(0).getDESCRIPCION());
+                procedimientostmp.setITEM_TARIFARIO(Integer.valueOf(cobroAdicionals.get(0).getCODITEM()));
+                procedimientostmp.setTipoRubro("DSE");
+                procedimientoRehabiliLstCobroAd.add(procedimientostmp);
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(ProcedimientosService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+
+    public List<ProcedimientosRehabilitacion> uniqueSinOrdenar(List<ProcedimientosRehabilitacion> lista) {
+
+        HashSet<ProcedimientosRehabilitacion> hs = new HashSet<ProcedimientosRehabilitacion>();
+        hs.addAll(lista);
+        lista.clear();
+        lista.addAll(hs);
+        return lista;
+    }
+
+    /*
+    *Crea una llave unica para los cobro adicionales Rehabilitacion
+    */
+    public List<ProcedimientosRehabilitacion> duplicadosV(List<ProcedimientosRehabilitacion> lst) {
+        HashMap<Integer, ProcedimientosRehabilitacion> map = new HashMap<Integer, ProcedimientosRehabilitacion>();
+         List<ProcedimientosRehabilitacion> aux = new ArrayList<ProcedimientosRehabilitacion>();
+
+        for (ProcedimientosRehabilitacion p : lst) {
+            map.put(p.getNUM_ORDEN(), p);
+        }
+        Set<Map.Entry<Integer, ProcedimientosRehabilitacion>> set = map.entrySet();
+
+        for (Map.Entry<Integer, ProcedimientosRehabilitacion> op : set) {
+            aux.add(op.getValue());
+        }
+        return aux;
+    }
+
+      /*
+    *Crea una llave unica para los cobro adicionales Rehabilitacion
+    */
+    public List<Procedimientos> duplicados(List<Procedimientos> lst) {
+        HashMap<Integer, Procedimientos> map = new HashMap<Integer, Procedimientos>();
+         List<Procedimientos> aux = new ArrayList<Procedimientos>();
+
+        for (Procedimientos p : lst) {
+            map.put(p.getIONUOR(), p);
+        }
+        Set<Map.Entry<Integer, Procedimientos>> set = map.entrySet();
+
+
+        for (Map.Entry<Integer, Procedimientos> op : set) {
+            aux.add(op.getValue());
+        }
+        return aux;
+    }
+
+    
+    
+    //GET AND SET
+    public List<Procedimientos> getProcedimientoLstCobroAd() {
+        return procedimientoLstCobroAd;
+    }
+
+    public void setProcedimientoLstCobroAd(List<Procedimientos> procedimientoLstCobroAd) {
+        this.procedimientoLstCobroAd = procedimientoLstCobroAd;
+    }
+
+    public List<ProcedimientosRehabilitacion> getProcedimientoRehabiliLstCobroAd() {
+        return procedimientoRehabiliLstCobroAd;
+    }
+
+    public void setProcedimientoRehabiliLstCobroAd(List<ProcedimientosRehabilitacion> procedimientoRehabiliLstCobroAd) {
+        this.procedimientoRehabiliLstCobroAd = procedimientoRehabiliLstCobroAd;
+    }
+
+    public List<Procedimientos> getProcedimientoLst() {
+        return procedimientoLst;
+    }
+
+    public void setProcedimientoLst(List<Procedimientos> procedimientoLst) {
+        this.procedimientoLst = procedimientoLst;
+    }
+
+    public List<ProcedimientosRehabilitacion> getProcedimientoRehaLst() {
+        return procedimientoRehaLst;
+    }
+
+    public void setProcedimientoRehaLst(List<ProcedimientosRehabilitacion> procedimientoRehaLst) {
+        this.procedimientoRehaLst = procedimientoRehaLst;
+    }
+
+    public List<ProcedimientosRehabilitacion> getProcedimientoRehabiliLstCobroAdAux() {
+        return procedimientoRehabiliLstCobroAdAux;
+    }
+
+    public void setProcedimientoRehabiliLstCobroAdAux(List<ProcedimientosRehabilitacion> procedimientoRehabiliLstCobroAdAux) {
+        this.procedimientoRehabiliLstCobroAdAux = procedimientoRehabiliLstCobroAdAux;
+    }
+
+    public List<Procedimientos> getProcedimientoLstCobroAdAux() {
+        return procedimientoLstCobroAdAux;
+    }
+
+    public void setProcedimientoLstCobroAdAux(List<Procedimientos> procedimientoLstCobroAdAux) {
+        this.procedimientoLstCobroAdAux = procedimientoLstCobroAdAux;
+    }
+    
+
+}

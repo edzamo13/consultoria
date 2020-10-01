@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="formList">
+        <p:dataTable var="usg" value="#{userGroupView.lstGroupsRegistered}" rowExpandMode="single" >
+        <f:facet name="header">
+            Despliegue las lista para ver la asignasión
+        </f:facet>
+        <p:column style="width:16px">
+            <p:rowToggler />
+        </p:column>
+        <p:column headerText="Grupos" >
+            <h:outputText value="#{usegrop.idGcn.nameGcn}" />
+        </p:column>
+ 
+        <p:rowExpansion>
+            <p:panelGrid  columns="2" columnClasses="label,value" style="width:300px">
+                <p:dataTable var="usr" value="#{userGroupView.getLstUsersRegistered(usg.idGcn.idGcn)}" class="tableWithOutStyles">
+                    <p:column headerText="Usuarios">
+                        <h:outputText value="#{usr.idUsr.loginUsr}" />
+                    </p:column>
+                     <p:column headerText="Nombre">
+                         <h:outputText value="#{usr.idUsr.firstNameUsr}" />
+                    </p:column>
+                     <p:column headerText="Apellidos">
+                         <h:outputText value="#{usr.idUsr.lastNameUsr}" />
+                    </p:column>
+                     <p:column headerText="Jerarquías">
+                         <h:outputText value="#{usr.idUsr.idHle.nameHle}" />
+                    </p:column>
+                </p:dataTable>
+            </p:panelGrid>
+        </p:rowExpansion>
+            
+            <p:column headerText="Editar" width="40">
+                <p:commandButton actionListener="#{userGroupView.setSelectedLstUsersGroup(usg.idGcn)}"  onclick="PF('dlg3').show();" icon="ui-icon-pencil" title="Editar" />                 
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" title="Borrar" actionListener="#{userGroupView.setSelectedLstUsersGroup(usg.idGcn)}" action="#{userGroupView.remove(userGroupView.lstUsersGroupByIdGroup)}">
+                <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar la Asignación?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+    </p:dataTable> 
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+         </p:confirmDialog>
+    </h:form>
+</ui:composition>

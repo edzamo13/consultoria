@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="formList">
+        <br></br>  
+
+        <p:dataTable id="dtbTiposServicio" var="tiposServicio" value="#{tiposServicioView.listCenters}" style="margin-bottom:20px" sortBy="#{tiposServicio.idCet}">
+
+            <p:column headerText="Codigo" sortBy="#{tiposServicio.nameCet}" filterBy="#{tiposServicio.nameCet}" filterMatchMode="contains"> 
+                <h:outputText value="#{tiposServicio.nameCet}" />
+            </p:column>
+
+            <p:column headerText="Nombre" sortBy="#{tiposServicio.provinceCet}" filterBy="#{tiposServicio.provinceCet}" filterMatchMode="contains">
+                <h:outputText value="#{tiposServicio.provinceCet}" />
+            </p:column>
+
+            <p:column headerText="Observacion" sortBy="#{tiposServicio.cantonCet}" filterBy="#{tiposServicio.cantonCet}" filterMatchMode="contains">
+                <h:outputText value="#{tiposServicio.cantonCet}" />
+            </p:column>
+
+            <p:column headerText="Activo"  sortBy="#{incident.activeInc}" filterMatchMode="contains" width="40" >
+                <p:selectBooleanCheckbox value="#{incident.activeInc}" />
+            </p:column>
+
+
+            <p:column width="40" style="text-align: center" headerText="Editar">
+                <p:commandButton  icon="ui-icon-pencil" 
+                                  title="Editar"
+                                  actionListener="#{tiposServicioView.setSelected(tiposServicio)}"
+                                  onclick="PF('dlg3').show();"/>            
+
+            </p:column>
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" 
+                                 action="#{tiposServicioView.remove(tiposServicio)}" >
+                    <p:confirm header="Confirmation" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</ui:composition>

@@ -1,0 +1,244 @@
+
+html
+{ 
+   height: 100%; 
+} 
+
+body
+{ 
+   font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+   font-size: 0.8em;  
+} 
+
+#bodyForm{
+    background: rgba(255,255,255,0)!important;  
+    background: -moz-linear-gradient(-45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.29) 42%, rgba(246,246,246,0.46) 65%, rgba(59,190,230,0.68) 97%, rgba(41,185,229,0.68) 100%)!important;  
+    background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(42%, rgba(255,255,255,0.29)), color-stop(65%, rgba(246,246,246,0.46)), color-stop(97%, rgba(59,190,230,0.68)), color-stop(100%, rgba(41,185,229,0.68)))!important;  
+    background: -webkit-linear-gradient(-45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.29) 42%, rgba(246,246,246,0.46) 65%, rgba(59,190,230,0.68) 97%, rgba(41,185,229,0.68) 100%)!important;  
+    background: -o-linear-gradient(-45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.29) 42%, rgba(246,246,246,0.46) 65%, rgba(59,190,230,0.68) 97%, rgba(41,185,229,0.68) 100%)!important;  
+    background: -ms-linear-gradient(-45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.29) 42%, rgba(246,246,246,0.46) 65%, rgba(59,190,230,0.68) 97%, rgba(41,185,229,0.68) 100%)!important;  
+    background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.29) 42%, rgba(246,246,246,0.46) 65%, rgba(59,190,230,0.68) 97%, rgba(41,185,229,0.68) 100%)!important;  
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#29b9e5', GradientType=1 )  !important;  
+    
+}
+
+
+#container {
+  margin: 0 auto;
+  padding: 0 20px 10px 20px;
+  /*border-top: 5px solid #bed6f8;
+  border-left: 5px solid #bed6f8;
+  border-right: 5px solid #bed6f8;
+  border-bottom: 25px solid #bed6f8;*/
+  
+  width: 75%; 
+  /*background: #FFFFFF;
+  background-image: url(#{request.contextPath}/resources/gfx/headerbkg.png);
+  background-repeat: repeat-x;*/
+  padding-top: 30px;
+  /*box-shadow: 3px 3px 15px #d5d5d5;*/
+  box-shadow: 3px 3px 40px #bed6f8;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  
+}
+
+#content {
+  float: left;
+  width: 50%;
+  margin: 5%;
+}
+
+#aside {
+  font-size: 1em;
+  width: 25%;
+  float: left;
+  margin: 5% 0px;
+  /*border: 1px solid #D5D5D5;*/
+  background: #F1F1F1;
+  box-shadow: 3px 3px 20px #D5D5D5;
+  /*border: 2px solid #3cb0fd;
+  background: #EDF6F9;*/
+  /*background-image: url(#{request.contextPath}/resources/gfx/asidebkg.png);*/
+  background-repeat: repeat-x;
+  padding: 20px;
+}
+
+#aside ul {
+  padding-left: 30px;
+}
+
+.dualbrand {
+  float: right;
+  padding-right: 10px;
+}
+#footer {
+ clear: both;
+  text-align: center;
+  /*color: #666666;*/
+  color:black;
+  font-size: 0.8em;
+}
+code {
+  font-size: 1.1em;
+}
+a {
+  color: #4a5d75;
+  text-decoration: none;
+}
+a:hover {
+  color: #369;
+  text-decoration: underline;
+}
+h1 {
+  color:#243446;
+  font-size: 2.25em;
+}
+h2 {
+  font-size: 1em;
+}
+h3 {
+  color:#243446;
+}
+h4 {
+}
+h5 {
+}
+h6 {
+}
+/* Member registration styles */
+span.invalid {
+  padding-left: 3px;
+  color: red;
+}
+#frmLogin {
+  padding: 1em;
+  font: 80%/1 sans-serif;
+  width: 80%;
+  /*border: 1px solid #D5D5D5;*/
+  box-shadow: 3px 3px 15px #bed6f8;
+}
+
+label {
+  text-align: right;
+  font-weight: bold;
+  color:#363636;
+}
+/*input {
+  margin-bottom: 8px;
+}*/
+.register {
+  float: left;
+  margin-left: 85px;
+}
+
+.btn {
+  background: #EDF6F9;
+  background-image: -webkit-linear-gradient(top, #EDF6F9, #93DBF0);
+  background-image: -moz-linear-gradient(top, #EDF6F9, #93DBF0);
+  background-image: -ms-linear-gradient(top, #EDF6F9, #93DBF0);
+  background-image: -o-linear-gradient(top, #EDF6F9, #93DBF0);
+  background-image: linear-gradient(to bottom, #EDF6F9, #93DBF0);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  font-family: Arial;
+  color: #000000;
+  font-size: 13px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
+
+/*  -----  table style  -------  */
+
+
+/*  = Simple Table style (black header, grey/white stripes  */
+
+.simpletablestyle {
+  background-color:#E6E7E8;
+  clear:both;
+  width: 550px;
+}
+
+.simpletablestyle img {
+  border:0px;
+}
+
+.simpletablestyle td {
+  height:2em;
+  padding-left: 6px;
+  font-size:11px;
+  padding:5px 5px;
+}
+
+.simpletablestyle th {
+	background: url(#{request.contextPath}/resources/gfx/bkg-blkheader.png) black repeat-x top left;
+  font-size:12px;
+  font-weight:normal;
+  padding:0 10px 0 5px;
+  border-bottom:#999999 dotted 1px;
+}
+
+.simpletablestyle thead {
+  background: url(#{request.contextPath}/resources/gfx/bkg-blkheader.png) black repeat-x top left;
+  height:31px;
+  font-size:10px;
+  font-weight:bold;
+  color:#FFFFFF;
+  text-align:left;
+}
+
+.simpletablestyle .header a {
+  color:#94aebd;
+}
+
+.simpletablestype tfoot {
+	height: 20px;
+  font-size: 10px;
+  font-weight: bold;
+  background-color: #EAECEE;
+  text-align: center;
+}
+
+.simpletablestyle tr.header td {
+  padding: 0px 10px 0px 5px;
+}
+
+
+.simpletablestyle .subheader {
+  background-color: #e6e7e8;
+  font-size:10px;
+  font-weight:bold;
+  color:#000000;
+  text-align:left;
+}
+
+/* Using new CSS3 selectors for styling*/
+.simpletablestyle tr:nth-child(odd) {
+  background: #f4f3f3;
+}
+.simpletablestyle tr:nth-child(even) {
+  background: #ffffff;
+}
+
+.simpletablestyle td a:hover {
+  color:#3883ce;
+  text-decoration:none; 
+}
+
+.panelgrid-sin-bordes td, .panelgrid-sin-bordes tr{
+    border-width: 0 !important;    
+}

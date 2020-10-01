@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/template/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form id="formDependencia">
+
+            <p:growl id="growl" autoUpdate="true" showDetail="true" sticky="true" globalOnly="true"/>  
+
+            <p:toolbar>
+                    <f:facet name="left">
+                        <p:menuButton value="Opciones" iconPos="true">
+                            <p:menuitem value="Agregar" action="#{dependenciaControlador.muestraFormulario()}" icon="ui-icon-plusthick" />
+                            <p:menuitem value="Editar" action="#{dependenciaControlador.editarDependenciaSeleccionada()}" icon="ui-icon-pencil" />
+                       </p:menuButton>
+                    </f:facet>
+            </p:toolbar>
+            
+            <p:panel>
+                <p:panelGrid columns="2" style="margin: 0 auto; " styleClass="panelgrid-sin-bordes">
+                    <h:outputText value="Institución " styleClass="label"/>
+                    <p:selectOneMenu id="selectOneMenuInstitucion" value="#{dependenciaControlador.dependenciaForm.institucion.inIdInstitucion}">
+                        <f:selectItem itemLabel="Selecione una Opción" itemValue="" />
+                        <f:selectItems value="#{dependenciaControlador.dependenciaForm.instituciones}" var="itemSeleccionado" itemLabel="#{itemSeleccionado.inNombre}" itemValue="#{itemSeleccionado.inIdInstitucion}" />
+                        <p:ajax listener="#{dependenciaControlador.cargaDependencias()}" update="pnlPrincipal"/>
+                    </p:selectOneMenu>
+                </p:panelGrid> 
+
+                <br/>
+
+
+
+                <p:panel id="pnlPrincipal" visible ="#{dependenciaControlador.dependenciaForm.muestraPanel}">
+
+
+                    <br/>
+
+                    <p:treeTable value="#{dependenciaControlador.dependenciaForm.root}" var="node" selectionMode="single" selection="#{dependenciaControlador.dependenciaForm.selectedNode}" id="treeDependencias">
+                        <f:facet name="header">
+                            Dependencias
+                        </f:facet>
+                        <p:column headerText="Id" width="10%" style="text-align: center; margin: 0 auto">
+                            <h:outputText value="#{node.deIdDependencia}" />
+                        </p:column>
+                        <p:column headerText="Nombre">
+                            <h:outputText value="#{node.deNombre}" />
+                        </p:column>
+                        <p:column headerText="Tipo" width="10%" style="text-align: center; margin: 0 auto">
+                            <h:outputText value="#{node.deTipoDependencia}" />
+                        </p:column>
+                        <p:column headerText="Estado" width="10%" style="text-align: center; margin: 0 auto">
+                            <h:outputText value="#{node.deEstado}" />
+                        </p:column>
+                    </p:treeTable>
+                </p:panel>
+            </p:panel>
+
+            
+            <p:dialog header="Dependencia" dynamic="true" id="dialogDependencia" widgetVar="dialogDependencia" modal="true" showEffect="fade" hideEffect="fade" closable="false" resizable="false">
+                <div align="center">
+                    <p:panelGrid id="formulario" columns="2"  columnClasses="backgroundColumn, sizeColumnSecondary">
+                        <h:panelGroup>
+                            <h:outputText value="Nombre " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:column>
+                            <p:inputText id="txtNombre" autocomplete="off" style="width: 100%" value="#{dependenciaControlador.dependenciaForm.nombre}"
+                                         required="true" requiredMessage="Ingrese un nombre" maxlength="200" onkeyup="this.value = this.value.toUpperCase()">
+                                <f:validateLength maximum="200" minimum="1" />
+                            </p:inputText>
+                            <p:message for="txtNombre" />
+                        </p:column>
+
+                        <h:panelGroup>
+                            <h:outputText value="Tipo de dependencia " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:selectOneMenu id="tipoDepe" style="width:150px" value="#{dependenciaControlador.dependenciaForm.tipoDependencia}">
+                            <f:selectItem itemLabel="DIRECCIÓN" itemValue="DIR" />
+                            <f:selectItem itemLabel="NEGOCIO" itemValue="NEG" />
+                        </p:selectOneMenu>
+
+                        <h:panelGroup>
+                            <h:outputText value="Estado " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:selectOneMenu id="estado" style="width:150px" value="#{dependenciaControlador.dependenciaForm.estado}">
+                            <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                            <f:selectItem itemLabel="INACTIVO" itemValue="I" />
+                        </p:selectOneMenu>
+
+                       <h:panelGroup>
+                            <h:outputText value="Dependencia padre " styleClass="label"/>
+                            <h:outputText value=" " styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:selectOneMenu id="somPadre" value="#{dependenciaControlador.dependenciaForm.idPadre}">
+                            <f:selectItem itemLabel="NINGUNO" itemValue="" />
+                            <f:selectItems value="#{dependenciaControlador.dependenciaForm.dependencias}" var="itemSeleccionado" itemLabel="#{itemSeleccionado.deNombre}" itemValue="#{itemSeleccionado.deIdDependencia}" />
+                        </p:selectOneMenu>
+
+                    </p:panelGrid>
+
+                    <p:separator style="height:5px" />
+
+                    <p:commandButton value="Guardar" action="#{dependenciaControlador.muestraConfirmacion()}" update="formulario" icon="ui-icon-disk" title="Guardar" />
+                    <p:commandButton value="Cancelar" update="dialogDependencia" icon="ui-icon-close" title="Cancelar" />
+
+                </div>
+            </p:dialog>
+
+            
+            <p:dialog header="Mensaje" id="dlgConfirmacion" widgetVar="dlgConfirmacion" modal="true" showEffect="fade" hideEffect="fade" resizable="false" closable="false" width="300px">
+                <h:panelGrid columns="1" style="margin:0 auto" >
+                    <center>
+                        <h:panelGrid columns="2">
+
+                            <h:graphicImage value="/resources/img/plantilla/pregunta.jpg" width="50" height="50" />
+                            <p:outputLabel value="¿Desea Guardar el Registro?"/>
+
+                        </h:panelGrid>
+                        <br/>
+
+                        <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto">
+                            <p:commandButton value="Aceptar" icon="ui-icon-check" action="#{dependenciaControlador.guardaFormularioIngreso()}" update="dialogDependencia, dlgConfirmacion, :#{p:component('treeDependencias')}" title="Aceptar"/>
+                            <p:commandButton value="Cancelar" icon="ui-icon-close" update="dlgConfirmacion" title="Cancelar"/>
+                        </h:panelGrid>
+                    </center>
+
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">
+        Administración - <span class="subitem">Módulos</span>
+    </ui:define>
+
+    <ui:define name="description">
+        Definir los Módulos
+    </ui:define>
+
+    <ui:define name="implementation">  
+        <ui:include src="_createmodules.xhtml" />
+        <ui:include src="_editmodules.xhtml" />
+
+        <h:form id="formModules">
+            <p:commandButton id="crear" value="Crear" onclick="PF('dlCreateMd').show();"/>
+            <p:messages id="messages" autoUpdate="false" closable="true"/>
+            <br></br>                
+            <p:dataTable id="dtbModule" var="modules" value="#{modulesView.lstmodules}" style="margin-top: 10px" sortBy="#{modules.idMod}">
+                
+                <p:column headerText="Nombre" sortBy="#{modules.nameMod}" filterBy="#{modules.nameMod}" filterMatchMode="contains"> 
+                    <h:outputText value="#{modules.nameMod}" />
+                </p:column>
+                <p:column headerText="Descripción" sortBy="#{modules.descriptionMod}" filterBy="#{modules.descriptionMod}" filterMatchMode="contains">
+                    <h:outputText value="#{modules.descriptionMod}" />
+                </p:column>
+                <p:column width="40" style="text-align: center" headerText="Editar">
+                    <p:commandButton  icon="ui-icon-pencil" 
+                                      title="Editar"
+                                      actionListener="#{modulesView.setSelected(modules)}"
+                                      onclick="PF('editMd').show();"/>            
+
+                </p:column>
+                <p:column width="60" style="text-align: center" headerText="Eliminar">
+                    <p:commandButton icon="ui-icon-trash" 
+                                     actionListener="#{modulesView.remove(modules)}" 
+                                     update=":formModules:dtbModule">
+                        <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar el Módulo?" icon="ui-icon-alert" />  
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+

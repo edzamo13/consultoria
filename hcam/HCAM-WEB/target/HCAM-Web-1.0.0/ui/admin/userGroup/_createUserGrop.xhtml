@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+        <p:dialog id="mdlNewHierLev" header="Asignar Usuarios a Grupo" showEffect="fold" hideEffect="fold" widgetVar="dlg2" modal="true" >
+            <p:messages id="messages" autoUpdate="true" closable="true"/>
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">               
+                <h:panelGrid id="grid" columns="2" cellpadding="5">
+
+                    <p:outputLabel for="somGroup" value="Grupos:" style="font-weight:bold" />
+                    <p:selectOneMenu id="somGroup"  style="width:175px"  value="#{userGroupView.selectedGroupChatNotification.idGcn}" >
+                       
+                        <f:selectItems value="#{userGroupView.lstGroupChatNotification}" var="group" itemLabel="#{group.nameGcn}" itemValue="#{group.idGcn}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="" />
+
+                    
+
+                    <p:dataTable id="cdtAsignarMenus" var="user" value="#{userGroupView.lstUsers}" selection="#{userGroupView.lstSelectedUsers}" rowKey="#{user.idUsr}" class="tableWithOutStyles" style="width: 300px;" >
+                        <f:facet name="header">
+                            Asignar Usuarios
+                        </f:facet>
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                        <p:column headerText="Usuario">
+                            <h:outputText value="#{user.loginUsr}" />
+                        </p:column>
+                        
+                        <p:column headerText="Nombres">
+                            <h:outputText value="#{user.firstNameUsr}" />
+                        </p:column>
+                        
+                        <p:column headerText="Apellidos">
+                            <h:outputText value="#{user.lastNameUsr}" />
+                        </p:column>
+                                                
+                        <p:column headerText="Jerarquías">
+                            <h:outputText value="#{user.idHle.nameHle}" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <br></br>
+                    <br></br>
+
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{userGroupView.save(userGroupView.usersGroup)}" icon="ui-icon-disk"/>
+                            <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" action="adminUserGroup?faces-redirect=true" />
+                        </h:panelGrid>
+                    </div>
+
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

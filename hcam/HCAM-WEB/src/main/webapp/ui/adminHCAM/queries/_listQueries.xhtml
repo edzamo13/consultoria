@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="formList">
+        <br></br>  
+
+        <p:dataTable id="dtbQueries" var="queries" value="#{queriesView.lstQueries}" style="margin-bottom:20px" sortBy="#{queries.copk}">
+
+            <p:column headerText="Servicio" sortBy="#{queries.seidpk.senombre}" filterBy="#{queries.seidpk.senombre}" filterMatchMode="contains" width="450"> 
+                <h:outputText value="#{queries.seidpk.senombre}" />
+            </p:column>            
+            
+            <p:column headerText="Consulta" sortBy="#{queries.cosql}" filterBy="#{queries.cosql}" filterMatchMode="contains" width="450"> 
+                <h:outputText value="#{queries.cosql}" />
+            </p:column>
+
+            <p:column headerText="Orden" sortBy="#{queries.coorden}" filterBy="#{queries.coorden}" filterMatchMode="contains" >
+                <h:outputText value="#{queries.coorden}" />
+            </p:column>
+
+            <p:column headerText="Estado"  sortBy="#{queries.coestado}" filterBy="#{queries.coestado}" filterMatchMode="contains"  >
+                <h:outputText value="#{queries.coestado}" />
+            </p:column>
+            
+            <p:column width="40" style="text-align: center" headerText="Editar">
+                <p:commandButton  icon="ui-icon-pencil" 
+                                  title="Editar"
+                                  actionListener="#{queriesView.setSelected(queries)}"
+                                  onclick="PF('dlg3').show();"/>            
+            </p:column>
+            
+            <p:column width="60" style="text-align: center" headerText="Eliminar">
+                <p:commandButton icon="ui-icon-trash" 
+                                 action="#{queriesView.remove(queries)}" >
+                    <p:confirm header="Confirmation" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                </p:commandButton>
+            </p:column>
+            
+        </p:dataTable>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </h:form>
+</ui:composition>

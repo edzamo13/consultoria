@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="formList">
+        <br></br>  
+        <p:dataTable id="dtbCenter" var="centers" value="#{serviciosView.listCenters}" style="margin-bottom:20px" sortBy="#{centers.idCet}">
+        
+            
+            <p:column headerText="Nombre" sortBy="#{centers.nameCet}" filterBy="#{centers.nameCet}" filterMatchMode="contains"> 
+                <h:outputText value="#{centers.nameCet}" />
+            </p:column>
+            <p:column headerText="Provincia" sortBy="#{centers.provinceCet}" filterBy="#{centers.provinceCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.provinceCet}" />
+            </p:column>
+            <p:column headerText="Canton" sortBy="#{centers.cantonCet}" filterBy="#{centers.cantonCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.cantonCet}" />
+            </p:column>
+            <p:column headerText="Direccion" sortBy="#{centers.addressCet}" filterBy="#{centers.addressCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.addressCet}" />
+            </p:column>
+            <p:column headerText="Telefono" sortBy="#{centers.phoneCet}" filterBy="#{centers.phoneCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.phoneCet}" />
+            </p:column>
+            <p:column headerText="Codigo Centro" width="150" sortBy="#{centers.codeCet}" filterBy="#{centers.codeCet}" filterMatchMode="contains">
+                <h:outputText value="#{centers.codeCet}" />
+            </p:column>
+            <p:column width="40" style="text-align: center" headerText="Editar">
+                    <p:commandButton  icon="ui-icon-pencil" 
+                                      title="Editar"
+                                      actionListener="#{serviciosView.setSelected(centers)}"
+                                      onclick="PF('dlg3').show();"/>            
+
+                </p:column>
+                <p:column width="60" style="text-align: center" headerText="Eliminar">
+                    <p:commandButton icon="ui-icon-trash" 
+                                     action="#{serviciosView.remove(centers)}" >
+                        <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar el Centro?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+             </p:confirmDialog>
+          
+        </h:form>
+</ui:composition>

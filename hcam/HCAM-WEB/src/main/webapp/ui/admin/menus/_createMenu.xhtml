@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+        <p:dialog id="mdlNewHierLev" header="Crear Nivel Jerarquico" showEffect="fold" hideEffect="fold" widgetVar="dlg2" modal="true" >
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">               
+                <h:panelGrid id="grid" columns="3" cellpadding="5">
+                    
+                    <p:outputLabel value="Nombre:" for="inpNombre" style="font-weight:bold"/>
+                    <p:inputText id="inpNombre" value="#{menusView.menu.nameMnu}" required="true" label="Nombre: ">
+                     <f:validateRegex pattern="[a-zA-Z0-9_-]{3,15}" />
+                    </p:inputText>
+                    <p:message for="inpNombre"/>
+
+                    <p:outputLabel value="Descripción:" for="inpDesc" style="font-weight:bold"/>
+                    <p:inputText id="inpDesc" value="#{menusView.menu.descriptionMnu}" required="true" label="Descripción: "/>
+                    <p:message for="inpDesc"/>
+                                                 
+                    <p:outputLabel for="inpMod" value="Modulo:" style="font-weight:bold" />
+                    <p:selectOneMenu id="inpMod"  style="width:175px" required="true" value="#{menusView.modules.idMod}" >
+                        <f:selectItem itemLabel="Seleccione el Módulo"/>
+                        <f:selectItems value="#{menusView.lstModules}" var="modl" itemLabel="#{modl.nameMod}" itemValue="#{modl.idMod}"/>
+                    </p:selectOneMenu>
+                    <p:message for="inpMod"/>  
+                                        
+                    <p:outputLabel value="Activo:" for="active" style="font-weight:bold"/>
+                    <p:selectBooleanCheckbox id="active" value="#{menusView.menu.statusMnu}" label="Activo: " />
+                    <p:outputLabel value=""/>
+
+                    <br></br>
+                    <br></br>
+
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{menusView.save}" icon="ui-icon-disk"/>
+                            <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" />
+                        </h:panelGrid>
+                    </div>
+
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

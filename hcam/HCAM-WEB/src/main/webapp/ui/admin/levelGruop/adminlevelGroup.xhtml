@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp">
+
+    <ui:define name="title">
+        Administración - <span class="subitem">Niveles Jerarquicos por Grupos</span>
+    </ui:define>
+
+    <ui:define name="description">
+        Definir niveles jerárquicos que pertenecen a cada grupo del chat o notificación.
+    </ui:define>
+
+    <ui:define name="implementation">
+        
+
+    <h:form id="form_group"> 
+                      
+            
+    <p:commandButton id="crear" value="Crear" onclick="PF('dlg_2').show();" />
+            <p:messages id="messages" autoUpdate="false" closable="true"/>
+            
+            <br></br>
+
+            <ui:include src="_listselectgroup.xhtml" />
+        </h:form> 
+
+        <ui:include src="_editlevelGroup.xhtml" />
+        <ui:include src="_createlevelGroup.xhtml" />
+        
+
+       
+    </ui:define>
+</ui:composition>
+
+

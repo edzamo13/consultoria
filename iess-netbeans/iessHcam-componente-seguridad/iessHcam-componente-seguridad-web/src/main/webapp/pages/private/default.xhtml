@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/seguridad/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <p:growl id="msgs" globalOnly="true" sticky="true"/>
+            <p:dataGrid var="app" value="#{aplicacionControlador.aplicacionBb.aplicacions}" columns="3" layout="grid"
+                    rows="20" paginator="true" id="aplicacion"
+                    paginatorPosition="bottom"
+                    rowsPerPageTemplate="6,12,16">
+            <f:facet name="header">
+                <h:outputText value="Lista de Aplicaciones" style="font-size: medium"></h:outputText>
+            </f:facet>
+
+            <p:panel header="#{app.apNombre}">
+
+                <h:panelGrid columns="1" style="width:100%">
+
+                    <h:form id="formBoton1" prependId="false">
+                        <center>
+                            <p:commandLink  title="ir a #{app.apNombre} " action="#{aplicacionControlador.cargarApp(app)}" 
+                                            oncomplete="enviar(#{app.apIdAplicacion})">                               
+                                <p:graphicImage cache="false" id="imagen" value="/DisplayImage?idAplicacion=#{app.apIdAplicacion}" width="75" height="75"></p:graphicImage>
+                                <br/>
+                                <h:outputText value="#{app.apNombre}"></h:outputText>
+                            </p:commandLink>
+                        </center>
+                    </h:form>
+                    <form name="formPostApp#{app.apIdAplicacion}" method="post" action="#{app.apUrl}" id="formPostApp" >
+                        <input type="hidden" value="#{app.idUsuario}" name="INidUsuario"/>
+                        <input type="hidden" value="#{app.usuario}" name="INusuario"/>
+                        <input type="hidden" value="#{app.codUnme}" name="INcodUnme"/>
+                        <input type="hidden" value="#{app.numeroDocumento}" name="INnumeroDocumento"/>
+                        <input type="hidden" value="#{app.ipUsuario}" name="INipUsuario"/>
+                        <input type="hidden" value="#{app.apIdAplicacion}" name="INidAplicacion"/>
+                        <input type="hidden" value="#{app.nombrePersona}" name="INnombrePersona"/>
+                        <input type="hidden" value="#{app.apNombre}" name="INaplicativo"/>
+                        <input type="hidden" value="inMail" name="inMail"/>
+                    </form> 
+                </h:panelGrid>
+
+            </p:panel>
+        </p:dataGrid>
+
+        <script type="text/javascript" language="javascript">
+            function enviar(i) {
+                var theForm = document.forms['formPostApp' + i];
+                if (!theForm) {
+                    theForm = document.form1;
+                }
+                theForm.submit();
+            }
+
+
+        </script>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-edit">
+        <p:dialog header="Modificar Categoría" widgetVar="dlg3" showEffect="fold" hideEffect="fold" modal="true" height="400">
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">
+            <h:panelGrid id='gridEdit' columns="3" cellpadding="">
+                <p:outputLabel for="name" value="Nombre:" />
+                <p:inputText id="name" value="#{incidentCategoriesView.selectedIncidentCategory.nameInc}" required="true" validatorMessage="Introduzca datos correctos(Alfanuméricos, no mayor a 15)">
+                        <f:validateRegex pattern="^[a-zA-Z0-9\s]{2,15}$" />
+               </p:inputText>
+               <p:message for="name"/>
+               
+                <p:outputLabel for="description" value="Descripción:" />
+                <p:inputText id="description" value="#{incidentCategoriesView.selectedIncidentCategory.descriptionInc}" required="true" />
+                <p:message for="description"/>
+                
+                <p:outputLabel value="Activo:" for="active" />
+                <p:selectBooleanCheckbox id="active" value="#{incidentCategoriesView.selectedIncidentCategory.activeInc}" />
+
+
+                <br></br>
+                <br></br>
+                <div align="center">
+                    <h:panelGrid columns="2" cellpadding="5" >
+                        <p:commandButton       id="btnGuardar" 
+                                               value="Guardar"  
+                                               action="#{incidentCategoriesView.edit(incidentCategoriesView.selectedIncidentCategory)}"
+                                               icon="ui-icon-pencil"  
+                                               update=":form-edit:gridEdit">
+                        </p:commandButton>
+                        <p:commandButton       id="btnCancelar" 
+                                               value="Cancelar"
+                                               onclick="window.location.replace(window.location.href);"
+                                               action="adminincidentCategories?faces-redirect=true"
+                                               icon="ui-icon-cancel" />
+                    </h:panelGrid>
+                </div>
+            </h:panelGrid>
+           </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

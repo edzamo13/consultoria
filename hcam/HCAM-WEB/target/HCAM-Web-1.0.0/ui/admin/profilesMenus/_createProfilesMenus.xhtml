@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+        <p:dialog id="mdlNewHierLev" header="Asignar Menús a Perfiles" showEffect="fold" hideEffect="fold" widgetVar="dlg2" modal="true" >
+            <p:messages id="messages" autoUpdate="true" closable="true"/>
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">               
+                <h:panelGrid id="grid" columns="2" cellpadding="5">
+
+                    <p:outputLabel for="somProfile" value="Perifl:" style="font-weight:bold" />
+                    <p:selectOneMenu id="somProfile"  style="width:175px"  value="#{profilesMenusView.selectedProfile.idPrf}" >
+                       
+                        <f:selectItems value="#{profilesMenusView.lstProfiles}" var="prf" itemLabel="#{prf.namePrf}" itemValue="#{prf.idPrf}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="" />
+
+                    
+
+                    <p:dataTable id="cdtAsignarMenus" var="mns" value="#{profilesMenusView.lstMenus}" selection="#{profilesMenusView.lstSelectedMenus}" rowKey="#{mns.idMnu}" class="tableWithOutStyles" style="width: 300px;" >
+                        <f:facet name="header">
+                            Asignar Menus
+                        </f:facet>
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                        <p:column headerText="Menú">
+                            <h:outputText value="#{mns.nameMnu}" />
+                        </p:column>
+                        <p:column headerText="Módulo">
+                            <h:outputText value="#{mns.idMod.nameMod}" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <br></br>
+                    <br></br>
+
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{profilesMenusView.save(profilesMenusView.profileMenu)}" icon="ui-icon-disk"/>
+                            <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" action="adminProfilesMenus?faces-redirect=true" />
+                        </h:panelGrid>
+                    </div>
+
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

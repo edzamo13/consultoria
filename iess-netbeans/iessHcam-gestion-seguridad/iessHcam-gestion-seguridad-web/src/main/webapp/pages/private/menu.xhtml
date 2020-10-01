@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template/template/commonLayout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:form id="formMenu">
+
+            <p:growl id="growl" autoUpdate="true" showDetail="true" sticky="true" globalOnly="true" showSummary="false"/>  
+
+            <p:toolbar>
+                    <f:facet name="left">
+                        <p:menuButton value="Opciones" iconPos="true">
+                            <p:menuitem value="Agregar" action="#{menuControlador.muestraFormulario()}" icon="ui-icon-plusthick" />
+                            <p:menuitem value="Editar" action="#{menuControlador.editarDependenciaSeleccionada()}" icon="ui-icon-pencil" />
+                        </p:menuButton>
+                    </f:facet>
+            </p:toolbar>
+            
+            <p:panel>
+                <center>
+                <p:panelGrid columns="2" styleClass="panelgrid-sin-bordes">
+                    <h:outputText value="Institución" styleClass="label"/>
+                    <p:selectOneMenu id="selectOneMenuInstitucion" value="#{menuControlador.menuForm.institucion.inIdInstitucion}" style="width: 300px"
+                                     filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Selecione una Opción" itemValue="" />
+                        <f:selectItems value="#{menuControlador.menuForm.instituciones}" var="itemSeleccionado" itemLabel="#{itemSeleccionado.inNombre}" itemValue="#{itemSeleccionado.inIdInstitucion}" />
+                        <p:ajax listener="#{menuControlador.cargaDependencias()}" update="selectOneMenuDependencias, selectOneMenuAplicacion, pnlPrincipal"/>
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Dependencia " styleClass="label"/>
+                    <p:selectOneMenu id="selectOneMenuDependencias" value="#{menuControlador.menuForm.dependencia.deIdDependencia}"  style="width: 300px"
+                                     filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Selecione una Opción" itemValue="" />
+                        <f:selectItems value="#{menuControlador.menuForm.dependencias}" var="itemSeleccionado" itemLabel="#{itemSeleccionado.deNombre}" itemValue="#{itemSeleccionado.deIdDependencia}"/>
+                        <p:ajax listener="#{menuControlador.cargaAplicaciones()}" update="selectOneMenuAplicacion, pnlPrincipal"/>
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Aplicación" styleClass="label"/>
+                    <p:selectOneMenu id="selectOneMenuAplicacion" value="#{menuControlador.menuForm.aplicacion.apIdAplicacion}" style="width: 300px"
+                                     filter="true" filterMatchMode="contains">
+                        <f:selectItem itemLabel="Selecione una Opción" itemValue="" />
+                        <f:selectItems value="#{menuControlador.menuForm.aplicaciones}" var="itemSeleccionado" itemLabel="#{itemSeleccionado.apNombre}" itemValue="#{itemSeleccionado.apIdAplicacion}" />
+                        <p:ajax listener="#{menuControlador.cargaMenus()}" update="pnlPrincipal"/>
+                    </p:selectOneMenu>
+
+                </p:panelGrid>   
+                </center>
+                <br/>
+
+                
+                <p:panel id="pnlPrincipal" visible ="#{menuControlador.menuForm.muestraPanel}">
+
+                    <p:treeTable value="#{menuControlador.menuForm.root}" var="node" selectionMode="single" 
+                                 selection="#{menuControlador.menuForm.selectedNode}" id="treeMenus" emptyMessage="La aplicación no posee un menú">
+                        <f:facet name="header">
+                            Menú
+                        </f:facet>
+                        <p:column headerText="ID" width="10%" style="text-align: center; margin: 0 auto">
+                            <h:outputText value="#{node.meIdOpcion}" />
+                        </p:column>
+                        <p:column headerText="Nombre" width="30%" >
+                            <h:outputText value="#{node.meEtiqueta}" />
+                        </p:column>
+                        <p:column headerText="Orden" width="10%" style="text-align: center; margin: 0 auto">
+                            <h:outputText value="#{node.meOrden}" />
+                        </p:column>
+                        <p:column headerText="Url" width="40%" style="text-align: center; margin: 0 auto">
+                            <h:outputText value="#{node.meUrl}" />
+                        </p:column>
+                        <p:column headerText="Estado" width="10%" style="text-align: center; margin: 0 auto">
+                            <h:outputText value="#{node.meEstado}" />
+                        </p:column>
+                    </p:treeTable>
+                
+                </p:panel>
+                
+            </p:panel>
+
+
+
+            <p:dialog header="Menú" dynamic="true" id="dialogMenu" widgetVar="dialogMenu" modal="true" showEffect="fade" hideEffect="fade" closable="false" resizable="false">
+                <div align="center">
+                    <p:panelGrid id="formulario" columns="2" columnClasses="backgroundColumn, sizeColumnSecondary">
+                        <h:panelGroup>
+                            <h:outputText value="Nombre " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:column>
+                            <p:inputText id="txtNombre" autocomplete="off" style="width: 100%" value="#{menuControlador.menuForm.nombre}" required="true" requiredMessage="Ingrese un nombre" maxlength="200">
+                                <f:validateLength maximum="200" minimum="1" />
+                            </p:inputText>
+                            <p:message for="txtNombre" />
+                        </p:column>
+
+                        <h:panelGroup>
+                            <h:outputText value="Orden " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:column>
+                            <p:inputText id="txtOrden" autocomplete="off" style="width: 100%" value="#{menuControlador.menuForm.orden}" required="true" requiredMessage="Ingrese un número entre 1 y 99" maxlength="2">
+                                <f:validateDoubleRange minimum="1" maximum="99" />
+                            </p:inputText>
+                            <p:message for="txtOrden" />
+                        </p:column>
+
+                        <h:panelGroup>
+                            <h:outputText value="URL " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:column>
+                            <p:inputText id="txtUrl" autocomplete="off" style="width: 100%" value="#{menuControlador.menuForm.url}" required="true" requiredMessage="Ingrese Una dirección URL" maxlength="400">
+                                <f:validateLength maximum="400" minimum="1" />
+                            </p:inputText>
+                            <p:message for="txtUrl" />
+                        </p:column>
+
+                        <h:panelGroup>
+                            <h:outputText value="Estado " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:selectOneMenu id="estado" style="width:125px" value="#{menuControlador.menuForm.estado}">
+                            <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                            <f:selectItem itemLabel="INACTIVO" itemValue="I" />
+                        </p:selectOneMenu>
+
+                        <h:panelGroup>
+                            <h:outputText value="Menú padre " styleClass="label"/>
+                            <h:outputText value=" *" styleClass="labelRed"/>
+                        </h:panelGroup>
+                        <p:selectOneMenu id="somPadre" value="#{menuControlador.menuForm.idPadre}">
+                            <f:selectItem itemLabel="NINGUNO" itemValue="" />
+                            <f:selectItems value="#{menuControlador.menuForm.menus}" var="itemSeleccionado" itemLabel="#{itemSeleccionado.meEtiqueta}" itemValue="#{itemSeleccionado.meIdOpcion}" />
+                        </p:selectOneMenu>
+
+                    </p:panelGrid>
+
+                    <p:separator style="height:5px" />
+
+                    <p:commandButton value="Guardar" action="#{menuControlador.muestraConfirmacion()}" update="formulario" icon="ui-icon-disk" title="Guardar" />
+                    <p:commandButton value="Cancelar" update="dialogMenu" icon="ui-icon-close" title="Cancelar" />
+
+                </div>
+            </p:dialog>
+            
+            <p:dialog header="Mensaje" id="dlgConfirmacion" widgetVar="dlgConfirmacion" modal="true" showEffect="fade" hideEffect="fade" resizable="false" closable="false" width="300px">
+                <h:panelGrid columns="1" style="margin:0 auto" >
+                    <center>
+                        <h:panelGrid columns="2">
+
+                            <h:graphicImage value="/resources/img/plantilla/pregunta.jpg" width="50" height="50" />
+                            <p:outputLabel value="¿Desea Guardar el Registro?"/>
+
+                        </h:panelGrid>
+                        <br/>
+
+                        <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto">
+                            <p:commandButton value="Aceptar" icon="ui-icon-check" action ="#{menuControlador.guardaFormularioIngreso()}" update="dialogMenu, dlgConfirmacion, :#{p:component('treeMenus')}" title="Aceptar"/>
+                            <p:commandButton value="cancelar" icon="ui-icon-close" update="dlgConfirmacion" title="Cancelar"/>
+                        </h:panelGrid>
+                    </center>
+
+                </h:panelGrid>
+
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

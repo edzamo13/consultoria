@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/template/seguridad/commonLayoutLogin.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <p:growl id="growl" autoUpdate="true" sticky="true" showDetail="true" showSummary="false"/>  
+        <div align="center" class="centrado-porcentual">
+            <h:form id="frmLogin" >
+                <p:growl id="growl" autoUpdate="true" showDetail="true" globalOnly="true" showSummary="false"/>
+                <p:panel id="pnlLogin" header="Ingreso al Sistema" style="width: 350px">
+                    <h:panelGrid columns="3">
+
+                        <h:outputLabel value="Usuario" styleClass="label"></h:outputLabel>
+                        <h:inputText onkeyup="this.value = this.value.toUpperCase()" id="nombreUsuario" value="#{loginControlador.loginBb.nombreUsuario}"  required="true" requiredMessage="Ingrese su nombre de Usuario"
+                                     label="Usuario" autocomplete="off"/>
+                        <p:message for="nombreUsuario" display="icon" />
+
+                        <h:outputLabel value="Contraseña" styleClass="label"></h:outputLabel>
+                        <h:inputSecret id="contrasenia" value="#{loginControlador.loginBb.contrasenia}" required="true" requiredMessage="Ingrese su Contraseña" />
+                        <p:message for="contrasenia" display="icon" />
+
+                    </h:panelGrid>
+                    <center>
+                        <h:panelGrid columns="1">
+                            <p:commandButton id="login" value="Ingresar" action="#{loginControlador.login()}" icon="ui-icon-unlocked" update="frmLogin, :#{p:component('pnlPrincipal')}">
+                                <p:ajax update=":#{p:component('pnlPrincipal')}" resetValues="true" />
+                            </p:commandButton>                                    
+                        </h:panelGrid>
+                    </center>
+
+                </p:panel>
+
+                <p:blockUI block="frmLogin" trigger="login">
+                    <h:graphicImage value="#{resource['img/plantilla/iconWaiting.gif']}" width="50" height="50"/>
+                </p:blockUI>
+
+            </h:form>
+        </div>
+
+
+
+        <p:dialog header="Actualizar de Información" widgetVar="dlgActualUsuario" id="dlgActualUsuario" closable="false" modal="true" resizable="false" width="700">
+            <h:form id="formEditaUsuario" >
+                <br/>
+
+                <p:outputLabel value="Hemos detectado que es su primer acceso al sistema. Antes de acceder a sus aplicaciones, por favor complete los siguientes datos para continuar."/>
+
+                <br/><br/>
+
+                <p:panelGrid id="pnlPrincipal" columns="1" style="width: 85%; margin: 0 auto; text-align: center;">
+
+                    <f:facet name="header" >
+                        <h:outputText value="Usuario: #{loginControlador.loginBb.nombreUsuario}"/>
+                    </f:facet>
+
+                    <p:column>
+                        <h:panelGrid width="100%" columns="1" >
+
+                            <h:panelGrid width="100%" style="table-layout: fixed;" columns="2">
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Nombre Completo" styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputText id="txtNombre" autocomplete="off" value="#{usuarioControlador.usuarioForm.nombrePersona}" style="width: 80%" maxlength="100" required="true" requiredMessage="Ingrese un nombre" >
+                                            <f:validateLength maximum="100" minimum="1" />
+                                        </p:inputText>
+                                        <p:message for="txtNombre" />
+                                    </h:panelGrid>
+                                </p:column>
+
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Cédula " styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputMask id="txtCedula" value="#{usuarioControlador.usuarioForm.identificacion}" mask="9999999999" required="true" style="width: 80%;" size="10"/>
+                                        <p:message for="txtCedula" />
+                                    </h:panelGrid>
+                                </p:column>
+                            </h:panelGrid>
+
+                            <h:panelGrid width="100%" style="table-layout: fixed;" columns="2">
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="E-Mail " styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputText id="txtMail" autocomplete="off" value="#{usuarioControlador.usuarioForm.email}" style="width: 80%" maxlength="100" required="true" requiredMessage="Ingrese un Email" validatorMessage="Ingrese un Email válido">
+                                            <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                                            <f:validateLength maximum="100" minimum="1" />
+                                        </p:inputText>
+                                        <p:message for="txtMail" />
+                                    </h:panelGrid>
+                                </p:column>
+
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Teléfono " styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputText autocomplete="off" id="txtTelefono" value="#{usuarioControlador.usuarioForm.telefono}" maxlength="20" style="width: 80%" required="true" requiredMessage="Ingrese un número de teléfono">
+                                            <f:validateLength maximum="20" minimum="1" />
+                                        </p:inputText>
+                                        <p:message for="txtTelefono" />
+                                    </h:panelGrid>
+                                </p:column>
+
+
+                            </h:panelGrid>
+
+
+                            <h:panelGrid width="100%" style="table-layout: fixed;" columns="2">
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Nueva Contraseña " styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputText id="txtPass1" autocomplete="off" value="#{usuarioControlador.usuarioForm.nuevoPass}" style="width: 80%" maxlength="15" required="true" requiredMessage="Ingrese una nueva Contraseña" type="password"/>
+                                        <p:message for="txtPass1" />
+                                    </h:panelGrid>
+                                </p:column>
+
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Repita la Contraseña " styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputText id="txtPass2" autocomplete="off" value="#{usuarioControlador.usuarioForm.repitePass}" style="width: 80%" maxlength="15" required="true" requiredMessage="Repita la nueva Contraseña" type="password"/>
+                                        <p:message for="txtPass2" />
+                                    </h:panelGrid>
+                                </p:column>
+
+
+                            </h:panelGrid>
+
+                        </h:panelGrid>
+                    </p:column>
+
+                </p:panelGrid>
+                <br/>
+
+                <h:panelGrid columns="2" style="margin: 0 auto; text-align: center;">
+                    <p:commandButton value="Guardar" actionListener="#{usuarioControlador.muestraConfirmacion('dlgConfirmacion')}" update="pnlPrincipal" icon="ui-icon-disk"/>
+                    <p:commandButton value="Cancelar" update="dlgActualUsuario, :#{p:component('frmLogin')}" process="@this" icon="ui-icon-close">
+                        <p:ajax update=":#{p:component('frmLogin')}" resetValues="true" />
+                    </p:commandButton>
+
+                </h:panelGrid>
+            </h:form>
+        </p:dialog> 
+
+
+
+        <p:dialog header="Mensaje" dynamic="true" id="dlgConfirmacion" widgetVar="dlgConfirmacion" modal="true" showEffect="fade" hideEffect="fade" closable="false" resizable="false">
+            <h:form id="formConfirEdi" >
+                <h:panelGrid columns="1" style="margin:0 auto" >
+                    <center>
+                        <h:panelGrid columns="2">
+
+                            <h:graphicImage value="#{resource['img/plantilla/pregunta.jpg']}" width="50" height="50" />
+                            <p:outputLabel value="¿Desea Guardar este Registro?"/>
+
+                        </h:panelGrid>
+                        <br/>
+
+                        <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto">
+
+                            <p:commandButton value="Si" action="#{usuarioControlador.guardaUsuario()}" update="dlgConfirmacion" icon="ui-icon-check" title="View"/>
+                            <p:commandButton value="No" update="dlgConfirmacion" icon="ui-icon-close" title="View"/>
+                        </h:panelGrid>
+
+                    </center>
+
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Confirmación" widgetVar="dlgCierraUsuario" closable="false" modal="true" resizable="false" id="dlgCierraUsuario" width="450"> 
+            <h:form id="formCierraGuard">
+
+                <h:panelGrid columns="3">
+                    <h:graphicImage value="#{resource['img/plantilla/foco.png']}" width="90" height="90" />
+
+                    <p:outputLabel value="&#160;&#160;&#160;&#160;&#160;"/>
+
+                    <h:panelGroup>
+
+
+                        <br/>
+                        <center>
+                            <h:outputText value="Usuario Actualizado Correctamente" styleClass="labelVerdeTriage"/>
+                        </center>
+
+                        <br/>
+                        <center>
+                            <p:commandButton value="Aceptar" icon="ui-icon-check" 
+                                             onclick="PF('dlgCierraUsuario').hide();" 
+                                             action ="/index.jsf?faces-redirect=true"
+                                             actionListener="#{usuarioControlador.cierraSession()}"/>
+                        </center>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+            </h:form>
+        </p:dialog>
+
+
+        <p:dialog header="Cambio de Contraseña" widgetVar="dlgCambPass" id="dlgCambPass" closable="false" modal="true" resizable="false" width="600">
+            <h:form id="formCambPass" >
+                <br/>
+
+                <p:outputLabel value="Para realizar el cambio de contraseña ingrese los datos que se piden a continuación"/>
+
+                <br/><br/>
+
+                <p:panelGrid id="pnlCambPass" columns="1" style="width: 85%; margin: 0 auto; text-align: center;">
+
+                    <p:column>
+                        <h:panelGrid width="100%" columns="1" >
+
+                            <h:panelGrid width="100%" style="table-layout: fixed;" columns="2">
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Usuario " styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputText onkeyup="this.value = this.value.toUpperCase()" id="txtUsuarioPass" autocomplete="off" value="#{usuarioControlador.usuarioForm.usuario}" style="width: 80%" maxlength="20" required="true" requiredMessage="Ingrese su Usuario">
+                                            <f:validateLength maximum="20" minimum="1" />
+                                        </p:inputText>
+                                        <p:message for="txtUsuarioPass" />
+                                    </h:panelGrid>
+                                </p:column>
+
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Cédula " styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputMask id="txtCedulaPass" value="#{usuarioControlador.usuarioForm.identificacion}" mask="9999999999" required="true" style="width: 80%;" size="10"/>
+                                        <p:message for="txtCedulaPass" />
+                                    </h:panelGrid>
+                                </p:column>
+                            </h:panelGrid>
+
+                            <h:panelGrid width="100%" style="table-layout: fixed;" columns="2">
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Nueva Contraseña " styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputText id="txtPass1Change" autocomplete="off" value="#{usuarioControlador.usuarioForm.nuevoPass}" style="width: 80%" maxlength="15" required="true" requiredMessage="Ingrese una nueva Contraseña" type="password"/>
+                                        <p:message for="txtPass1Change" />
+                                    </h:panelGrid>
+                                </p:column>
+
+                                <p:column>
+                                    <h:panelGrid width="100%" columns="1" >
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Repita la Contraseña " styleClass="label"/>
+                                            <p:outputLabel value="*" styleClass="labelRed"/>
+                                        </h:panelGroup>
+                                        <p:inputText id="txtPass2Change" autocomplete="off" value="#{usuarioControlador.usuarioForm.repitePass}" style="width: 80%" maxlength="15" required="true" requiredMessage="Repita la nueva Contraseña" type="password"/>
+                                        <p:message for="txtPass2Change" />
+                                    </h:panelGrid>
+                                </p:column>
+                            </h:panelGrid>
+
+                        </h:panelGrid>
+                    </p:column>
+
+                </p:panelGrid>
+                <br/>
+
+                <h:panelGrid columns="2" style="margin: 0 auto; text-align: center;">
+                    <p:commandButton value="Guardar" actionListener="#{usuarioControlador.muestraConfirmacion('dlgConfirmacionCambio')}" update="pnlCambPass" icon="ui-icon-disk"/>
+                    <p:commandButton value="Cancelar" update="dlgCambPass" process="@this" icon="ui-icon-close">
+                        <p:ajax update=":#{p:component('pnlCambPass')}" resetValues="true" />
+                    </p:commandButton>
+
+                </h:panelGrid>
+            </h:form>
+        </p:dialog> 
+
+
+
+        <p:dialog header="Mensaje" dynamic="true" id="dlgConfirmacionCambio" widgetVar="dlgConfirmacionCambio" modal="true" showEffect="fade" hideEffect="fade" closable="false" resizable="false">
+            <h:form id="formConfirPass" >
+                <h:panelGrid columns="1" style="margin:0 auto" >
+                    <center>
+                        <h:panelGrid columns="2">
+
+                            <h:graphicImage value="#{resource['img/plantilla/pregunta.jpg']}" width="50" height="50" />
+                            <p:outputLabel value="¿Desea Cambiar su contraseña?"/>
+
+                        </h:panelGrid>
+                        <br/>
+
+                        <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto">
+
+                            <p:commandButton value="Si" action="#{usuarioControlador.cambiarPassword()}" update="dlgConfirmacionCambio" icon="ui-icon-check" title="View"/>
+                            <p:commandButton value="No" update="dlgConfirmacionCambio" icon="ui-icon-close" title="View"/>
+                        </h:panelGrid>
+
+                    </center>
+
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+</ui:composition>
+

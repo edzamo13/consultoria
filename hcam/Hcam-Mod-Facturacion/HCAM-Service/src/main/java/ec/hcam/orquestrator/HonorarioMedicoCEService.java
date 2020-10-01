@@ -1,0 +1,478 @@
+package ec.hcam.orquestrator;
+
+import ec.hcam.data.CodigosConsultaExterna;
+import ec.hcam.data.DatosMedico;
+import ec.hcam.data.DatosPaciente;
+import ec.hcam.data.Dependencia;
+import ec.hcam.data.InformacionCE;
+import ec.hcam.data.InformacionHC;
+import ec.hcam.entity.Cabplantbl;
+import ec.hcam.entity.Detplantbl;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.AsyncResult;
+import javax.ejb.Asynchronous;
+import javax.ejb.Stateless;
+
+import javax.ejb.TransactionManagement;
+import static javax.ejb.TransactionManagementType.BEAN;
+
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+
+/**
+ * Session Bean implementation class verficarEstancia
+ */
+@Stateless
+@TransactionManagement(BEAN)
+public class HonorarioMedicoCEService extends Basica implements HonorarioMedicoCEServiceRemote {
+
+    @Override
+    @Asynchronous
+    public Future obtenerRegistrosCE(int nivel, String iounme, Integer ioxdat,Integer unimedpk,Integer ubicapk) {
+
+       System.out.println("Hora Inicio de Honorarios Medicos CE:" + imprimirHora().toString());
+        
+        //obtenemos todas las dependencias, 
+        List<Dependencia> listaDep;
+        listaDep = obtenerDependencias(nivel, iounme, ioxdat);
+        
+        int panidh = 196;
+                
+        List<CodigosConsultaExterna> listaHoraCodigo;
+        listaHoraCodigo = obtenerHoraCodigoConsultaExterna(nivel, iounme, panidh);
+        
+
+        procesarDependenciasUnaAUna(nivel, iounme, ioxdat, listaDep, listaHoraCodigo,unimedpk,ubicapk);
+        
+        System.out.println("Hora Fin de Honorarios Medicos CE:" + imprimirHora().toString());
+       return new AsyncResult("OK");
+         
+    }
+
+    //obtener horas
+    public List<CodigosConsultaExterna> obtenerHoraCodigoConsultaExterna(int ctidpk, String ir2unm, int panidh) {
+
+        //int panidh = 196;
+        String sqlString = "SELECT C.PANIDPK AS PANIDPK ,C.PANIDH AS PANIDH, C.PADESCRI AS PADESCRI,C.PADET1 AS PADET1,C.PADET2 AS PADET2, C.PACODTAR AS PACODTAR, F.TAVALOR AS VALOR ,f.TADESCRIPC as descripcion FROM FACWEB.PANICODTBL A JOIN FACWEB.CABTARITBL B ON A.CTIDPK = B.CTIDPK JOIN FACWEB.PARANIVETBL C ON A.PANIDPK = C.PANIDPK AND A.PANIDH = C.PANIDH JOIN FACWEB.CT_UMTBL D ON D.CTIDPK = B.CTIDPK JOIN FACWEB.UNIDMEDTBL E ON D.UNIDPK = E.UNIDPK AND D.UBICAPK = E.UBICAPK JOIN FACWEB.TARIFAFTBL F ON F.CTIDPK = B.CTIDPK AND C.PACODTAR = F.TACODIGO WHERE  C.PANIDH =:panidh AND E.UNCODIGO =:ir2unm";
+        Map<String, Object> params = new HashMap<>();
+        //params.put("ctidpk", ctidpk);
+        params.put("ir2unm", ir2unm);
+        //params.put("ir2dep", ir2dep);
+        params.put("panidh", panidh);
+        List<CodigosConsultaExterna> informacionCodigosConsultaExternaList = queryExecutor.executeQuery(sqlString, params, CodigosConsultaExterna.class);
+
+        return informacionCodigosConsultaExternaList;
+    }
+    
+    //obtener lista de dependencias de la unidad medica solicitada 1
+    public List<Dependencia> obtenerDependencias(int ctidpk, String ir2unm, int ir2cit) {
+
+        String sqlString = "SELECT DISTINCT A.IADDEP AS IR2DEP FROM CEDDTA.IAGD01 A LEFT JOIN CEDDTA.IDIACE B ON A.IADUNM = B.IDIUNM AND A.IADDEP = B.IDIDEP AND A.IADCOD = B.IDIMED AND A.IADCIT = B.IDIFNA AND A.IADHIS = B.IDIHIS LEFT JOIN CEDDTA.IRME01 C ON A.IADUNM = C.IRMUNM AND A.IADDEP = C.IRMDEP AND A.IADCOD = C.IRMCOD AND A.IADCIT = C.IRMCIT AND A.IADHIS = C.IRMHIS WHERE A.IADUNM =:ir2unm AND IADHIS > 0 AND A.IADCIT =:ir2cit AND A.IADSTA = 'A' AND A.IADDEP IN (select icele1 from CEDDTA.INCODI where ICFAMI = 'DEPE' AND ICNICO = 2 AND ICELE1 NOT IN ('0000000133', '0000000129', '0000000311', '0000000582', '0000000648', '0000000647', '0000000650', '0000000644', '0000000645', '0000000646', '0000000649', '0000000593')) AND A.IADDEP not in ( SELECT C.PADET2 AS PADET2 FROM FACWEB.PANICODTBL A JOIN FACWEB.CABTARITBL B ON A.CTIDPK = B.CTIDPK JOIN FACWEB.PARANIVETBL C ON A.PANIDPK = C.PANIDPK AND A.PANIDH = C.PANIDH JOIN FACWEB.CT_UMTBL D ON D.CTIDPK = B.CTIDPK JOIN FACWEB.UNIDMEDTBL E ON D.UNIDPK = E.UNIDPK AND D.UBICAPK = E.UBICAPK JOIN FACWEB.TARIFAFTBL F ON F.CTIDPK = B.CTIDPK AND C.PACODTAR = F.TACODIGO WHERE C.PANIDH =214 AND E.UNCODIGO =:ir2unm) ORDER BY IR2DEP";
+        Map<String, Object> params = new HashMap<>();
+        //params.put("ctidpk", ctidpk);
+        params.put("ir2unm", ir2unm);
+        //params.put("ir2dep", ir2dep);
+        params.put("ir2cit", ir2cit);
+        List<Dependencia> informacionDependenciaList = queryExecutor.executeQuery(sqlString, params, Dependencia.class);
+
+
+        return informacionDependenciaList;
+    }
+
+    public List<InformacionHC> obtenerHistoriasClinicasPacientePorDependencia(int ctidpk, String ir2unm, int ir2dep, int ir2cit) {
+
+     // este metodo es disting
+        String sqlString = "SELECT A.IADHIS AS IR2HIS"
+                + "FROM CEDDTA.IAGD01 A"
+                + "LEFT JOIN CEDDTA.IDIACE B "
+                + "ON   A.IADUNM = B.IDIUNM"
+                + "AND  A.IADDEP = B.IDIDEP"
+                + "AND  A.IADCOD = B.IDIMED"
+                + "AND  A.IADCIT = B.IDIFNA"
+                + "AND  A.IADHIS = B.IDIHIS"
+                + "LEFT JOIN CEDDTA.IRME01 C"
+                + "ON   A.IADUNM = C.IRMUNM"
+                + "AND  A.IADDEP = C.IRMDEP"
+                + "AND  A.IADCOD = C.IRMCOD"
+                + "AND  A.IADCIT = C.IRMCIT"
+                + "AND  A.IADHIS = C.IRMHIS"
+                + ""
+                + "WHERE A.IADUNM =:ir2unm AND IADHIS > 0 AND A.IADCIT =:ir2cit AND A.IADSTA = 'A' AND A.IADDEP=:ir2dep GROUP BY IR2HIS";
+        //String sqlString = "SELECT ir2his as IR2HIS FROM S101719R.CEDDTA.IRSI02 i join facweb.tarifaftbl t on i.ir2ite=t.tacodigo and t.ctidpk=:ctidpk WHERE IR2UNM=:ir2unm AND IR2DEP=:ir2dep AND IR2CIT=:ir2cit AND IR2SUB='P' AND IR2INT=' ' GROUP BY IR2HIS";
+        //String sqlString = "SELECT ir2his as IR2HIS FROM S101719R.CEDDTA.IRSI02 i join facweb.tarifaftbl t on i.ir2ite=t.tacodigo and t.ctidpk=:ctidpk WHERE IR2UNM=:ir2unm AND IR2CIT=:ir2cit GROUP BY IR2HIS";
+        Map<String, Object> params = new HashMap<>();
+        //params.put("ctidpk", ctidpk);
+        params.put("ir2unm", ir2unm);
+        params.put("ir2dep", ir2dep);
+        params.put("ir2cit", ir2cit);
+        List<InformacionHC> informacionHCList = queryExecutor.executeQuery(sqlString, params, InformacionHC.class);
+        
+        return informacionHCList;
+    }
+
+    public List<InformacionCE> obtenerTodosLosRegistrosPacienteDeUnaDependencia(int ctidpk, String ir2unm, BigInteger ir2dep, int ir2cit) {
+        //este optiene todo
+        String sqlString = "SELECT A.IADSTA AS IADSTA, A.IADUNM AS IADUNM, A.IADDEP AS IADDEP, A.IADCOD AS IADCOD, A.IADCIT AS IADCIT, A.IADHOP AS IADHOP, A.IADHIS AS IADHIS, A.IADACM AS IADACM, COALESCE(CASE WHEN B.IDINEN = 'S' THEN 'PRIMERA' WHEN B.IDINEN <> 'S' THEN 'SUBSECUENTE' END , 'SUBSECUENTE' ) AS TIPO, COALESCE(CASE WHEN C.IRMDP1 <> ' ' THEN C.IRMDP1 ELSE CASE WHEN C.IRMDP2 <> ' ' THEN C.IRMDP2 ELSE CASE WHEN C.IRMDP3 <> ' ' THEN C.IRMDP3 END END END, ' ') AS DIAGPRES, COALESCE(CASE WHEN C.IRMDD1 <> ' ' THEN C.IRMDD1 ELSE CASE WHEN C.IRMDD2 <> ' ' THEN C.IRMDD2 ELSE CASE WHEN C.IRMDD3 <> ' ' THEN C.IRMDD3 END END END, ' ') AS DIAGDEF, COALESCE(B.IDATPR,'T') AS ODONT FROM CEDDTA.IAGD01 A LEFT JOIN CEDDTA.IDIACE B ON A.IADUNM = B.IDIUNM AND A.IADDEP = B.IDIDEP AND A.IADCOD = B.IDIMED AND A.IADCIT = B.IDIFNA AND A.IADHIS = B.IDIHIS LEFT JOIN CEDDTA.IRME01 C ON A.IADUNM = C.IRMUNM AND A.IADDEP = C.IRMDEP AND A.IADCOD = C.IRMCOD AND A.IADCIT = C.IRMCIT AND A.IADHIS = C.IRMHIS WHERE A.IADUNM =:ir2unm AND IADHIS > 0 AND A.IADCIT =:ir2cit AND A.IADSTA = 'A' AND A.IADDEP=:ir2dep";
+        //String sqlString = "SELECT ir2his as IR2HIS, i.ir2ite as IR2ITE, t.tavalor as TAVALOR, ir2hop as IR2HOP, i.ir2int as IR2INT, i.ir2sub as IR2SUB, i.ir2sfa as IR2SFA FROM S101719R.CEDDTA.IRSI02 i join facweb.tarifaftbl t on i.ir2ite=t.tacodigo and t.ctidpk=:ctidpk WHERE IR2UNM=:ir2unm AND IR2DEP=:ir2dep AND IR2CIT=:ir2cit AND IR2SUB='P' AND IR2INT=' ' order by ir2his";
+        //Este deberia funcionar
+        //String sqlString = "SELECT ir2his as IR2HIS, i.ir2ite as IR2ITE, t.tavalor as TAVALOR, i.ir2hop as IR2HOP, i.ir2int as IR2INT, i.ir2sub as IR2SUB, i.ir2sfa as IR2SFA FROM S101719R.CEDDTA.IRSI02 i join facweb.tarifaftbl t on i.ir2ite=t.tacodigo and t.ctidpk=:ctidpk WHERE IR2UNM=:ir2unm AND IR2CIT=:ir2cit order by ir2his FETCH FIRST 20 ROWS ONLY";
+        //String sqlString = "SELECT ir2his as IR2HIS, i.ir2ite as IR2ITE, t.tavalor as TAVALOR, ir2hop as IR2HOP FROM S101719R.CEDDTA.IRSI02 i join facweb.tarifaftbl t on i.ir2ite=t.tacodigo and t.ctidpk=:ctidpk WHERE IR2UNM=:ir2unm AND IR2DEP=:ir2dep AND IR2CIT=:ir2cit order by ir2his FETCH FIRST 20 ROWS ONLY";
+        Map<String, Object> params = new HashMap<>();
+        //params.put("ctidpk", ctidpk);
+        params.put("ir2unm", ir2unm);
+        params.put("ir2dep", ir2dep);
+        params.put("ir2cit", ir2cit);
+        List<InformacionCE> informacionCEList = queryExecutor.executeQuery(sqlString, params, InformacionCE.class);
+
+        return informacionCEList;
+    }
+
+    public void procesarDependenciasUnaAUna(int nivel, String iounme, int ioxdat, List<Dependencia> listaDependencia, List<CodigosConsultaExterna> listaHoraCodigo,Integer unimedpk,Integer ubicapk) {
+        
+        utx = ctx.getUserTransaction();
+        // Hacer una lista para moverse dependencia a dependencia y empesar el procesamiento...
+        double dependeciaObtenida = 0.0;
+        //int dependenciaObtenidaInt = 0;
+        BigInteger dependenciaObtenidaBi = new BigInteger("0");
+
+        String fechaSt = Integer.toString(ioxdat);
+        String mesSt = fechaSt.substring(4, 6);
+        String diaSt = fechaSt.substring(6, 8);
+        String anioSt = fechaSt.substring(0, 4);
+
+        Integer mesI = Integer.parseInt(mesSt);
+        Integer diaI = Integer.parseInt(diaSt);
+        Integer anioI = Integer.parseInt(anioSt);
+
+        existenciaCabecera(mesI, diaI, anioI,unimedpk,ubicapk);
+
+        int i = 0;
+        //Imagen objeto = new Imagen();
+
+        for (Dependencia dependencia : listaDependencia) {
+            dependeciaObtenida = listaDependencia.get(i).getIR2DEP();
+            
+            //dependenciaObtenidaInt = (int) dependeciaObtenida;
+            BigDecimal dependeciaObtenidaBd = BigDecimal.valueOf(listaDependencia.get(i).getIR2DEP());
+            dependenciaObtenidaBi = dependeciaObtenidaBd.toBigInteger();
+
+            List<InformacionCE> listaHCTotalDependencia;
+            listaHCTotalDependencia = obtenerTodosLosRegistrosPacienteDeUnaDependencia(nivel, iounme, dependenciaObtenidaBi, ioxdat);
+
+            procesarRegistrosDependencias(nivel, iounme, dependenciaObtenidaBi, ioxdat, listaHCTotalDependencia, listaHoraCodigo);
+            //if (i == 10) {
+            //    break;
+            //}
+            i++;
+        }
+        
+        try {
+            utx.begin();
+            for (Detplantbl detplantbl : listaDetalles) {
+                detalleService.createDetplantbl(detplantbl);
+            }
+            utx.commit();
+        } catch (NotSupportedException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException | SystemException ex) {
+            try {
+                utx.rollback();
+            } catch (IllegalStateException | SecurityException | SystemException ex1) {
+                Logger.getLogger(HonorariosMedicosCirugiaService.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(HonorariosMedicosCirugiaService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        bag.clear();
+        listaDetalles.clear();
+        //guardar todo
+        //procesarRegistrosPorPaciente(tasks, tasksT, ctidpk, irunm, irdep, ircit);
+    }
+
+    public void procesarRegistrosDependencias(int ctidpk, String ir2unm, BigInteger ir2dep, int ir2cit, List<InformacionCE> tasksT, List<CodigosConsultaExterna> listaHoraCodigo) {
+
+        List<InformacionCE> listaSalida = new ArrayList<>();        
+        InformacionCE objeto = new InformacionCE();       
+
+        for (InformacionCE infoCE : tasksT) {
+
+            objeto = infoCE;
+            aplicarRegla(objeto, ir2unm, ir2dep, ir2cit, listaHoraCodigo);            
+        }
+    }
+
+    public void aplicarRegla(InformacionCE objeto, String ir2unm, BigInteger ir2dep, int ir2cit, List<CodigosConsultaExterna> listaHoraCodigo) {
+       
+        
+        double horaRecuperadad = objeto.getIADACM();
+        int horaRecuperadai = (int)horaRecuperadad;
+        Double valor=0.0;
+        String descripcion="";
+        String pacotar="";
+        for (CodigosConsultaExterna listaCodiHora:listaHoraCodigo){
+            
+        if((horaRecuperadai >= listaCodiHora.getPADET1()) && (horaRecuperadai <=listaCodiHora.getPADET2())){
+        valor=listaCodiHora.getVALOR();
+        descripcion=listaCodiHora.getDESCRIPCION();
+        pacotar = listaCodiHora.getPACODTAR();
+        
+        }
+        
+        }
+        registrarDetallePlanillaje(objeto, ir2unm, ir2dep, ir2cit, valor,descripcion, pacotar);
+        
+    }
+
+    
+    public void registrarDetallePlanillaje(InformacionCE objeto, String ir2unm, BigInteger ir2dep, int ir2cit, double valor,String descripcion,String pacotar) {
+        int banderaControlaIf = 1;
+        if (banderaControlaIf == 0){
+        String queryString = "SELECT A.IRMDP1 as diag1, A.IRMDP2 as diag2, A.IRMDP3 as diag3, "
+                + "A.IRMDD1 as diag4, A.IRMDD2 as diag5, A.IRMDD3 as diag6, 'PRESUNTIVO' as tipodiag1, "
+                + "'PRESUNTIVO' as tipodiag2, 'PRESUNTIVO' as tipodiag3, 'DEFINITIVO' as tipodiag4, "
+                + "'DEFINITIVO' as tipodiag5, 'DEFINITIVO' as tipodiag6, A.IRMCOD as codmedico, "
+                + "B.IMMNOM as nommedico FROM CEDDTA.IRME01 A LEFT JOIN CEDDTA.IMME01 B ON A.IRMUNM = B.IMMUNM AND "
+                + "A.IRMCOD = B.IMMCOD WHERE A.IRMUNM =:ir2unm AND A.IRMHIS =:irmhis AND "
+                + "A.IRMCIT =:ir2cit AND A.IRMHOP =:irmhop";
+
+        Map<String, Object> paramsDatosMedicos = new HashMap();
+        //paramsDatosMedicos.put("irmhis", objeto.getIR2HIS());
+        //paramsDatosMedicos.put("irmhop", objeto.getIR2HOP());
+        paramsDatosMedicos.put("ir2unm", ir2unm);
+        paramsDatosMedicos.put("ir2cit", ir2cit);
+        
+        List<DatosMedico> datosMedico = queryExecutor.executeQuery(queryString, paramsDatosMedicos, DatosMedico.class
+        );
+
+        String queryPaciente = "SELECT COALESCE(B.IACNOM, A.IAFNOM) as NOMBREAFILIADO, "
+                + "COALESCE(B.IACCED, A.IAFCED) as CEDULAAFILIADO, CASE WHEN A.IAFCRE = '  ' "
+                + "THEN 'MA' ELSE A.IAFCRE END PARENTESCO, "
+                + "TIMESTAMPDIFF ( 256 , CHAR ( CURRENT TIMESTAMP - TO_DATE ( CHAR ( A.IAFFNA ) , 'YYYYMMDD' ) ) ) as EDADPACIENTE, "
+                + "A.IAFSEX as GENEROPACIENTE, A.IAFFNA as FECNACIMIENTO, A.IAFNOM as NOMBREPACIENTE, "
+                + "A.IAFCED as CEDULAPACIENTE, CASE WHEN A.IAFCRE ='  ' THEN 'MA' ELSE A.IAFCRE END as RELACIONFAMILIAR "
+                + "FROM CEDDTA.IAFI01 A LEFT JOIN CEDDTA.IAFI03 B ON  A.IAFCED=B.IACCED WHERE A.IAFUNM =:ir2unm AND "
+                + "A.IAFHIS =:irhis";
+
+        Map<String, Object> paramsDatosPaciente = new HashMap();
+
+        paramsDatosPaciente.put(
+                "irhis", objeto.getIADHIS());
+        paramsDatosPaciente.put(
+                "ir2unm", ir2unm);
+
+        List<DatosPaciente> datosPaciente = queryExecutor.executeQuery(queryPaciente, paramsDatosPaciente, DatosPaciente.class);
+
+        //Consultar datos cliente
+        Detplantbl detalle = new Detplantbl();
+
+        String fechaSt = Integer.toString(ir2cit);
+        String mesSt = fechaSt.substring(4, 6);
+        String diaSt = fechaSt.substring(6, 8);
+        String anioSt = fechaSt.substring(0, 4);
+
+        Integer mesI = Integer.parseInt(mesSt);
+        Integer diaI = Integer.parseInt(diaSt);
+        int anioI = Integer.parseInt(anioSt);
+
+        Calendar c1 = Calendar.getInstance();
+
+        Cabplantbl cab = (Cabplantbl) bag.get("cabplantbl");
+
+        detalle.setReidpk(1);
+        detalle.setNumplad(cab.getNumplanilla());
+        //revisar que va en el siguienteobjeto.getIADCOD()
+        detalle.setCoditem(" ");
+        detalle.setHistoCli(String.valueOf(objeto.getIADHIS()));
+        detalle.setFechaReg(c1.getTime());
+        detalle.setDescItem(descripcion); //con el codigo del tarifario descripcion
+        String nombreDependenciaRealiza = NombreDependenciaSQL(ir2dep);
+        detalle.setDepRea(nombreDependenciaRealiza); //buscar por código de dependencia, preguntar en que talla hallar el nombre
+        //detalle.setDepRea("CodigoOper2"); //buscar por código de dependencia, preguntar en que talla hallar el nombre
+        
+        
+        //BigInteger codepsolbi = BigInteger.valueOf(ir2dep);
+        
+        detalle.setCoddepsol(ir2dep);
+        detalle.setCoddeprea(ir2dep); //ver esta campo
+        detalle.setTipSer(2);  //ver este campo
+        detalle.setSubtipser(1);
+        detalle.setCantidad(1);
+        //Aqui viene el valor de lo que consulto en el tarifario
+        Double valorResultado = 0.0;
+        detalle.setValorUnit(valor); //ver este campo
+        detalle.setValorTotal(valor);
+        detalle.setNumOrden(1); //ver este campo
+        detalle.setTipoRubro("AMB");
+        detalle.setCodMedico(datosMedico.get(0).getCODMEDICO());
+        detalle.setNomMedico(datosMedico.get(0).getNOMMEDICO());
+        detalle.setDiagnostico1(datosMedico.get(0).getDIAG1());
+        detalle.setDiagnostico2(datosMedico.get(0).getDIAG2());
+        detalle.setDiagnostico3(datosMedico.get(0).getDIAG3());
+        detalle.setDiagnostico4(datosMedico.get(0).getDIAG4());
+        detalle.setDiagnostico5(datosMedico.get(0).getDIAG5());
+        detalle.setDiagnostico6(datosMedico.get(0).getDIAG6());
+        detalle.setTipoDiag1(datosMedico.get(0).getTIPODIAG1().charAt(0));
+        detalle.setTipoDiag2(datosMedico.get(0).getTIPODIAG2().charAt(0));
+        detalle.setTipoDiag3(datosMedico.get(0).getTIPODIAG3().charAt(0));
+        detalle.setTipoDiag4(datosMedico.get(0).getTIPODIAG4().charAt(0));
+        detalle.setTipoDiag5(datosMedico.get(0).getTIPODIAG5().charAt(0));
+        detalle.setTipoDiag6(datosMedico.get(0).getTIPODIAG6().charAt(0));
+
+        detalle.setTimeAntestesia(Short.parseShort("0"));  //no aplica anestencia en honorarios
+        detalle.setCodDerivacion("CD"); //ver este campo
+        detalle.setSecDerivacion(Short.parseShort("0")); //ver este campo
+        detalle.setContingenCubre(0);
+
+        detalle.setNombreAfiliado(datosPaciente.get(0).getNOMBREAFILIADO());
+        detalle.setCedulaAfiliado(datosPaciente.get(0).getCEDULAAFILIADO());
+        detalle.setParentesco(datosPaciente.get(0).getPARENTESCO());
+        detalle.setCedulaBeneficia(datosPaciente.get(0).getCEDULAPACIENTE());
+        detalle.setNombreBeneficia(datosPaciente.get(0).getNOMBREPACIENTE());
+        detalle.setTipoBeneficia("TI"); //ver este campo
+        //Para sacar la fecha de nacimiento se ejecuta lo siguiente
+        String fechaNa = datosPaciente.get(0).getFECNACIMIENTO();
+        String mesNa = fechaNa.substring(4, 6);
+        String diaNa = fechaNa.substring(6, 8);
+        String anioNa = fechaNa.substring(0, 4);
+
+        String fechaNac = anioNa + "-" + mesNa + "-" + diaNa;
+        
+        
+        detalle.setFecNacBenef(Date.valueOf(fechaNac)); //ver este campo
+        //detalle.setFecNacBenef(Date.valueOf("1954-02-04")); //ver este campo
+        detalle.setEdadBenefic(datosPaciente.get(0).getEDADPACIENTE());
+        detalle.setGeneroBenef(datosPaciente.get(0).getGENEROPACIENTE().charAt(0));
+        detalle.setDuracionAtencion(0); //ver este campo
+        detalle.setEstado('A');
+
+        cab.setDetplantblList(null);
+        detalle.setCpidpk(cab);
+
+        listaDetalles.add(detalle);
+
+        }
+        if (banderaControlaIf == 1){
+            
+             Detplantbl detalle = new Detplantbl();
+        //Datos Cabecera        
+        Cabplantbl cab = (Cabplantbl) bag.get("cabplantbl");
+            
+        Map<String, Object> paramsDatosMedicos = new HashMap();
+        //paramsDatosMedicos.put("irmhis", objeto.getIR2HIS());
+        //paramsDatosMedicos.put("irmhop", objeto.getIR2HOP());
+        paramsDatosMedicos.put("ir2unm", ir2unm);
+        paramsDatosMedicos.put("ir2cit", ir2cit);
+
+        List<DatosMedico> datosMedico = new ArrayList<>();
+        
+        Map<String, Object> paramsDatosPaciente = new HashMap();
+
+        paramsDatosPaciente.put("irhis", objeto.getIADHIS());
+        paramsDatosPaciente.put("ir2unm", ir2unm);
+
+        List<DatosPaciente> datosPaciente = new ArrayList<>();
+
+        String fechaSt = Integer.toString(ir2cit);
+        String mesSt = fechaSt.substring(4, 6);
+        String diaSt = fechaSt.substring(6, 8);
+        String anioSt = fechaSt.substring(0, 4);
+
+        Integer mesI = Integer.parseInt(mesSt);
+        Integer diaI = Integer.parseInt(diaSt);
+        int anioI = Integer.parseInt(anioSt);
+
+        Calendar c1 = Calendar.getInstance();
+        
+        //Cabplantbl cab = (Cabplantbl) bag.get("cabplantbl");
+        detalle.setNumplad(cab.getNumplanilla());
+        
+        detalle.setReidpk(1);
+        
+        //revisar que va en el siguienteobjeto.getIADCOD()
+        
+        detalle.setCoditem(pacotar);        
+        
+        double historiaClinicad = objeto.getIADHIS();
+        int historiaClinicai = (int)historiaClinicad;
+        
+        detalle.setHistoCli(String.valueOf(historiaClinicai));
+        detalle.setFechaReg(c1.getTime());
+        
+        //detalle.setDescItem("Consulta Externa"); //con el codigo del tarifario descripcion
+        detalle.setDescItem(descripcion);
+        
+        //Esto se puede quitar
+        String nombreDependenciaRealiza = NombreDependenciaSQL(ir2dep);
+        detalle.setDepRea(nombreDependenciaRealiza); //buscar por código de dependencia, preguntar en que talla hallar el nombre
+        
+        detalle.setDepRea(nombreDependenciaRealiza); //buscar por código de dependencia, preguntar en que talla hallar el nombre
+        
+        //BigInteger codepsolbi = BigInteger.valueOf(ir2dep);
+        
+        detalle.setCoddepsol(ir2dep);
+        detalle.setCoddeprea(ir2dep); //ver esta campo
+        detalle.setTipSer(2);  //ver este campo
+        detalle.setSubtipser(1);
+        detalle.setCantidad(1);
+        //Aqui viene el valor de lo que consulto en el tarifario
+        Double valorResultado = 0.0;
+        detalle.setValorUnit(valor); //ver este campo
+        detalle.setValorTotal(valor);
+        detalle.setNumOrden(1); //ver este campo
+        detalle.setTipoRubro("AMB");
+        
+        //detalle.setCodMedico(1);
+        double codigoMedicod=objeto.getIADCOD();
+        int codigoMedicoi=(int)codigoMedicod;
+        
+        detalle.setCodMedico(codigoMedicoi);
+        detalle.setNomMedico(" ");
+        detalle.setDiagnostico1(" ");
+        detalle.setDiagnostico2(" ");
+        detalle.setDiagnostico3(" ");
+        detalle.setDiagnostico4(" ");
+        detalle.setDiagnostico5(" ");
+        detalle.setDiagnostico6(" ");
+        detalle.setTipoDiag1(' ');
+        detalle.setTipoDiag2(' ');
+        detalle.setTipoDiag3(' ');
+        detalle.setTipoDiag4(' ');
+        detalle.setTipoDiag5(' ');
+        detalle.setTipoDiag6(' ');
+
+        detalle.setTimeAntestesia(Short.parseShort("0"));  //no aplica anestencia en honorarios
+        detalle.setCodDerivacion("CD"); //ver este campo
+        detalle.setSecDerivacion(Short.parseShort("0")); //ver este campo
+        detalle.setContingenCubre(0);
+
+        detalle.setNombreAfiliado(" ");
+        detalle.setCedulaAfiliado(" ");
+        detalle.setParentesco(" ");
+        detalle.setCedulaBeneficia(" ");
+        detalle.setNombreBeneficia(" ");
+        detalle.setTipoBeneficia("TI"); //ver este campo
+        detalle.setFecNacBenef(Date.valueOf("1954-02-04")); //ver este campo
+        detalle.setEdadBenefic(34);
+        detalle.setGeneroBenef('M');
+        detalle.setDuracionAtencion(0); //ver este campo
+        detalle.setEstado('A');
+        
+        cab.setDetplantblList(null);
+        detalle.setCpidpk(cab);
+        listaDetalles.add(detalle);        
+        registrarPorBloque(listaDetalles);
+        
+        }
+    }
+
+}

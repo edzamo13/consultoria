@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+        <p:dialog id="mdlNewHierLev" header="Crear Estado de Fichas" showEffect="fold" hideEffect="fold" widgetVar="dlg2" modal="true" >
+            <p:panel id="panel" header="Ingrese los datos" style="margin-bottom:10px;">               
+                <h:panelGrid id="grid" columns="3" cellpadding="5">
+                    
+                    <h:outputLabel for="name" value="Nombre:" style="font-weight:bold" />
+                <p:inputText id="name" value="#{fileStatusView.fileStatus.nameFst}" label="Nombre: " validatorMessage="Introduzca datos correctos(Alfanuméricos, no mayor a 15)">
+                     <f:validateRegex pattern="^[a-zA-Z0-9\s]{1,15}$" />
+                </p:inputText>
+                <p:message for="name"/>
+                
+                <h:outputLabel for="description" value="Descripción:" style="font-weight:bold" />
+                <p:inputTextarea id="description" value="#{fileStatusView.fileStatus.descriptionFst}" label="Descripción: "/>
+                <p:message for="description"/>
+                
+                <h:outputLabel for="initials" value="Iniciales:" style="font-weight:bold" />
+                <p:inputText id="initials" value="#{fileStatusView.fileStatus.initialsFst}" label="Iniciales: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios, no mayor a 5)">
+                     <f:validateRegex pattern="[a-zA-Z0-9]{1,5}" />
+                </p:inputText>
+                <p:message for="initials"/>
+
+                    <br></br>
+                    <br></br>
+
+                    <div align="center">
+                        <h:panelGrid columns="2" cellpadding="5" >
+                            <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{fileStatusView.save(fileStatusView.fileStatus)}" icon="ui-icon-disk"/>
+                            <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" action="adminFileStatus?faces-redirect=true" />
+                        </h:panelGrid>
+                    </div>
+
+                </h:panelGrid>
+            </p:panel>
+        </p:dialog>
+    </h:form>
+</ui:composition>

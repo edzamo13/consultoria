@@ -1,0 +1,139 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="createForm">
+        <p:dialog id="mdlNewHierLev" header="Crear Detalle Tarifario" widgetVar="dlg2" showEffect="fold" hideEffect="fold" modal="true" >
+            <h3>Ingrese los datos</h3>
+            <p:scrollPanel mode="native" id="panel"  style="width:450px;height:450px">               
+                <h:panelGrid id="grid" columns="3" cellpadding="5">
+
+                    <p:outputLabel for="name" value="Nombre Cabecera:" style="font-weight:bold" />
+                    <p:selectOneMenu id="name" value="#{selectOneMenuView.car}">
+                        <f:selectItem itemLabel="Cabecera Tarifario" itemValue="" />
+                        <f:selectItems value="#{selectOneMenuView.cars}" />
+                    </p:selectOneMenu>
+                    <p:message for="name"/>
+
+                    <p:outputLabel for="codigo" value="Código:" style="font-weight:bold" />
+                    <p:inputText id="codigo" value="#{centerView.centers.provinceCet}" required="true" label="Codigo: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="codigo"/>
+
+                    <p:outputLabel for="descripcion" value="Descripcion:" style="font-weight:bold" />
+                    <p:inputText id="descripcion" value="#{centerView.centers.cantonCet}" required="true" label="Descripción: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="descripcion"/>
+
+                    <p:outputLabel for="fechaIni" value="Fecha Inicio Vigencia:" style="font-weight:bold" />
+                    <p:calendar id="fechaIni" value="#{calendarView.date9}" pattern="dd-MM-yyyy" mask="true" />
+                    <p:message for="fechaIni"/>
+
+                    <p:outputLabel for="fechaFin" value="Fecha Fin Vigencia:" style="font-weight:bold" />
+                    <p:calendar id="fechaFin" value="#{calendarView.date9}" pattern="dd-MM-yyyy" mask="true" />
+                    <p:message for="fechaFin"/>
+
+                    <p:outputLabel for="valor" value="Valor:" style="font-weight:bold" />
+                    <p:inputText id="valor" value="#{centerView.centers.cantonCet}" required="true" label="Valor: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="valor"/>
+
+                    <p:outputLabel for="uvr" value="UVR:" style="font-weight:bold" />
+                    <p:inputText id="uvr" value="#{centerView.centers.cantonCet}" required="true" label="UVR: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="uvr"/>
+
+                    <p:outputLabel for="observacion" value="Observación:" style="font-weight:bold" />
+                    <p:inputText id="observacion" value="#{centerView.centers.cantonCet}" required="true" label="Observación: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="observacion"/>
+
+                    <p:outputLabel for="fcm" value="F.C.M:" style="font-weight:bold" />
+                    <p:inputText id="fcm" value="#{centerView.centers.cantonCet}" required="true" label="F.C.M: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="fcm"/>
+
+                    <p:outputLabel for="uvrAn" value="U.V.R. Anestesia:" style="font-weight:bold" />
+                    <p:inputText id="uvrAn" value="#{centerView.centers.cantonCet}" required="true" label="U.V.R. Anestesia: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="uvrAn"/>
+
+                    <p:outputLabel for="fcmAn" value="F.C.M. Anestesia:" style="font-weight:bold" />
+                    <p:inputText id="fcmAn" value="#{centerView.centers.cantonCet}" required="true" label="F.C.M. Anestesia: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="fcmAn"/>
+
+                    <p:outputLabel for="valorAn" value="Valor Anestesia:" style="font-weight:bold" />
+                    <p:inputText id="valorAn" value="#{centerView.centers.cantonCet}" required="true" label="Valor Anestesia: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="valorAn"/>
+
+                    <p:outputLabel for="tipo" value="Tipo:" style="font-weight:bold" />
+                    <p:inputText id="tipo" value="#{centerView.centers.cantonCet}" required="true" label="Tipo: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="tipo"/>
+
+                    <p:outputLabel for="estado" value="Estado:" style="font-weight:bold" />
+                    <p:inputText id="estado" value="#{centerView.centers.cantonCet}" required="true" label="Estado: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="estado"/>
+
+                    <p:outputLabel for="incrementoC" value="Incremento Costa:" style="font-weight:bold" />
+                    <p:inputText id="incrementoC" value="#{centerView.centers.cantonCet}" required="true" label="Incremento Costa: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="incrementoC"/>
+
+                    <p:outputLabel for="incrementoI" value="Incremento Insular:" style="font-weight:bold" />
+                    <p:inputText id="incrementoI" value="#{centerView.centers.cantonCet}" required="true" label="Incremento Insular: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="incrementoI"/>
+
+                    <p:outputLabel for="bilateral" value="Bilateral:" style="font-weight:bold" />
+                    <p:inputText id="bilateral" value="#{centerView.centers.cantonCet}" required="true" label=" Bilateral: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="bilateral"/>
+
+                    <p:outputLabel for="modificador" value="Modificador:" style="font-weight:bold" />
+                    <p:inputText id="modificador" value="#{centerView.centers.cantonCet}" required="true" label=" Modificador: " validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="modificador"/>
+
+                    <p:outputLabel for="tiempoCiruIni" value="Tiempo Cirujía Inicio:" style="font-weight:bold" />
+                    <p:inputText id="tiempoCiruIni" value="#{centerView.centers.cantonCet}" required="true" label="Tiempo Cirujía Inicio:" validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="tiempoCiruIni"/>
+
+                    <p:outputLabel for="tiempoCiruFin" value="Tiempo Cirujía Fin:" style="font-weight:bold" />
+                    <p:inputText id="tiempoCiruFin" value="#{centerView.centers.cantonCet}" required="true" label="Tiempo Cirujía Fin:" validatorMessage="Introduzca datos correctos(Alfanuméricos sin espacios)">
+                        <f:validateRegex pattern="[a-zA-Z0-9]{3,15}" />
+                    </p:inputText>
+                    <p:message for="tiempoCiruFin"/>
+                </h:panelGrid>
+            </p:scrollPanel>
+            <div align="center">
+                <h:panelGrid columns="2" cellpadding="5" >
+                    <p:commandButton id="btnGuardad" update=":createForm:grid" value="Guardar" action="#{centerView.save(centerView.centers)}" icon="ui-icon-disk"/>
+                    <p:commandButton id="btnCancelar" onclick="window.location.replace(window.location.href);" value="Cancelar" icon="ui-icon-cancel" action="adminDetalleTarifario?faces-redirect=true" />
+                </h:panelGrid>
+            </div>
+        </p:dialog>
+    </h:form>
+</ui:composition>

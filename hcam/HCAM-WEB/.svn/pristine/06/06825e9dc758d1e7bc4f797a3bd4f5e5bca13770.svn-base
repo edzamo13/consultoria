@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">
+        Administración - <span class="subitem">Menús por Perfiles</span>
+    </ui:define>
+
+    <ui:define name="description">
+        Definir los menús que pertenecen a cada perfil.
+    </ui:define>
+
+    <ui:define name="implementation">
+
+        <h:form id="form"> 
+            <p:commandButton id="crear" value="Crear" onclick="PF('dlg2').show();" action="#{profilesMenusView.CheckEmptyProfilesList}"/>
+            <p:messages id="messages" autoUpdate="false" closable="true" />
+
+            
+
+            <br></br>
+
+            <ui:include src="_listProfilesMenus.xhtml" />
+        </h:form> 
+
+        <ui:include src="_createProfilesMenus.xhtml" />
+        <ui:include src="_editProfilesMenus.xhtml" />
+
+
+    </ui:define>
+</ui:composition>
+

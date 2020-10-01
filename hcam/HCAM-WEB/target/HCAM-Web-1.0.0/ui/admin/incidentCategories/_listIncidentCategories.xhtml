@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:form id="formList">
+       
+        <p:dataTable id="DTCategory" var="incident" value="#{incidentCategoriesView.lstIncidentCategory}" sortBy="#{incident.idInc}" >
+                <p:column headerText="Nombre" sortBy="#{incident.nameInc}" filterBy="#{incident.nameInc}" filterMatchMode="contains">
+                    <h:outputText value="#{incident.nameInc}" />
+                </p:column>
+                
+                <p:column headerText="Descipción" sortBy="#{incident.descriptionInc}" filterBy="#{incident.descriptionInc}" filterMatchMode="contains">
+                    <h:outputText value="#{incident.descriptionInc}" />
+                </p:column>
+                <p:column headerText="Fecha Registro" sortBy="#{incident.registerDateInc}" filterBy="#{incident.registerDateInc}" filterMatchMode="contains">
+                        <h:outputText value="#{incident.registerDateInc}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    
+                <p:column headerText="Activo"  sortBy="#{incident.activeInc}" filterMatchMode="contains" width="40" >
+                    <div align="center">
+                     <p:selectBooleanCheckbox value="#{incident.activeInc}" disabled="true"/>
+                    </div>
+              </p:column>
+                
+                <p:column headerText="Fecha Inactivo" sortBy="#{incident.inactiveDateInc}" filterBy="#{incident.inactiveDateInc}" filterMatchMode="contains">
+                        <h:outputText value="#{incident.inactiveDateInc}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                
+                <p:column width="40" headerText="Editar" style="text-align: center">
+                    <p:commandButton  icon="ui-icon-pencil" 
+                                      title="Editar"
+                                      actionListener="#{incidentCategoriesView.setSelected(incident)}"
+                                      onclick="PF('dlg3').show();"/> 
+                </p:column>
+                <p:column width="60" style="text-align: center" headerText="Eliminar">
+                    <p:commandButton action="#{incidentCategoriesView.remove(incident)}"
+                                     icon="ui-icon-trash" 
+                                     title="Eliminar">
+                        <p:confirm header="Confirmation" message="¿Está Seguro de Eliminar la Categoría?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>      
+    </h:form>
+</ui:composition>
