@@ -1,0 +1,22 @@
+{
+  "planFunFechaAprobacion": "2019-04-05T16:44:40.850Z",
+  "estado": "A",
+  "planFunEstado": "A",
+  "ubicacionesFuncionario": [
+    {
+      "ubicacionrnaId": 0,
+      "agencia": {
+        "ageId": 1
+      },
+      "FuncionarioClasificacion": {
+        "clasificacionId": 0,
+        "funcionario": {
+          "funId": 1
+        },
+        "estado": "A"
+      },
+      "ubiFuncionarioTipo": "nose",
+      "estado": "A"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "actSemId": 0,
+  "planificacionSemanal": {
+    "planSemId": 0
+  },
+  "actividad": {
+    "actId": 0
+  },
+  "actSemFecha": "2019-05-20T16:53:49.224Z",
+  "actSemDescripcion": "string",
+  "actSemPropuesta": 0,
+  "actSemCumplida": 0,
+  "actSemReqApoyo": "string",
+  "actSemEstado": "string",
+  "actSemObservaciones": "string",
+  "estado": "string"
+}

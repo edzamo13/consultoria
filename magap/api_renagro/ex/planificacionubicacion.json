@@ -1,0 +1,10 @@
+{  
+  "timeStamp": "2019-05-23T19:56:24.127Z",
+  "estado": "ac",
+  "planificacionSemanal": {
+    	"planSemId": 100
+  },
+  "ubicacionFuncionario": {
+    	"ubiFunId": 20
+  }
+}

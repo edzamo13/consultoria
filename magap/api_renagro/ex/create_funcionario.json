@@ -1,0 +1,23 @@
+{
+  "perId": 77,
+  "estado": "A",
+  "funcionarioClasificaciones": [
+    {
+      "clasificacionId": 0,
+      "estado": "A",
+      "ubicacionesFuncionario": [
+        {
+          "ubicacionrnaId": 0,
+          "planificacionFuncionario": {
+            "planFunId": 1
+          },
+          "agencia": {
+            "ageId": 1
+          },
+          "ubiFunTipo": "string",
+          "estado": "A"
+        }
+      ]
+    }
+  ]
+}

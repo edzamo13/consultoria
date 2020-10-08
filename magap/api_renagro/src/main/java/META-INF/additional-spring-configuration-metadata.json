@@ -1,0 +1,117 @@
+{"properties": [
+  {
+    "name": "url.servidor_micro",
+    "type": "java.lang.String",
+    "description": "A description for 'url.servidor_micro'"
+  },
+  {
+    "name": "url.catalogo",
+    "type": "java.lang.String",
+    "description": "A description for 'url.catalogo'"
+  },
+  {
+    "name": "url.procedure",
+    "type": "java.lang.String",
+    "description": "A description for 'url.procedure'"
+  },
+  {
+    "name": "url.productores",
+    "type": "java.lang.String",
+    "description": "A description for 'url.productores'"
+  },
+  {
+    "name": "url.socioproductor",
+    "type": "java.lang.String",
+    "description": "A description for 'url.socioproductor'"
+  },
+  {
+    "name": "url.personas",
+    "type": "java.lang.String",
+    "description": "A description for 'url.personas'"
+  },
+  {
+    "name": "url.personatipo",
+    "type": "java.lang.String",
+    "description": "A description for 'url.personatipo'"
+  },
+  {
+    "name": "url.predios",
+    "type": "java.lang.String",
+    "description": "A description for 'url.predios'"
+  },
+  {
+    "name": "url.ubicacion",
+    "type": "java.lang.String",
+    "description": "A description for 'url.ubicacion'"
+  },
+  {
+    "name": "url.usuarios",
+    "type": "java.lang.String",
+    "description": "A description for 'url.usuarios'"
+  },
+  {
+    "name": "url.usuarioperfil",
+    "type": "java.lang.String",
+    "description": "A description for 'url.usuarioperfil'"
+  },
+  {
+    "name": "url.usuarioperfilps",
+    "type": "java.lang.String",
+    "description": "A description for 'url.usuarioperfilps'"
+  },
+  {
+    "name": "url.biblioteca",
+    "type": "java.lang.String",
+    "description": "A description for 'url.biblioteca'"
+  },
+  {
+    "name": "url.mapas",
+    "type": "java.lang.String",
+    "description": "A description for 'url.mapas'"
+  },
+  {
+    "name": "url.log",
+    "type": "java.lang.String",
+    "description": "A description for 'url.log'"
+  },
+  {
+    "name": "url.organizacion",
+    "type": "java.lang.String",
+    "description": "A description for 'url.organizacion'"
+  },
+  {
+    "name": "url.organizacionview",
+    "type": "java.lang.String",
+    "description": "A description for 'url.organizacionview'"
+  },
+  {
+    "name": "url.funcionario",
+    "type": "java.lang.String",
+    "description": "A description for 'url.funcionario'"
+  },
+  {
+    "name": "url.laboratorios",
+    "type": "java.lang.String",
+    "description": "A description for 'url.laboratorios'"
+  },
+  {
+    "name": "url.contrato",
+    "type": "java.lang.String",
+    "description": "A description for 'url.contrato'"
+  },
+  {
+    "name": "url.visitas",
+    "type": "java.lang.String",
+    "description": "A description for 'url.visitas'"
+  },
+  {
+    "name": "url.seguridades",
+    "type": "java.lang.String",
+    "description": "A description for 'url.seguridades'"
+  },
+  {
+    "name": "url.renagro",
+    "type": "java.lang.String",
+    "description": "A description for 'url.renagro'"
+  }
+]}

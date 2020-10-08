@@ -1,0 +1,88 @@
+{
+	"mue_id": 0,
+	"contrato": {
+		"contId": 0,
+		"predioSicpas": {
+			"predsicpasId": 0,
+			"predProduccion": "string",
+			"predLatitud": "string",
+			"predLongitud": "string",
+			"predAltura": 0,
+			"predEstado": "string"
+		},
+		"laboratorio": {
+			"labId": 0,
+			"categoria": {
+				"catId": 0,
+				"catDescripcion": "string",
+				"timeStamp": "2018-11-23T14:52:38.570Z",
+				"catEstado": "string"
+			},
+			"codigo": "string",
+			"nombre": "string",
+			"areaId": 0,
+			"direccion": "string",
+			"telefono": "string"
+		},
+		"prodId": 0,
+		"contCod": "string",
+		"contFechaRec": "2018-11-23T14:52:38.570Z",
+		"contFechaEntr": "2018-11-23T14:52:38.570Z",
+		"contFechaIngLab": "2018-11-23T14:52:38.570Z",
+		"conEstado": "string",
+		"remitente": {
+			"remId": 0,
+			"contrato": {
+				
+			},
+			"perOrgId": 0,
+			"remIdentificador": "string",
+			"remNombre": "string",
+			"remCiRuc": "string",
+			"remFax": "string",
+			"remOfiCentral": false,
+			"remMail": "string",
+			"remEstado": "string"
+		}
+	},
+	"mueSeqLab": 0,
+	"mueIdentificacion": "string",
+	"mueSupHa": 0,
+	"mueIdCultAnt": 0,
+	"mueIdCultProx": 0,
+	"mueIdCultEst": 0,
+	"mueMantCult": "string",
+	"mueEdadCult": 0,
+	"mueCondicion": "string",
+	"mueTopografia": "string",
+	"mueRiego": false,
+	"mueDrenaje": "string",
+	"mueFertilizante": "string",
+	"mueQqha": "string",
+	"mueProdQqha": "string",
+	"timeStamp": "2018-11-23T14:52:38.570Z",
+	"mueEstado": "string",
+	"muestrasTarifario": [
+		{
+			"mueTarId": 0,
+			"muestra": {
+				
+			},
+			"tarifario": {
+				"tarId": 0,
+				"categoria": {
+					"catId": 0,
+					"catDescripcion": "string",
+					"timeStamp": "2018-11-23T14:52:38.570Z",
+					"catEstado": "string"
+				},
+				"tarNombre": "string",
+				"tarValor": 0,
+				"timeStamp": "2018-11-23T14:52:38.570Z",
+				"tarEstado": "string"
+			},
+			"timeStamp": "2018-11-23T14:52:38.570Z",
+			"mueTarEstado": "string"
+		}
+	]
+}
